@@ -8,37 +8,33 @@ const links = [
   ["Most Recent", "#most-recent"],
   ["Favourite Artists", "#most-listened-artists"],
   ["Favourite Songs", "#most-listened-songs"],
-  ["Playlists Made For You", "#customized-playlists"],
+  ["Playlists Made For You", "#customized-playlists"]
 ];
 const SNavbar = () => {
   const path = useRouter().pathname;
-  console.log(path);
   return (
     <>
-      <Navbar bg="dark" variant="dark">
-        <Container className="flex justify-between">
-          <Navbar.Brand href="/">
+      <Navbar bg='dark' variant='dark'>
+        <Container className='flex justify-between'>
+          <Navbar.Brand href='/'>
             <img
-              alt=""
-              src="/photos/spotify-logo.png"
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
+              alt=''
+              src='/photos/spotify-logo.png'
+              width='30'
+              height='30'
+              className='d-inline-block align-top'
             />{" "}
             Subussy
           </Navbar.Brand>
           <Nav>
-            <Nav.Link></Nav.Link>
-          </Nav>
-          <Nav>
             {links.map((ind) => {
               return (
-                <Nav.Link className="relative" key={ind[1]} href={ind[1]}>
+                <Nav.Link className='relative' key={ind[1]} href={ind[1]}>
                   {ind[0]}
                   {path === ind[1] ? (
                     <motion.div
-                      className="w-full absolute left-0 bottom-1 h-[2px] rounded-xl bg-g-primary"
-                      layoutId="underline"
+                      className='w-full absolute left-0 bottom-1 h-[2px] rounded-xl bg-g-primary'
+                      layoutId='underline'
                     />
                   ) : null}
                 </Nav.Link>
