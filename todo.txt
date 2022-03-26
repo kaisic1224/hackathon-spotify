@@ -1,0 +1,4 @@
+Tomorrow:
+ - Get data from spotify api
+ - sign out auth page
+ - playlist builder
