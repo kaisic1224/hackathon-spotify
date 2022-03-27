@@ -10,12 +10,10 @@ const links = [
   ["Favourite Songs", "#most-listened-songs"],
   ["Playlists Made For You", "#customized-playlists"],
 ];
-const SNavbar = () => {
-  const path = useRouter().pathname;
-  console.log(path);
+const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar fixed="top" bg="dark" variant="dark">
         <Container className="flex justify-between">
           <Navbar.Brand href="/">
             <img
@@ -35,7 +33,7 @@ const SNavbar = () => {
               return (
                 <Nav.Link className="relative" key={ind[1]} href={ind[1]}>
                   {ind[0]}
-                  {path === ind[1] ? (
+                  {viewedSection === ind[0] ? (
                     <motion.div
                       className="w-full absolute left-0 bottom-1 h-[2px] rounded-xl bg-g-primary"
                       layoutId="underline"
