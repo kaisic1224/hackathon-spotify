@@ -9,22 +9,22 @@ export interface card {
 const variants = {
   hidden: {
     opacity: 0,
-    y: "80%"
+    y: "80%",
   },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
 const Card = ({ strung }: { strung: string }) => {
   return (
     <motion.div
       variants={variants}
-      className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white p-4 rounded-xl'
+      className="bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white p-4 rounded-xl"
     >
       {strung}
     </motion.div>
