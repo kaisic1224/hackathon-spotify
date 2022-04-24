@@ -11,12 +11,13 @@ import Locked from "../components/Locked";
 import { useRouter } from "next/router";
 import { basic } from "../lib/spotify";
 
+
 const staggerFadeUp = {
   show: {
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const Home: NextPage = () => {
@@ -45,7 +46,6 @@ const Home: NextPage = () => {
       handleView("Playlists Made For You");
     }
   }, [inView, inView2, inView3, inView4]);
-  console.log(session);
   return (
     <>
       <SNavbar viewedSection={sectName!} />
@@ -53,25 +53,25 @@ const Home: NextPage = () => {
         <title>SubWoofer | Home</title>
       </Head>
       <main>
-        <section className='min-h-[89vh]'>
+        <section className="min-h-[89vh]">
           <img
-            className='-z-50 absolute aspect-video h-screen w-full -translate-y-15'
-            src='/photos/heroimage.jpg'
+            className="-z-50 absolute aspect-video h-screen w-full -translate-y-15"
+            src="/photos/heroimage.jpg"
           />
           <motion.div
             initial={{ y: "100%", x: "-50%", opacity: 0 }}
             animate={{ y: "-75%", opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className='flex flex-col absolute items-center left-1/2 top-1/2'
+            className="flex flex-col absolute items-center left-1/2 top-1/2"
           >
-            <motion.h1 className='mx-auto mt-8 font-src-pro font-semibold text-6xl max-w-[24ch] text-center text-white'>
+            <motion.h1 className="mx-auto mt-8 font-src-pro font-semibold text-6xl max-w-[24ch] text-center text-white">
               Customize Your Shareable Playlists
             </motion.h1>
             {session?.user ? (
-              <motion.div className='text-white font-src-pro font-bold text-xl'>
+              <motion.div className="text-white font-src-pro font-bold text-xl">
                 Welcome Back, {session?.user.name}!
                 <motion.button
-                  className='bg-g-primary text-lg text-white font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4 ml-6'
+                  className="bg-g-primary text-lg text-white font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4 ml-6"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => signOut()}
@@ -81,7 +81,7 @@ const Home: NextPage = () => {
               </motion.div>
             ) : (
               <motion.button
-                className='bg-g-primary text-white font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4'
+                className="bg-g-primary text-white font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => signIn()}
@@ -91,22 +91,23 @@ const Home: NextPage = () => {
             )}
           </motion.div>
         </section>
-        <section className='bg-card-base' id='most-recent' ref={ref}>
-          <motion.h1 className='ml-20 relative py-20 text-white'>
+        <section className="bg-card-base" id="most-recent" ref={ref}>
+          <motion.h1 className="ml-20 relative py-20 text-white">
             Most Recent
           </motion.h1>
           <motion.div
             variants={staggerFadeUp}
-            initial='hidden'
-            whileInView='show'
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: true }}
-            className='grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden'
+            className="grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden"
           >
             <Card strung={"song1"} />
             <Card strung={"song1"} />
             <Card strung={"song1"} />
             <Card strung={"song1"} />
           </motion.div>
+
           <div className='py-60'></div>
         </section>
         <section
@@ -151,6 +152,7 @@ const Home: NextPage = () => {
             // console.log(data);
             const res2 = await fetch("/api/topTracks");
             console.log(await res2.json());
+
           }}
         >
           i am jesus

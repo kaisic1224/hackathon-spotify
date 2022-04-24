@@ -19,6 +19,7 @@ const refreshToken = async (refresh_token: string) => {
   const data = await res.json();
   console.log(data);
   return data;
+
 };
 
 export default NextAuth({
@@ -28,6 +29,7 @@ export default NextAuth({
       clientSecret: process.env.CLIENT_SECRET!,
       authorization: LOGIN_URL
     })
+
   ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {},
@@ -60,4 +62,5 @@ export default NextAuth({
       return session;
     }
   }
+
 });
