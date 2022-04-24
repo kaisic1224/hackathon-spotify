@@ -45,7 +45,7 @@ const Home: NextPage = () => {
       handleView("Playlists Made For You");
     }
   }, [inView, inView2, inView3, inView4]);
-
+  console.log(session);
   return (
     <>
       <SNavbar viewedSection={sectName!} />
@@ -135,20 +135,20 @@ const Home: NextPage = () => {
         <div
           onClick={async () => {
             const code = router.query.code;
-            const res = await fetch("https://accounts.spotify.com/api/token", {
-              method: "POST",
-              headers: {
-                Authorization: `Basic ${basic}`,
-                "Content-Type": "application/x-www-form-urlencoded"
-              },
-              body: new URLSearchParams({
-                grant_type: "authorization_code",
-                code: code! as string,
-                redirect_uri: "http://localhost:3000"
-              })
-            });
-            const data = await res.json();
-            console.log(data);
+            // const res = await fetch("https://accounts.spotify.com/api/token", {
+            //   method: "POST",
+            //   headers: {
+            //     Authorization: `Basic ${basic}`,
+            //     "Content-Type": "application/x-www-form-urlencoded"
+            //   },
+            //   body: new URLSearchParams({
+            //     grant_type: "authorization_code",
+            //     code: code! as string,
+            //     redirect_uri: "http://localhost:3000"
+            //   })
+            // });
+            // const data = await res.json();
+            // console.log(data);
             const res2 = await fetch("/api/topTracks");
             console.log(await res2.json());
           }}

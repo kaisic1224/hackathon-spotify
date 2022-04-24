@@ -3,14 +3,12 @@ import { getToken } from "next-auth/jwt";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const token = await getToken({ req });
-  console.log(token);
   const response = await fetch(
     "https://api.spotify.com/v1/me/player/currently-playing",
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token?.access_token}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${token?.access_token}`
       }
     }
   );

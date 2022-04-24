@@ -13,10 +13,11 @@ const refreshToken = async (refresh_token: string) => {
     },
     body: new URLSearchParams({
       grant_type: "refresh_token",
-      refresh_token: refresh_token
+      refresh_token
     })
   });
   const data = await res.json();
+  console.log(data);
   return data;
 };
 
@@ -29,26 +30,27 @@ export default NextAuth({
     })
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  pages: {
-    signIn: "/signin"
-  },
+  pages: {},
   jwt: {
     secret: process.env.NEXTAUTH_SECRET
   },
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account) {
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
-        token.username = account.providerAccountId;
-        token.accessTokenExpires = account?.expires_at! * 1000;
+        const newToken = {
+          ...token,
+          accessToken: account.access_token,
+          refreshToken: account.refresh_token,
+          accessTokenExpires: account.expires_at! * 1000,
+          user: user
+        };
+        return newToken;
       }
       if (Date.now() < (token.accessTokenExpires as number)) {
-        const data = refreshToken(token.refreshToken as string);
-        return data;
+        return token;
       }
 
-      return token;
+      return refreshToken(token.refreshToken as string);
     },
     async session({ token, session }) {
       session.accessToken = token.accessToken;
