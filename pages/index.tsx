@@ -8,6 +8,9 @@ import Card from "../components/Card";
 import { useInView, InView } from "react-intersection-observer";
 import { useState, useEffect } from "react";
 import Locked from "../components/Locked";
+import { useRouter } from "next/router";
+import { basic } from "../lib/spotify";
+
 
 const staggerFadeUp = {
   show: {
@@ -19,9 +22,8 @@ const staggerFadeUp = {
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
+  const router = useRouter();
   const [sectName, setName] = useState<string>();
-  const [section, setSection] = useState<any>();
-  const [list, setList] = useState<any>();
   const handleView = (name: string) => {
     setName(name);
   };
@@ -44,7 +46,6 @@ const Home: NextPage = () => {
       handleView("Playlists Made For You");
     }
   }, [inView, inView2, inView3, inView4]);
-
   return (
     <>
       <SNavbar viewedSection={sectName!} />
@@ -106,36 +107,52 @@ const Home: NextPage = () => {
             <Card strung={"song1"} />
             <Card strung={"song1"} />
           </motion.div>
-          <div className="py-60"></div>
+
+          <div className='py-60'></div>
         </section>
         <section
-          className="bg-card-base relative"
-          id="most-listened-artists"
+          className='bg-card-base relative'
+          id='most-listened-artists'
           ref={ref2}
         >
-          <motion.h1 className="ml-20 py-20 text-white">
+          <motion.h1 className='ml-20 py-20 text-white'>
             Most Listened Artists
           </motion.h1>
           {session?.user ? null : <Locked />}
-          <div className="py-60"></div>
+          <div className='py-60'></div>
         </section>
-        <section className="bg-card-base" id="most-listened-songs" ref={ref3}>
-          <motion.h1 className="ml-20 relative py-20 text-white">
+        <section className='bg-card-base' id='most-listened-songs' ref={ref3}>
+          <motion.h1 className='ml-20 relative py-20 text-white'>
             Most Listened Songs
           </motion.h1>
-          <div className="py-60"></div>
+          <div className='py-60'></div>
         </section>
-        <section className="bg-card-base" id="customized-playlists" ref={ref4}>
-          <motion.h1 className="ml-20 relative py-20 text-white">
+        <section className='bg-card-base' id='customized-playlists' ref={ref4}>
+          <motion.h1 className='ml-20 relative py-20 text-white'>
             Customized Playlists
           </motion.h1>
-          <div className="py-60"></div>
+          <div className='py-60'></div>
         </section>
         <div
           onClick={async () => {
-            const res = await fetch("http://localhost:3000/api/Top-Tracks");
-            const data = await res.json();
-            console.log(data);
+            const code = router.query.code;
+            // const res = await fetch("https://accounts.spotify.com/api/token", {
+            //   method: "POST",
+            //   headers: {
+            //     Authorization: `Basic ${basic}`,
+            //     "Content-Type": "application/x-www-form-urlencoded"
+            //   },
+            //   body: new URLSearchParams({
+            //     grant_type: "authorization_code",
+            //     code: code! as string,
+            //     redirect_uri: "http://localhost:3000"
+            //   })
+            // });
+            // const data = await res.json();
+            // console.log(data);
+            const res2 = await fetch("/api/topTracks");
+            console.log(await res2.json());
+
           }}
         >
           i am jesus
@@ -149,6 +166,6 @@ export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
-    props: {},
+    props: {}
   };
 };
