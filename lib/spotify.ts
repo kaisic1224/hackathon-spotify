@@ -3,14 +3,23 @@ import { getToken } from "next-auth/jwt";
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const basic = process.env.BASIC;
-const redirect_uri = "http://localhost:3000";
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 
 const scopes = [
   "user-read-email",
   "user-read-playback-state",
   "user-read-currently-playing",
-  "user-read-recently-played"
+  "user-read-recently-played",
+  "user-follow-modify",
+  "user-read-recently-played",
+  "user-top-read",
+  "playlist-read-collaborative",
+  "playlist-modify-public",
+  "playlist-read-private",
+  "playlist-modify-private",
+  "user-read-private",
+  "user-library-read",
+  "user-library-modify"
 ].join(",");
 
 const params = {
@@ -20,8 +29,8 @@ const params = {
 const queryParamString = new URLSearchParams(params);
 const LOGIN_URL = `https://accounts.spotify.com/authorize?${queryParamString.toString()}`;
 
-const refreshToken = async (refresh_token: string) => {
-  const response = await fetch(TOKEN_ENDPOINT, {
+const refreshToken = async (token: any) => {
+  const res = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
       Authorization: `Basic ${basic}`,
@@ -29,11 +38,18 @@ const refreshToken = async (refresh_token: string) => {
     },
     body: new URLSearchParams({
       grant_type: "refresh_token",
-      refresh_token
+      refresh_token: token.refreshToken
     })
   });
+  const data = await res.json();
 
-  return response.json();
+  console.log("A NEW TOKEN HAS BEEN GENERATED from API URI");
+  return {
+    ...token,
+    accessToken: data.access_token,
+    accessTokenExpires: Date.now() + data.expires_in * 1000,
+    refreshToken: data.refresh_token ?? token.refreshToken
+  };
 };
 
-export { LOGIN_URL, refreshToken, basic };
+export { LOGIN_URL, refreshToken };
