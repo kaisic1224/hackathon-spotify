@@ -99,10 +99,12 @@ const Card = ({ song }: { song: playlistItem | track }) => {
     return (
       <motion.div
         variants={variants}
-        className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white p-4 rounded-xl'
+        className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white font-medium
+         p-4 rounded-xl'
       >
-        {song.track.name ?? song.name}
+        {song.track.name}
         <img
+          className='mt-1'
           src={song.track.album.images[1].url!}
           width={song.track.album.images[1].width}
           height={song.track.album.images[1].height}

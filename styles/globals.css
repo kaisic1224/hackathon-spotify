@@ -16,3 +16,7 @@
   background: #888;
   border-radius: 0.75rem;
 }
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(99, 99, 179);
+}

@@ -20,9 +20,10 @@ const staggerFadeUp = {
 const Home: NextPage = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const [option, setOption] = useState({ value: "4-weeks" });
 
   const [recentTracks, setRecent] = useState<playlistItem[]>([]);
-  const [topTracks, setTopTracks] = useState<track[]>([]);
+  const [topTracks, setTopArtists] = useState<track[]>([]);
 
   const [sectName, setName] = useState<string>();
   const [ref, inView, entry] = useInView();
@@ -55,7 +56,7 @@ const Home: NextPage = () => {
       // FETCH MOST PLAYED ARTISTS IN SHORT TIME PERIOD
       const top = await fetch("/api/topArtists");
       const topData = await top.json();
-      setTopTracks(topData.items);
+      setTopArtists(topData.items);
     };
     fetchData();
   }, []);
@@ -127,8 +128,30 @@ const Home: NextPage = () => {
           id='most-listened-artists'
           ref={ref2}
         >
-          <motion.h2 className='px-20 py-20 text-white'>
+          <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white'>
             Most Listened Artists
+            <label htmlFor='' className=' text-lg'>
+              Past:{" "}
+              <select
+                value={option.value}
+                onChange={async (e) => {
+                  setOption({ value: e.target.value });
+                  const res = await fetch(
+                    "/api/topArtists?" +
+                      new URLSearchParams({
+                        rate: option.value
+                      })
+                  );
+                  const data = await res.json();
+                  setTopArtists(data.items);
+                }}
+                className='bg-body-main'
+              >
+                <option value='short_term'>4 weeks</option>
+                <option value='medium_term'>6 monthes</option>
+                <option value='long_term'>All time</option>
+              </select>
+            </label>
           </motion.h2>
           {/* {session?.user ? null : <Locked />} */}
           {topTracks.length != 0 && (

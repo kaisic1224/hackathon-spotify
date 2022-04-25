@@ -24,6 +24,5 @@ export default async function handler(
     }
   );
   const data = await response.json();
-  console.log(data.items[0].track.album.images[0]);
   res.status(200).json(JSON.stringify(data, null, 2));
 }
