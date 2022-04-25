@@ -3,9 +3,9 @@ import Head from "next/head";
 import SNavbar from "../components/SNavbar";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import Card from "../components/Card";
-import { useInView, InView } from "react-intersection-observer";
-import { useState, useEffect } from "react";
+import Card, { playlistItem, track } from "../components/Card";
+import { useInView } from "react-intersection-observer";
+import { useState, useEffect, useCallback } from "react";
 import Locked from "../components/Locked";
 import { useRouter } from "next/router";
 
@@ -18,12 +18,13 @@ const staggerFadeUp = {
 };
 
 const Home: NextPage = () => {
-  const { data: session } = useSession();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const [recentTracks, setRecent] = useState<playlistItem[]>([]);
+  const [topTracks, setTopTracks] = useState<track[]>([]);
+
   const [sectName, setName] = useState<string>();
-  const handleView = (name: string) => {
-    setName(name);
-  };
   const [ref, inView, entry] = useInView();
   const [ref2, inView2, entry2] = useInView();
   const [ref3, inView3, entry3] = useInView();
@@ -31,18 +32,34 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (entry?.isIntersecting) {
-      handleView("Most Recent");
+      setName("Most Recent");
     }
     if (entry2?.isIntersecting) {
-      handleView("Favourite Artists");
+      setName("Favourite Artists");
     }
     if (entry3?.isIntersecting) {
-      handleView("Favourite Songs");
+      setName("Favourite Songs");
     }
     if (entry4?.isIntersecting) {
-      handleView("Playlists Made For You");
+      setName("Playlists Made For You");
     }
   }, [inView, inView2, inView3, inView4]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // FETCH RECENTLY PLAYED SONGS
+      const recently = await fetch("/api/getRecent");
+      const recentlyData = await recently.json();
+      setRecent(recentlyData.items);
+
+      // FETCH MOST PLAYED ARTISTS IN SHORT TIME PERIOD
+      const top = await fetch("/api/topArtists");
+      const topData = await top.json();
+      setTopTracks(topData.items);
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <SNavbar viewedSection={sectName!} />
@@ -89,21 +106,20 @@ const Home: NextPage = () => {
           </motion.div>
         </section>
         <section className='bg-card-base' id='most-recent' ref={ref}>
-          <motion.h1 className='ml-20 relative py-20 text-white'>
-            Most Recent
-          </motion.h1>
-          <motion.div
-            variants={staggerFadeUp}
-            initial='hidden'
-            whileInView='show'
-            viewport={{ once: true }}
-            className='grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden'
-          >
-            <Card song={"song1"} />
-            <Card song={"song1"} />
-            <Card song={"song1"} />
-            <Card song={"song1"} />
-          </motion.div>
+          <motion.h2 className='px-20 py-20 text-white'>Most Recent</motion.h2>
+          {recentTracks.length != 0 && (
+            <motion.div
+              variants={staggerFadeUp}
+              initial='hidden'
+              whileInView='show'
+              viewport={{ once: true }}
+              className='grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden'
+            >
+              {recentTracks.map((item) => (
+                <Card key={item.track.id} song={item} />
+              ))}
+            </motion.div>
+          )}
           <div className='py-60'></div>
         </section>
         <section
@@ -111,34 +127,37 @@ const Home: NextPage = () => {
           id='most-listened-artists'
           ref={ref2}
         >
-          <motion.h1 className='ml-20 py-20 text-white'>
+          <motion.h2 className='px-20 py-20 text-white'>
             Most Listened Artists
-          </motion.h1>
-          {session?.user ? null : <Locked />}
+          </motion.h2>
+          {/* {session?.user ? null : <Locked />} */}
+          {topTracks.length != 0 && (
+            <motion.div
+              variants={staggerFadeUp}
+              initial='hidden'
+              whileInView='show'
+              viewport={{ once: true }}
+              className='grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden'
+            >
+              {topTracks.map((item) => (
+                <Card key={item.id} song={item} />
+              ))}
+            </motion.div>
+          )}
           <div className='py-60'></div>
         </section>
         <section className='bg-card-base' id='most-listened-songs' ref={ref3}>
-          <motion.h1 className='ml-20 relative py-20 text-white'>
+          <motion.h2 className='px-20 relative py-20 text-white'>
             Most Listened Songs
-          </motion.h1>
+          </motion.h2>
           <div className='py-60'></div>
         </section>
         <section className='bg-card-base' id='customized-playlists' ref={ref4}>
-          <motion.h1 className='ml-20 relative py-20 text-white'>
+          <motion.h2 className='px-20 relative py-20 text-white'>
             Customized Playlists
-          </motion.h1>
+          </motion.h2>
           <div className='py-60'></div>
         </section>
-        <div
-          onClick={async () => {
-            const code = router.query.code;
-
-            const res2 = await fetch("/api/topTracks");
-            console.log(await res2.json());
-          }}
-        >
-          i am jesus
-        </div>
       </main>
     </>
   );
@@ -147,6 +166,8 @@ const Home: NextPage = () => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  // const recentlyRes = await fetch("http://localhost:3000/api/getRecent");
+  // const recently = await recentlyRes.json();
   return {
     props: {}
   };
