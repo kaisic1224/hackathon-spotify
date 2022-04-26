@@ -5,7 +5,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   let token = await getToken({ req });
   const rate = req.query.rate;
   const queryParamString = new URLSearchParams({
-    limit: "10",
+    limit: "8",
     time_range: rate ? rate.toString() : "short_term"
   });
   const response = await fetch(

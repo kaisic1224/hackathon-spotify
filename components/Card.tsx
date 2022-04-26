@@ -84,7 +84,7 @@ export interface track {
 }
 
 export interface playlistItem {
-  track: track;
+  track?: track;
   played_at: string;
   context: {
     external_urls: external_url;
@@ -95,36 +95,43 @@ export interface playlistItem {
 }
 
 const Card = ({ song }: { song: playlistItem | track }) => {
-  if (song.track) {
+  if (song.track || song.type === "track") {
     return (
       <motion.div
+        layout
         variants={variants}
         className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white font-medium
-         p-4 rounded-xl'
+         p-4 rounded-xl md:w-full'
       >
-        {song.track.name}
+        {song.track?.name ?? song.name}
         <img
-          className='mt-1'
-          src={song.track.album.images[1].url!}
-          width={song.track.album.images[1].width}
-          height={song.track.album.images[1].height}
-        />
-      </motion.div>
-    );
-  } else {
-    return (
-      <motion.div
-        variants={variants}
-        className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white p-4 rounded-xl'
-      >
-        {song.name}
-        <img
-          src={song.images[1].url!}
-          width={song.images[1].width}
-          height={song.images[1].height}
+          className='mt-1 aspect-square object-cover'
+          src={song.track?.album.images[1].url ?? song.album.images[1].url}
+          width={
+            song.track?.album.images[1].width ?? song.album.images[1].width
+          }
+          height={
+            song.track?.album.images[1].height ?? song.album.images[1].height
+          }
         />
       </motion.div>
     );
   }
+  return (
+    <motion.div
+      layout
+      variants={variants}
+      className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white font-medium
+      p-4 rounded-xl md:w-full'
+    >
+      {song.name}
+      <img
+        className='mt-1 aspect-square object-cover'
+        src={song.images[1].url!}
+        width={song.images[1].width}
+        height={song.images[1].height}
+      />
+    </motion.div>
+  );
 };
 export default Card;

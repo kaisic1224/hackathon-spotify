@@ -1,15 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
-import { refreshToken } from "../../lib/spotify";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   let token = await getToken({ req });
-  if ((token?.accessTokenExpires as number) < Date.now()) {
-    console.log("new token generating...");
-    token = await refreshToken(token);
-  }
+
+  const rate = req.query.rate;
+  const queryParamString = new URLSearchParams({
+    limit: "8",
+    time_range: rate ? rate.toString() : "short_term"
+  });
   const response = await fetch(
-    "https://api.spotify.com/v1/me/player/currently-playing",
+    "https://api.spotify.com/v1/me/top/tracks?" + queryParamString.toString(),
     {
       method: "GET",
       headers: {
