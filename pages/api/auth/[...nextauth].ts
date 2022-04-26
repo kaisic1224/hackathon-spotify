@@ -1,10 +1,11 @@
 import NextAuth, { User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { LOGIN_URL } from "../../../lib/spotify";
 
 const basic = process.env.BASIC;
 
-const refreshToken = async (refresh_token: string) => {
+const refreshToken = async (token: any) => {
   const res = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
@@ -13,13 +14,18 @@ const refreshToken = async (refresh_token: string) => {
     },
     body: new URLSearchParams({
       grant_type: "refresh_token",
-      refresh_token
+      refresh_token: token.refreshToken
     })
   });
   const data = await res.json();
-  console.log(data);
-  return data;
 
+  console.log("A NEW TOKEN HAS BEEN GENERATED from nextauth");
+  return {
+    ...token,
+    accessToken: data.access_token,
+    accessTokenExpires: Date.now() + data.expires_in * 1000,
+    refreshToken: data.refresh_token ?? token.refreshToken
+  };
 };
 
 export default NextAuth({
@@ -29,10 +35,11 @@ export default NextAuth({
       clientSecret: process.env.CLIENT_SECRET!,
       authorization: LOGIN_URL
     })
-
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  pages: {},
+  pages: {
+    signIn: "/signin"
+  },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET
   },
@@ -49,18 +56,17 @@ export default NextAuth({
         return newToken;
       }
       if (Date.now() < (token.accessTokenExpires as number)) {
-        return token;
+        return { ...token };
       }
 
-      return refreshToken(token.refreshToken as string);
+      return refreshToken(token);
     },
     async session({ token, session }) {
       session.accessToken = token.accessToken;
-      session.refresh_token = token.refreshToken;
+      session.refreshToken = token.refreshToken;
       session.accessTokenExpires = token.accessTokenExpires;
       session.user = token.user as User;
       return session;
     }
   }
-
 });

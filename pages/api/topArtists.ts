@@ -3,14 +3,13 @@ import { getToken } from "next-auth/jwt";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   let token = await getToken({ req });
-
   const rate = req.query.rate;
   const queryParamString = new URLSearchParams({
     limit: "8",
     time_range: rate ? rate.toString() : "short_term"
   });
   const response = await fetch(
-    "https://api.spotify.com/v1/me/top/tracks?" + queryParamString.toString(),
+    "https://api.spotify.com/v1/me/top/artists?" + queryParamString.toString(),
     {
       method: "GET",
       headers: {
