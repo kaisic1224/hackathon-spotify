@@ -5,6 +5,5 @@ const secret = process.env.NEXTAUTH_SECRET!;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const token = await getToken({ req, secret });
-  console.log(token);
   return res.status(200).json(JSON.stringify(token, null, 2));
 };

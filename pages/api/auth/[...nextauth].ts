@@ -55,6 +55,7 @@ export default NextAuth({
         };
         return newToken;
       }
+
       if (Date.now() < (token.accessTokenExpires as number)) {
         return { ...token };
       }
