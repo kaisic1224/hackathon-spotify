@@ -1,9 +1,6 @@
 import { getToken } from "next-auth/jwt";
 
-const client_id = process.env.CLIENT_ID;
-const client_secret = process.env.CLIENT_SECRET;
 const basic = process.env.BASIC;
-const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 
 const scopes = [
   "user-read-email",

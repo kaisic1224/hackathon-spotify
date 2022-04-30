@@ -20,3 +20,10 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgb(99, 99, 179);
 }
+
+@layer {
+  .song-card {
+    @apply bg-body-main isolate z-50 relative hover:bg-g-primary text-white font-medium shadow-sm
+         p-4 rounded-xl xs:max-w-lg sm:max-w-xl;
+  }
+}

@@ -21,8 +21,6 @@ const CardGrid = ({
       variants={staggerFadeUp}
       initial='hidden'
       animate='show'
-      layout
-      layoutDependency={dataItems}
       className='grid px-8 mx-auto justify-items-center
        xs:gap-12
        md:grid-cols-2

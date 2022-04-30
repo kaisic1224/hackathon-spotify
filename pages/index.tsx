@@ -5,15 +5,14 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { artist, playlistItem, track } from "../components/Card";
 import { useInView } from "react-intersection-observer";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import Locked from "../components/Locked";
-import { useRouter } from "next/router";
 import DatePicker from "../components/DatePicker";
 import CardGrid from "../components/CardGrid";
 import LoadMore from "../components/LoadMore";
+import Menu from "../components/Menu";
 
 const Home: NextPage = () => {
-  const router = useRouter();
   const { data: session } = useSession();
 
   const [recentTracks, setRecent] = useState<playlistItem[]>([]);
@@ -27,19 +26,7 @@ const Home: NextPage = () => {
   const [ref3, inView3, entry3] = useInView({ threshold: 0.4, delay: 0.25 });
   const [ref4, inView4, entry4] = useInView({ threshold: 0.2, delay: 0.25 });
 
-  const menu = (e) => {
-    console.log(e);
-    console.log("jajajaja");
-  };
-  useEffect(() => {
-    document.addEventListener("contextmenu", menu);
-
-    return () => {
-      document.removeEventListener("contextmenu", menu);
-    };
-  }, []);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (entry?.isIntersecting) {
       setName("Most Recent");
     }
@@ -72,13 +59,14 @@ const Home: NextPage = () => {
       setTopTracks(topTracksData.items);
 
       // GET RECOMMENDATIONS
+      if (topData.error) return;
       const recQueries = new URLSearchParams({
         seed_artists: [...topData.items]
           .slice(0, 2)
           .map((artist) => artist.id)
           .join(","),
         seed_genres: [...topData.items]
-          .slice(0, 2)
+          .slice(0, 3)
           .map((artist) => artist.genres[0])
           .join(",")
       });
@@ -96,6 +84,7 @@ const Home: NextPage = () => {
       </Head>
 
       <SNavbar viewedSection={sectName!} />
+      <Menu />
       <header className='min-h-[89vh]'>
         <img
           className='-z-10 absolute object-cover aspect-video h-screen w-full select-none -translate-y-15'

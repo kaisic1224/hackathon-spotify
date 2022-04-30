@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Menu from "./Menu";
 
 const variants = {
   hidden: {
@@ -110,40 +111,39 @@ export interface playlistItem {
 const Card = ({ song }: { song: playlistItem | track | artist }) => {
   if (song.track || song.type === "track") {
     return (
-      <motion.div
-        layout
-        variants={variants}
-        className='bg-body-main relative hover:bg-g-primary text-white font-medium shadow-sm
-         p-4 rounded-xl xs:max-w-lg sm:max-w-xl group'
-      >
-        {/* <div className='absolute w-full h-full'></div> */}
-        <span
-          className='inline-block cursor-default xs:max-w-[34ch] xsm:max-w-none md:max-w-[31ch] lg:max-w-none
+      <>
+        <motion.div
+          layout='position'
+          variants={variants}
+          data-open={
+            song?.track?.external_urls.spotify ?? song?.external_urls.spotify
+          }
+          className='song-card group'
+        >
+          <span
+            className='inline-block cursor-default xs:max-w-[34ch] xsm:max-w-none md:max-w-[31ch] lg:max-w-none
         xl:max-w-[25ch] overflow-hidden whitespace-nowrap overflow-ellipsis'
-        >
-          {song.track?.name ?? song.name}
-        </span>
-        <span
-          className=' absolute delay-300 text-white rounded-lg text-sm scale-0 group-hover:scale-100 transition-transform duration-200
-        px-2 py-1 z-50 top-0 -translate-y-[117%] left-0 bg-black-main origin-bottom'
-        >
-          {song.track?.name ?? song.name}
-        </span>
-        <img
-          className={`aspect-square object-cover justify-self-center w-full`}
-          src={song.track?.album.images[0].url ?? song.album.images[0].url}
-        />
-      </motion.div>
+          >
+            {song?.track?.name ?? song.name}
+          </span>
+          <span
+            className=' absolute delay-300 text-white rounded-lg text-sm scale-0 group-hover:scale-100 transition-transform duration-200
+          px-2 py-1 z-50 top-0 -translate-y-[117%] left-0 bg-black-main origin-bottom border-2 border-card-accent'
+          >
+            {song?.track?.name ?? song.name}
+          </span>
+          <img
+            className={`aspect-square object-cover justify-self-center w-full -z-10`}
+            src={song?.track?.album.images[0].url ?? song.album.images[0].url}
+          />
+        </motion.div>
+      </>
     );
   }
   return (
-    <motion.div
-      layout
-      variants={variants}
-      className='bg-body-main relative hover:bg-g-primary text-white font-medium shadow-sm
-         p-4 rounded-xl'
-    >
+    <motion.div layout='position' variants={variants} className='song-card'>
       <span>{song.name}</span>
+
       <img
         className={`aspect-square object-cover justify-self-center w-full`}
         src={song.images[0].url!}

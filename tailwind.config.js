@@ -11,7 +11,8 @@ module.exports = {
         "black-main": "#121212",
         "g-primary": "#1aa34a",
         "card-base": "#242424",
-        "body-main": "#2a2a2a"
+        "body-main": "#2a2a2a",
+        "card-accent": "#474545"
       },
       fontFamily: {
         "src-pro": ["Source Sans Pro", ...defaultTheme.fontFamily.sans]
