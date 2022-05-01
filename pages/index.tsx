@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import SNavbar from "../components/SNavbar";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { artist, playlistItem, track } from "../components/Card";
 import { useInView } from "react-intersection-observer";
@@ -13,7 +13,7 @@ import LoadMore from "../components/LoadMore";
 import Menu from "../components/Menu";
 
 const Home: NextPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [recentTracks, setRecent] = useState<playlistItem[]>([]);
   const [topArtists, setTopArtists] = useState<artist[]>([]);
@@ -43,6 +43,10 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // ASSURE THERE IS A SESSION FIRST
+      const session = await getSession();
+      if (!session) return;
+
       // FETCH RECENTLY PLAYED SONGS
       const recently = await fetch("/api/getRecent");
       const recentlyData = await recently.json();

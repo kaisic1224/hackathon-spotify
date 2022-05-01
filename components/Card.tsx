@@ -121,18 +121,24 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
           className='song-card group'
         >
           <span
+            data-open={
+              song?.track?.external_urls.spotify ?? song?.external_urls.spotify
+            }
             className='inline-block cursor-default xs:max-w-[34ch] xsm:max-w-none md:max-w-[31ch] lg:max-w-none
-        xl:max-w-[25ch] overflow-hidden whitespace-nowrap overflow-ellipsis'
+                    xl:max-w-[25ch] overflow-hidden whitespace-nowrap overflow-ellipsis'
           >
             {song?.track?.name ?? song.name}
           </span>
           <span
             className=' absolute delay-300 text-white rounded-lg text-sm scale-0 group-hover:scale-100 transition-transform duration-200
-          px-2 py-1 z-50 top-0 -translate-y-[117%] left-0 bg-black-main origin-bottom border-2 border-card-accent'
+            px-2 py-1 z-50 top-0 -translate-y-[117%] left-0 bg-black-main origin-bottom border-2 border-card-accent'
           >
             {song?.track?.name ?? song.name}
           </span>
           <img
+            data-open={
+              song?.track?.external_urls.spotify ?? song?.external_urls.spotify
+            }
             className={`aspect-square object-cover justify-self-center w-full -z-10`}
             src={song?.track?.album.images[0].url ?? song.album.images[0].url}
           />
@@ -141,10 +147,16 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
     );
   }
   return (
-    <motion.div layout='position' variants={variants} className='song-card'>
-      <span>{song.name}</span>
+    <motion.div
+      layout='position'
+      variants={variants}
+      data-open={song?.external_urls.spotify}
+      className='song-card'
+    >
+      <span data-open={song?.external_urls.spotify}>{song.name}</span>
 
       <img
+        data-open={song?.external_urls.spotify}
         className={`aspect-square object-cover justify-self-center w-full`}
         src={song.images[0].url!}
       />
