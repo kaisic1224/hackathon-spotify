@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 import {
   Dispatch,
@@ -16,6 +15,7 @@ const Menu = () => {
   const [cords, setCords] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const [links, setLinks] = useState({ open: "" });
+  const [artist, setArtist] = useState([]);
 
   const handleContext = useCallback(
     (e: MouseEvent) => {
@@ -24,7 +24,6 @@ const Menu = () => {
         setOpen(false);
         return;
       }
-
       if (e.pageX + menuRef?.current?.offsetWidth! > window.innerWidth) {
         setCords({
           x: e.pageX - menuRef?.current?.offsetWidth!,
@@ -37,6 +36,16 @@ const Menu = () => {
         });
       }
       setOpen(true);
+      // const newArtistsNAMES = e.target.dataset.artistName.split(",");
+      // const newArtistsURLS = e.target.dataset.artist.split(",");
+      // const newarr = [newArtistsNAMES.length];
+      // for (let index = 0; index < newarr.length; index++) {
+      //   newarr.push({
+      //     name: newArtistsNAMES[index],
+      //     url: newArtistsURLS[index]
+      //   });
+      // }
+      // setArtist(newarr);
       setLinks({ open: e.target.dataset.open });
     },
     [setCords]
@@ -57,35 +66,41 @@ const Menu = () => {
 
   return (
     <>
-      <AnimatePresence exitBeforeEnter>{toast && <Toast />}</AnimatePresence>
+      {toast && <Toast />}
       {open && (
         <div
           ref={menuRef}
-          className='absolute z-[9999] p-1 bg-card-accent rounded-md text-white font-medium shadow-md min-w-fit'
+          className='absolute z-[9999] peer p-1 bg-card-accent rounded-md text-white font-medium shadow-md 
+          min-w-fit'
           style={{ top: cords.y, left: cords.x }}
         >
           <div
             onClick={() => {
               navigator.clipboard.writeText(links.open);
-              setOpen(false);
               setToast(true);
               setTimeout(() => {
                 setToast(false);
-              }, 1250);
+              }, 2000);
             }}
             className='px-2 py-1 select-none hover:bg-slate-500'
           >
             Copy link
           </div>
-          <div className='px-2 py-1 select-none hover:bg-slate-500'>
-            <a
-              href={links.open}
-              className='text-white no-underline cursor-default'
-              target='_blank'
-            >
-              Open in Spotify
-            </a>
+          <div
+            className='px-2 py-1 select-none hover:bg-slate-500'
+            onClick={() => window.open(links.open, "_blank")}
+          >
+            Open in Spotify
           </div>
+          {artist.length != 0 &&
+            artist.map((artist) => (
+              <div
+                key={artist.url}
+                className='px-2 py-1 select-none hover:bg-slate-500'
+              >
+                {artist.name}
+              </div>
+            ))}
         </div>
       )}
     </>

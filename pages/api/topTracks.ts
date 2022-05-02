@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
+import { getSession } from "next-auth/react";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  let token = await getToken({ req });
+  let token = await getSession({ req });
 
   const rate = req.query.rate;
   const queryParamString = new URLSearchParams({

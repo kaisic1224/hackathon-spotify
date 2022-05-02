@@ -11,6 +11,13 @@ import DatePicker from "../components/DatePicker";
 import CardGrid from "../components/CardGrid";
 import LoadMore from "../components/LoadMore";
 import Menu from "../components/Menu";
+import Footer from "../components/Footer";
+import React from "react";
+
+export const DateContext = React.createContext({
+  time_range: "short_term",
+  setTime: (newTime: string) => {}
+});
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
@@ -21,7 +28,8 @@ const Home: NextPage = () => {
   const [recommended, setRecommended] = useState<track[]>([]);
 
   const [sectName, setName] = useState<string>();
-  const [ref, inView, entry] = useInView({ threshold: 0.4, delay: 0.25 });
+  const [time_range, setTime] = useState("short_term");
+  const [ref, inView, entry] = useInView();
   const [ref2, inView2, entry2] = useInView({ threshold: 0.4, delay: 0.25 });
   const [ref3, inView3, entry3] = useInView({ threshold: 0.4, delay: 0.25 });
   const [ref4, inView4, entry4] = useInView({ threshold: 0.2, delay: 0.25 });
@@ -61,22 +69,6 @@ const Home: NextPage = () => {
       const topT = await fetch("/api/topTracks");
       const topTracksData = await topT.json();
       setTopTracks(topTracksData.items);
-
-      // GET RECOMMENDATIONS
-      if (topData.error) return;
-      const recQueries = new URLSearchParams({
-        seed_artists: [...topData.items]
-          .slice(0, 2)
-          .map((artist) => artist.id)
-          .join(","),
-        seed_genres: [...topData.items]
-          .slice(0, 3)
-          .map((artist) => artist.genres[0])
-          .join(",")
-      });
-      const rec = await fetch("/api/getRecommend?" + recQueries.toString());
-      const recData = await rec.json();
-      setRecommended(recData.tracks);
     };
     fetchData();
   }, []);
@@ -150,18 +142,25 @@ const Home: NextPage = () => {
           id='most-listened-artists'
           ref={ref2}
         >
-          <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
-            Most Listened Artists
-            <DatePicker endpoint='topArtists' setFn={setTopArtists} />
-          </motion.h2>
-          {topArtists?.length ?? 0 != 0 ? (
-            <CardGrid layoutID='artists' dataItems={topArtists} />
-          ) : (
-            <span>
-              {session?.user?.name} has not played anything in the last 30 days
-            </span>
-          )}
-          <LoadMore setFn={setTopArtists} endpoint='topArtists' />
+          <DateContext.Provider value={{ time_range, setTime }}>
+            <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
+              Most Listened Artists
+              <DatePicker endpoint='topArtists' setFn={setTopArtists} />
+            </motion.h2>
+            {topArtists?.length ?? 0 != 0 ? (
+              <CardGrid layoutID='artists' dataItems={topArtists} />
+            ) : (
+              <span>
+                {session?.user?.name} has not played anything in the last 30
+                days
+              </span>
+            )}
+            <LoadMore
+              setFn={setTopArtists}
+              endpoint='topArtists'
+              items={topArtists}
+            />
+          </DateContext.Provider>
         </section>
         <section className='relative pb-8' id='most-listened-songs' ref={ref3}>
           <motion.h2 className='px-20 flex flex-col gap-3 py-20 text-white xs:text-center'>
@@ -173,17 +172,36 @@ const Home: NextPage = () => {
           ) : null}
         </section>
         <section className='relative pb-8' id='customized-playlists' ref={ref4}>
-          <motion.h2 className='px-20 py-20 text-white xs:text-center'>
+          <motion.h2
+            onViewportEnter={async () => {
+              const recQueries = new URLSearchParams({
+                seed_artists: [...topArtists]
+                  .slice(0, 2)
+                  .map((artist) => artist.id)
+                  .join(","),
+                seed_genres: [...topArtists]
+                  .slice(0, 3)
+                  .map((artist) => artist.genres[0])
+                  .join(",")
+              });
+              const rec = await fetch(
+                "/api/getRecommend?" + recQueries.toString()
+              );
+              const recData = await rec.json();
+              setRecommended(recData.tracks);
+            }}
+            viewport={{ once: true }}
+            className='px-20 py-20 text-white xs:text-center'
+          >
             Customized Playlists
           </motion.h2>
           {recommended?.length ?? 0 != 0 ? (
             <CardGrid layoutID='recommended' dataItems={recommended} />
           ) : null}
         </section>
-        <div className='text-white' onClick={async () => {}}>
-          i am spotty
-        </div>
       </main>
+
+      <Footer />
     </>
   );
 };

@@ -118,11 +118,35 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
           data-open={
             song?.track?.external_urls.spotify ?? song?.external_urls.spotify
           }
-          className='song-card group'
+          data-artist={
+            song?.track?.artists
+              .map((artist) => artist.external_urls.spotify)
+              .join(",") ??
+            song?.artists
+              .map((artist) => artist.external_urls.spotify)
+              .join(",")
+          }
+          data-artist-name={
+            song?.track?.artists.map((artist) => artist.name).join(",") ??
+            song?.artists.map((artist) => artist.name).join(",")
+          }
+          className='song-card group shadow-sm'
         >
           <span
             data-open={
               song?.track?.external_urls.spotify ?? song?.external_urls.spotify
+            }
+            data-artist={
+              song?.track?.artists
+                .map((artist) => artist.external_urls.spotify)
+                .join(",") ??
+              song?.artists
+                .map((artist) => artist.external_urls.spotify)
+                .join(",")
+            }
+            data-artist-name={
+              song?.track?.artists.map((artist) => artist.name).join(",") ??
+              song?.artists.map((artist) => artist.name).join(",")
             }
             className='inline-block cursor-default xs:max-w-[34ch] xsm:max-w-none md:max-w-[31ch] lg:max-w-none
                     xl:max-w-[25ch] overflow-hidden whitespace-nowrap overflow-ellipsis'
@@ -139,6 +163,18 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
             data-open={
               song?.track?.external_urls.spotify ?? song?.external_urls.spotify
             }
+            data-artist={
+              song?.track?.artists
+                .map((artist) => artist.external_urls.spotify)
+                .join(",") ??
+              song?.artists
+                .map((artist) => artist.external_urls.spotify)
+                .join(",")
+            }
+            data-artist-name={
+              song?.track?.artists.map((artist) => artist.name).join(",") ??
+              song?.artists.map((artist) => artist.name).join(",")
+            }
             className={`aspect-square object-cover justify-self-center w-full -z-10`}
             src={song?.track?.album.images[0].url ?? song.album.images[0].url}
           />
@@ -151,10 +187,9 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
       layout='position'
       variants={variants}
       data-open={song?.external_urls.spotify}
-      className='song-card'
+      className='song-card shadow-md'
     >
       <span data-open={song?.external_urls.spotify}>{song.name}</span>
-
       <img
         data-open={song?.external_urls.spotify}
         className={`aspect-square object-cover justify-self-center w-full`}
