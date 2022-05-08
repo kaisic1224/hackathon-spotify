@@ -22,6 +22,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   const data = await response.json();
-
+  if (response.status != 200) {
+    console.log(`artists: ${response.statusText}`);
+  }
   return res.status(200).json(JSON.stringify(data, null, 2));
 };

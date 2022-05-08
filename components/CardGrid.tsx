@@ -13,7 +13,7 @@ const CardGrid = ({
   dataItems,
   layoutID
 }: {
-  layoutID: string;
+  layoutID?: string;
   dataItems: playlistItem[] | track[] | artist[];
 }) => {
   return (
@@ -21,10 +21,10 @@ const CardGrid = ({
       variants={staggerFadeUp}
       initial='hidden'
       animate='show'
-      className='grid px-8 mx-auto justify-items-center
+      className='grid justify-items-center mx-auto
        xs:gap-12
        md:grid-cols-2
-       xl:grid-cols-4 xl:gap-10
+       xl:grid-cols-4 xl:gap-10 
        2xl:max-w-screen-2xl'
     >
       <LayoutGroup id={layoutID}>

@@ -25,7 +25,6 @@ const DatePicker = ({
   setFn: Dispatch<SetStateAction<any[] | any>>;
   endpoint: string;
 }) => {
-  const [option, setOption] = useState("short_term");
   const { setTime, time_range } = useContext(DateContext);
 
   const fetchItems = async (uri: string) => {
@@ -37,17 +36,17 @@ const DatePicker = ({
   const debouncedDate = useCallback(
     debounce(() => {
       const queryParamString = new URLSearchParams({
-        rate: option
+        rate: time_range
       });
       const uri = `/api/${endpoint}?${queryParamString.toString()}`;
       fetchItems(uri);
     }),
-    [option, time_range]
+    [time_range]
   );
 
   useEffect(() => {
     debouncedDate();
-  }, [option, time_range]);
+  }, [time_range]);
 
   return (
     <label htmlFor='date-options' className='text-lg'>
@@ -55,7 +54,6 @@ const DatePicker = ({
       <select
         value={time_range}
         onChange={async (e) => {
-          setOption(e.target.value);
           setTime(e.target.value);
         }}
         name='date-options'

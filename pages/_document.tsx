@@ -10,7 +10,7 @@ class MyDocument extends Document {
             rel='stylesheet'
           />
         </Head>
-        <body className='overflow-x-hidden'>
+        <body className='overflow-x-hidden min-h-screen bg-black-main'>
           <Main />
           <NextScript />
         </body>

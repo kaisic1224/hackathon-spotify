@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import SNavbar from "../components/SNavbar";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import { motion } from "framer-motion";
+import { LayoutGroup, motion } from "framer-motion";
 import { artist, playlistItem, track } from "../components/Card";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect, useLayoutEffect } from "react";
@@ -13,6 +13,8 @@ import LoadMore from "../components/LoadMore";
 import Menu from "../components/Menu";
 import Footer from "../components/Footer";
 import React from "react";
+import { FaArrowRight } from "react-icons/fa";
+import Link from "next/link";
 
 export const DateContext = React.createContext({
   time_range: "short_term",
@@ -25,10 +27,10 @@ const Home: NextPage = () => {
   const [recentTracks, setRecent] = useState<playlistItem[]>([]);
   const [topArtists, setTopArtists] = useState<artist[]>([]);
   const [topTracks, setTopTracks] = useState<track[]>([]);
-  const [recommended, setRecommended] = useState<track[]>([]);
 
   const [sectName, setName] = useState<string>();
   const [time_range, setTime] = useState("short_term");
+  const [time_range2, setTime2] = useState("short_term");
   const [ref, inView, entry] = useInView();
   const [ref2, inView2, entry2] = useInView({ threshold: 0.4, delay: 0.25 });
   const [ref3, inView3, entry3] = useInView({ threshold: 0.4, delay: 0.25 });
@@ -50,6 +52,14 @@ const Home: NextPage = () => {
   }, [inView, inView2, inView3, inView4]);
 
   useEffect(() => {
+    const fetchSession = async () => {
+      const recently = await fetch("/api/getRecent");
+      const recentlyData = await recently.json();
+      setRecent(recentlyData.items);
+      setTopArtists(JSON.parse(sessionStorage.getItem("artists")!));
+      setTopTracks(JSON.parse(sessionStorage.getItem("tracks")!));
+    };
+
     const fetchData = async () => {
       // ASSURE THERE IS A SESSION FIRST
       const session = await getSession();
@@ -64,14 +74,57 @@ const Home: NextPage = () => {
       const top = await fetch("/api/topArtists");
       const topData = await top.json();
       setTopArtists(topData.items);
+      sessionStorage.setItem("artists", JSON.stringify([...topData.items]));
 
-      // FETCH MOST PLAYED TRACKS
+      // FETCH POPULAR SONGS
       const topT = await fetch("/api/topTracks");
       const topTracksData = await topT.json();
       setTopTracks(topTracksData.items);
+      sessionStorage.setItem(
+        "tracks",
+        JSON.stringify([...topTracksData.items])
+      );
+
+      const today = new Date(Date.now() + 1000 * 60 * 5).getTime();
+      sessionStorage.setItem("timestamp", today.toString());
     };
+
+    if (parseInt(sessionStorage.getItem("timestamp")!) > Date.now()) {
+      fetchSession();
+      return;
+    }
+
     fetchData();
   }, []);
+
+  if (session?.error === "refresh error") {
+    return (
+      <>
+        <Head>
+          <title>SubWoofer | Error</title>
+          <meta charSet='UTF-8' />
+          <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+          <meta
+            name='viewport'
+            content='width=device-width, initial-scale=1.0'
+          />
+        </Head>
+        <SNavbar viewedSection={sectName!} />
+        <main className='text-white text-center overflow-y-hidden pb-24'>
+          <h1 className='mt-48 text-5xl'>Refresh Token Error</h1>
+          <p className='text-lg'>Try signing in again</p>
+          <motion.button
+            className='bg-g-primary text-white hover:text-green-50 hover:shadow-green-400 font-semibold p-[.5em] px-[1.5em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4'
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => signIn()}
+          >
+            Sign In
+          </motion.button>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
@@ -129,7 +182,11 @@ const Home: NextPage = () => {
       </header>
       <main className='relative bg-card-base'>
         {session?.user ? null : <Locked />}
-        <section className='relative pb-8' id='most-recent' ref={ref}>
+        <section
+          className='relative px-8 mx-auto pb-8'
+          id='most-recent'
+          ref={ref}
+        >
           <motion.h2 className='px-20 text-white xs:text-center xs:py-16 lg:py-20'>
             Most Recent
           </motion.h2>
@@ -138,7 +195,7 @@ const Home: NextPage = () => {
           ) : null}
         </section>
         <section
-          className='relative pb-8'
+          className='relative px-8 mx-auto pb-8'
           id='most-listened-artists'
           ref={ref2}
         >
@@ -159,49 +216,55 @@ const Home: NextPage = () => {
               setFn={setTopArtists}
               endpoint='topArtists'
               items={topArtists}
+              anchor='most-listened-artists'
             />
           </DateContext.Provider>
         </section>
-        <section className='relative pb-8' id='most-listened-songs' ref={ref3}>
-          <motion.h2 className='px-20 flex flex-col gap-3 py-20 text-white xs:text-center'>
-            Most Listened Songs
-            <DatePicker endpoint='topTracks' setFn={setTopTracks} />
-          </motion.h2>
-          {topTracks?.length ?? 0 != 0 ? (
-            <CardGrid layoutID='tracks' dataItems={topTracks} />
-          ) : null}
-        </section>
-        <section className='relative pb-8' id='customized-playlists' ref={ref4}>
-          <motion.h2
-            onViewportEnter={async () => {
-              const recQueries = new URLSearchParams({
-                seed_artists: [...topArtists]
-                  .slice(0, 2)
-                  .map((artist) => artist.id)
-                  .join(","),
-                seed_genres: [...topArtists]
-                  .slice(0, 3)
-                  .map((artist) => artist.genres[0])
-                  .join(",")
-              });
-              const rec = await fetch(
-                "/api/getRecommend?" + recQueries.toString()
-              );
-              const recData = await rec.json();
-              setRecommended(recData.tracks);
-            }}
-            viewport={{ once: true }}
-            className='px-20 py-20 text-white xs:text-center'
+        <section
+          className='relative px-8 mx-auto pb-8'
+          id='most-listened-songs'
+          ref={ref3}
+        >
+          <DateContext.Provider
+            value={{ time_range: time_range2, setTime: setTime2 }}
           >
+            <motion.h2 className='px-20 flex flex-col gap-3 py-20 text-white xs:text-center'>
+              Most Listened Songs
+              <DatePicker endpoint='topTracks' setFn={setTopTracks} />
+            </motion.h2>
+            {topTracks?.length ?? 0 != 0 ? (
+              <CardGrid layoutID='tracks' dataItems={topTracks} />
+            ) : null}
+            <LoadMore
+              setFn={setTopTracks}
+              endpoint='topTracks'
+              items={topTracks}
+              anchor='most-listened-songs'
+            />
+          </DateContext.Provider>
+        </section>
+        <section
+          className='relative px-8 mx-auto pb-8'
+          id='customized-playlists'
+          ref={ref4}
+        >
+          <motion.h2 className='px-20 py-20 text-white xs:text-center'>
             Customized Playlists
           </motion.h2>
-          {recommended?.length ?? 0 != 0 ? (
-            <CardGrid layoutID='recommended' dataItems={recommended} />
-          ) : null}
+
+          <div className='flex items-center justify-center pb-12'>
+            <LayoutGroup>
+              <Link href='/playlists'>
+                <motion.div className='absolute cursor-pointer bg-card-accent duration-200 mx-auto p-[.35em] hover:p-[.85em] rounded-full transition-all w-fit'>
+                  <FaArrowRight className='fill-white w-6 h-6' />
+                </motion.div>
+              </Link>
+            </LayoutGroup>
+          </div>
         </section>
       </main>
 
-      <Footer />
+      {session?.user && <Footer />}
     </>
   );
 };

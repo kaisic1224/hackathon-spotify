@@ -1,12 +1,7 @@
 import { useRouter } from "next/router";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { FaCaretRight } from "react-icons/fa";
+import { artist, getCards } from "./Card";
 import Toast from "./Toast";
 
 const Menu = () => {
@@ -15,12 +10,12 @@ const Menu = () => {
   const [cords, setCords] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const [links, setLinks] = useState({ open: "" });
-  const [artist, setArtist] = useState([]);
+  const [artists, setArtists] = useState<string[][]>([]);
 
   const handleContext = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
-      if (!e.target!?.dataset.open) {
+      if (!(e.target as HTMLElement)?.dataset.open) {
         setOpen(false);
         return;
       }
@@ -36,17 +31,15 @@ const Menu = () => {
         });
       }
       setOpen(true);
-      // const newArtistsNAMES = e.target.dataset.artistName.split(",");
-      // const newArtistsURLS = e.target.dataset.artist.split(",");
-      // const newarr = [newArtistsNAMES.length];
-      // for (let index = 0; index < newarr.length; index++) {
-      //   newarr.push({
-      //     name: newArtistsNAMES[index],
-      //     url: newArtistsURLS[index]
-      //   });
-      // }
-      // setArtist(newarr);
-      setLinks({ open: e.target.dataset.open });
+      setLinks({ open: e.target?.dataset.open });
+      if (e.target?.dataset.artists) {
+        const artistes = e.target?.dataset.artists
+          .split(",")
+          .map((artistPair: string) => artistPair.split("::"));
+        setArtists([...artistes]);
+      } else {
+        setArtists([]);
+      }
     },
     [setCords]
   );
@@ -70,7 +63,7 @@ const Menu = () => {
       {open && (
         <div
           ref={menuRef}
-          className='absolute z-[9999] peer p-1 bg-card-accent rounded-md text-white font-medium shadow-md 
+          className='absolute z-[9999] isolate peer p-1 bg-card-accent rounded-md text-white font-medium shadow-md 
           min-w-fit'
           style={{ top: cords.y, left: cords.x }}
         >
@@ -92,15 +85,40 @@ const Menu = () => {
           >
             Open in Spotify
           </div>
-          {artist.length != 0 &&
-            artist.map((artist) => (
+          {artists.length != 0 && (
+            <div className='relative'>
               <div
-                key={artist.url}
-                className='px-2 py-1 select-none hover:bg-slate-500'
+                onClick={() => {
+                  if (artists.length === 1)
+                    window.open(artists[0][1], "_blank");
+                }}
+                className='pl-2 py-1 z-10 select-none hover:bg-slate-500 flex items-center justify-between peer'
               >
-                {artist.name}
+                Go to artist {artists.length != 1 && <FaCaretRight />}
               </div>
-            ))}
+              {artists.length != 1 ? (
+                <div
+                  className={`hidden z-50 peer-hover:block hover:block w-full absolute py-1 px-1 pl-2 bg-card-accent 
+               drop-shadow-lg -top-1 ${
+                 cords.x + menuRef?.current?.offsetWidth! * 2 >
+                 window.innerWidth
+                   ? "left-0 -translate-x-full rounded-l-md rounded-br-md"
+                   : "right-0 translate-x-full rounded-r-md rounded-bl-md"
+               }`}
+                >
+                  {artists.map((artist: string[]) => (
+                    <div
+                      key={artist[0]}
+                      className='px-2 py-1 select-none text-g-primary hover:text-green-300 hover:bg-slate-500'
+                      onClick={() => window.open(artist[1], "_blank")}
+                    >
+                      {artist[0]}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       )}
     </>
