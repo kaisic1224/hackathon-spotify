@@ -1,154 +1,48 @@
-import type { NextPage, GetStaticProps } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
-import SNavbar from "../components/SNavbar";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { motion } from "framer-motion";
 import Image from "next/image";
-import Card from "../components/Card";
-import { useInView, InView } from "react-intersection-observer";
-import { useState, useEffect } from "react";
-import Locked from "../components/Locked";
-
-const staggerFadeUp = {
-  show: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
+import styles from "../styles/Home.module.css";
+import { useSession, signIn, signOut } from "next-auth/react";
+import ChatBubble from "../components/ChatBubble";
+import SendMessage from "../components/SendMessage";
+import ChatWindow from "../components/ChatWindow";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
-  const [sectName, setName] = useState<string>();
-  const [section, setSection] = useState<any>();
-  const [list, setList] = useState<any>();
-  const handleView = (name: string) => {
-    setName(name);
-  };
-  const [ref, inView, entry] = useInView();
-  const [ref2, inView2, entry2] = useInView();
-  const [ref3, inView3, entry3] = useInView();
-  const [ref4, inView4, entry4] = useInView();
-
-  useEffect(() => {
-    if (entry?.isIntersecting) {
-      handleView("Most Recent");
-    }
-    if (entry2?.isIntersecting) {
-      handleView("Favourite Artists");
-    }
-    if (entry3?.isIntersecting) {
-      handleView("Favourite Songs");
-    }
-    if (entry4?.isIntersecting) {
-      handleView("Playlists Made For You");
-    }
-  }, [inView, inView2, inView3, inView4]);
-
+  if (session) {
+    return (
+      <>
+        <Head>
+          <title>Recycle Master</title>
+        </Head>
+        <h1 className="text-4xl font-bold text-blue-700">
+          Signed in as {session?.user?.name}
+        </h1>
+        <button
+          className="p-4 bg-green-400 rounded-2xl mt-4"
+          onClick={() => signOut()}
+        >
+          Sign Out
+        </button>
+        <ChatWindow />
+      </>
+    );
+  }
   return (
     <>
-      <SNavbar viewedSection={sectName!} />
       <Head>
-        <title>SubWoofer | Home</title>
+        <title>Recycle Master</title>
       </Head>
-      <main>
-        <section className="min-h-[89vh]">
-          <img
-            className="-z-50 absolute aspect-video h-screen w-full -translate-y-15"
-            src="/photos/heroimage.jpg"
-          />
-          <motion.div
-            initial={{ y: "100%", x: "-50%", opacity: 0 }}
-            animate={{ y: "-75%", opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col absolute items-center left-1/2 top-1/2"
-          >
-            <motion.h1 className="mx-auto mt-8 font-src-pro font-semibold text-6xl max-w-[24ch] text-center text-white">
-              Customize Your Shareable Playlists
-            </motion.h1>
-            {session?.user ? (
-              <motion.div className="text-white font-src-pro font-bold text-xl">
-                Welcome Back, {session?.user.name}!
-                <motion.button
-                  className="bg-g-primary text-lg text-white font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4 ml-6"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => signOut()}
-                >
-                  Not you? Log Out
-                </motion.button>
-              </motion.div>
-            ) : (
-              <motion.button
-                className="bg-g-primary text-white font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => signIn()}
-              >
-                Get Started
-              </motion.button>
-            )}
-          </motion.div>
-        </section>
-        <section className="bg-card-base" id="most-recent" ref={ref}>
-          <motion.h1 className="ml-20 relative py-20 text-white">
-            Most Recent
-          </motion.h1>
-          <motion.div
-            variants={staggerFadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden"
-          >
-            <Card strung={"song1"} />
-            <Card strung={"song1"} />
-            <Card strung={"song1"} />
-            <Card strung={"song1"} />
-          </motion.div>
-          <div className="py-60"></div>
-        </section>
-        <section
-          className="bg-card-base relative"
-          id="most-listened-artists"
-          ref={ref2}
-        >
-          <motion.h1 className="ml-20 py-20 text-white">
-            Most Listened Artists
-          </motion.h1>
-          {session?.user ? null : <Locked />}
-          <div className="py-60"></div>
-        </section>
-        <section className="bg-card-base" id="most-listened-songs" ref={ref3}>
-          <motion.h1 className="ml-20 relative py-20 text-white">
-            Most Listened Songs
-          </motion.h1>
-          <div className="py-60"></div>
-        </section>
-        <section className="bg-card-base" id="customized-playlists" ref={ref4}>
-          <motion.h1 className="ml-20 relative py-20 text-white">
-            Customized Playlists
-          </motion.h1>
-          <div className="py-60"></div>
-        </section>
-        <div
-          onClick={async () => {
-            const res = await fetch("http://localhost:3000/api/Top-Tracks");
-            const data = await res.json();
-            console.log(data);
-          }}
-        >
-          i am jesus
-        </div>
-      </main>
+      <h1 className="text-4xl font-bold">Not signed in.</h1>
+      <button
+        className="p-4 bg-amber-200 rounded-2xl mt-4"
+        onClick={() => signIn()}
+      >
+        Sign In
+      </button>
+      <ChatWindow />
     </>
   );
 };
 
 export default Home;
-
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {},
-  };
-};

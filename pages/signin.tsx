@@ -1,29 +1,31 @@
-import Head from "next/head";
+import React from "react";
 import { signIn } from "next-auth/react";
-import { motion } from "framer-motion";
+import Head from "next/head";
 
 const signin = () => {
   return (
     <>
       <Head>
-        <title>Sign In | Subussy</title>
+        <title>Sign In | Recycle Master</title>
       </Head>
-
-      <div className="bg-card-base text-center h-screen">
-        <h1 className="text-5xl text-white text-center pt-40">
-          Welcome! Login to your spotify to see your statistics!
-        </h1>
-
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="text-white mt-20 shadow-2xl bg-g-primary p-3 rounded-xl hover:bg-[#1ed760]"
-          onClick={() => signIn("spotify", { callbackUrl: "/" })}
-        >
-          Sigussy In
-        </motion.button>
+      <div className="text-center w-screen h-screen grid place-items-center bg-black/[0.95]">
+        <div>
+          <div className="flex">
+            <h1 className="text-white text-6xl font-bold translate-y-5 pr-4">
+              Sign in to{" "}
+            </h1>
+            <h1 className="animated-text">EXPERIENCE</h1>
+          </div>
+          <button
+            className="mt-10 p-4 text-2xl font-bold bg-purple-600 rounded-2xl shadow-2xl hover:bg-purple-500"
+            onClick={() => signIn("google", { callbackUrl: "/" })}
+          >
+            Sign In
+          </button>
+        </div>
       </div>
     </>
   );
 };
+
 export default signin;
