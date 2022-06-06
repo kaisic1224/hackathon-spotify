@@ -1,11 +1,15 @@
 import { motion, Reorder } from "framer-motion";
-import { getSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { FaLink } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { artist, playlistItem, track } from "../components/Card";
 import Head from "next/head";
 import CardGrid from "../components/CardGrid";
-import Display from "../components/Display";
+import Playlist from "../components/Playlist";
+import { DateContext } from ".";
+import DatePicker from "../components/DatePicker";
+import LoadMore from "../components/LoadMore";
+import AddImage from "../components/AddImage";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -20,62 +24,68 @@ const fadeinUp = {
 };
 
 const playlists = () => {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      signIn();
+    }
+  });
   const [recent, setRecent] = useState<playlistItem[]>([]);
   const [topArtists, setTopArtists] = useState<artist[]>([]);
   const [topTracks, setTopTracks] = useState<track[]>([]);
   const [recommended, setRecommended] = useState<track[]>([]);
-  const [recommended1, setRecommended1] = useState<track[]>([]);
-  const [recommended2, setRecommended2] = useState<track[]>([]);
-  const [recommended3, setRecommended3] = useState<track[]>([]);
+  const [time_range, setTime] = useState("short_term");
   const [loading, setloading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("Music for me");
+  const [file, setFile] = useState<File>();
+  const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
+  const [desc, setDesc] = useState("");
 
   const fetchRecommended = async () => {
+    const sGenres = topArtists
+      .slice(0, 2)
+      .filter((artist) => artist.genres.length != 0)
+      .map((artist) => artist.genres.slice(0, 1))
+      .join(",");
+    const sArtists = topArtists
+      .slice(0, 2)
+      .map((artist) => artist.id)
+      .join(",");
     const queryParamString = new URLSearchParams({
-      seed_genres: topArtists[0]?.genres.join(","),
-      seed_artists: topArtists[0]?.id,
-      limit: "8"
+      seed_genres: sGenres,
+      seed_artists: sArtists,
+      limit: "10"
     });
     const res = await fetch("/api/getRecommend?" + queryParamString.toString());
     const data = await res.json();
-    setRecommended([...data.tracks]);
 
-    const queryParamString1 = new URLSearchParams({
-      seed_genres: topArtists[1].genres.join(","),
-      seed_artists: topArtists[1].id,
-      limit: "8"
-    });
-    const res1 = await fetch(
-      "/api/getRecommend?" + queryParamString1.toString()
-    );
-    const data1 = await res1.json();
-    setRecommended1([...data1.tracks]);
-
+    const sGenres2 = topArtists
+      .slice(2, 4)
+      .filter((artist) => artist.genres.length != 0)
+      .map((artist) => artist.genres.slice(0, 1))
+      .join(",");
+    const sArtists2 = topArtists
+      .slice(2, 4)
+      .map((artist) => artist.id)
+      .join(",");
     const queryParamString2 = new URLSearchParams({
-      seed_genres: topArtists[2].genres.join(","),
-      seed_artists: topArtists[2].id,
-      limit: "8"
+      seed_genres: sGenres2,
+      seed_artists: sArtists2,
+      limit: "10"
     });
     const res2 = await fetch(
       "/api/getRecommend?" + queryParamString2.toString()
     );
     const data2 = await res2.json();
-    setRecommended2([...data2.tracks]);
-
-    const queryParamString3 = new URLSearchParams({
-      seed_genres: topArtists[3].genres.join(","),
-      seed_artists: topArtists[3].id,
-      limit: "8"
-    });
-    const res3 = await fetch(
-      "/api/getRecommend?" + queryParamString3.toString()
-    );
-    const data3 = await res3.json();
-    setRecommended3([...data3.tracks]);
+    setRecommended([...data.tracks, ...data2.tracks]);
   };
 
   useEffect(() => {
+    if (topArtists.length != 0) fetchRecommended();
+
     const fetchSession = () => {
-      setTopArtists(JSON.parse(sessionStorage.getItem("artists")!));
+      setTopArtists(JSON.parse(sessionStorage.getItem("topArtists")!));
       setloading(false);
     };
 
@@ -93,18 +103,17 @@ const playlists = () => {
       const top = await fetch("/api/topArtists");
       const topData = await top.json();
       setTopArtists(topData.items);
-      sessionStorage.setItem("artists", JSON.stringify([...topData.items]));
+      sessionStorage.setItem("topArtists", JSON.stringify([...topData.items]));
 
       // FETCH POPULAR SONGS
       const topT = await fetch("/api/topTracks");
       const topTracksData = await topT.json();
       setTopTracks(topTracksData.items);
       sessionStorage.setItem(
-        "tracks",
+        "topTracks",
         JSON.stringify([...topTracksData.items])
       );
 
-      console.log("i am being called from fetchdata");
       setloading(false);
 
       const today = new Date(Date.now() + 1000 * 60 * 5).getTime();
@@ -117,10 +126,6 @@ const playlists = () => {
     }
 
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (topArtists.length != 0) fetchRecommended();
   }, [loading]);
 
   return (
@@ -132,46 +137,43 @@ const playlists = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
 
-      <main className='text-white px-8'>
-        <motion.div
-          layoutId='nextPage'
-          className='bg-card-base overflow-hidden -z-50 -left-[5%] -top-[90%] w-[110vw] h-[500vh] absolute rounded-full'
+      {open && (
+        <AddImage
+          file={file}
+          setFile={setFile}
+          fLink={fLink}
+          setFlink={setFlink}
+          name={name}
+          setName={setName}
+          setOpen={setOpen}
+          description={desc}
+          setDescription={setDesc}
         />
-        <motion.h1
-          variants={fadeinUp}
-          initial='s'
-          animate='a'
-          className='text-6xl'
-        >
-          How about some bops?
-        </motion.h1>
-        <>
-          <motion.h2 variants={fadeinUp} initial='s' animate='a'>
-            Because you listen to {topArtists[0]?.name}...
+      )}
+      <DateContext.Provider value={{ time_range, setTime }}>
+        <main className='text-white px-8 pb-16 '>
+          <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
+            According to your Most Listened Artists...
+            <DatePicker endpoint='topArtists' setFn={setTopArtists} />
           </motion.h2>
-          <motion.div>
-            {recommended.length != 0 && <Display items={recommended} />}
-          </motion.div>
-          <motion.h2 variants={fadeinUp} initial='s' animate='a'>
-            Or how about some {topArtists[1]?.name}?
-          </motion.h2>
-          <motion.div>
-            {recommended1.length != 0 && <Display items={recommended1} />}
-          </motion.div>
-          <motion.h2 variants={fadeinUp} initial='s' animate='a'>
-            Because you like {topArtists[2]?.name}
-          </motion.h2>
-          <motion.div>
-            {recommended2.length != 0 && <Display items={recommended2} />}
-          </motion.div>
-          <motion.h2 variants={fadeinUp} initial='s' animate='a'>
-            Because you like {topArtists[3]?.name}
-          </motion.h2>
-          <motion.div>
-            {recommended3.length != 0 && <Display items={recommended3} />}
-          </motion.div>
-        </>
-      </main>
+          {topArtists?.length ?? 0 != 0 ? (
+            <CardGrid layoutID='artists' dataItems={topArtists.slice(0, 4)} />
+          ) : null}
+          <motion.h2>Here are some songs you might like...</motion.h2>
+          {recommended?.length ?? 0 != 0 ? (
+            <Playlist
+              fLink={fLink}
+              file={file}
+              openModal={setOpen}
+              name={name}
+              setName={setName}
+              items={recommended}
+              description={desc}
+              setDescription={setDesc}
+            />
+          ) : null}
+        </main>
+      </DateContext.Provider>
     </>
   );
 };

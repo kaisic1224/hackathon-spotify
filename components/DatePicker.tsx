@@ -60,7 +60,7 @@ const DatePicker = ({
         className='bg-body-main'
       >
         <option value='short_term'>4 weeks</option>
-        <option value='medium_term'>6 monthes</option>
+        <option value='medium_term'>6 months</option>
         <option value='long_term'>All time</option>
       </select>
     </label>

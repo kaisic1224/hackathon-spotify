@@ -32,8 +32,8 @@ const Home: NextPage = () => {
   const [time_range, setTime] = useState("short_term");
   const [time_range2, setTime2] = useState("short_term");
   const [ref, inView, entry] = useInView();
-  const [ref2, inView2, entry2] = useInView({ threshold: 0.4, delay: 0.25 });
-  const [ref3, inView3, entry3] = useInView({ threshold: 0.4, delay: 0.25 });
+  const [ref2, inView2, entry2] = useInView({ threshold: 0.2, delay: 0.25 });
+  const [ref3, inView3, entry3] = useInView({ threshold: 0.2, delay: 0.25 });
   const [ref4, inView4, entry4] = useInView({ threshold: 0.2, delay: 0.25 });
 
   useLayoutEffect(() => {
@@ -56,8 +56,8 @@ const Home: NextPage = () => {
       const recently = await fetch("/api/getRecent");
       const recentlyData = await recently.json();
       setRecent(recentlyData.items);
-      setTopArtists(JSON.parse(sessionStorage.getItem("artists")!));
-      setTopTracks(JSON.parse(sessionStorage.getItem("tracks")!));
+      setTopArtists(JSON.parse(sessionStorage.getItem("topTracks")!));
+      setTopTracks(JSON.parse(sessionStorage.getItem("topTracks")!));
     };
 
     const fetchData = async () => {
@@ -74,14 +74,14 @@ const Home: NextPage = () => {
       const top = await fetch("/api/topArtists");
       const topData = await top.json();
       setTopArtists(topData.items);
-      sessionStorage.setItem("artists", JSON.stringify([...topData.items]));
+      sessionStorage.setItem("topArtists", JSON.stringify([...topData.items]));
 
       // FETCH POPULAR SONGS
       const topT = await fetch("/api/topTracks");
       const topTracksData = await topT.json();
       setTopTracks(topTracksData.items);
       sessionStorage.setItem(
-        "tracks",
+        "topTracks",
         JSON.stringify([...topTracksData.items])
       );
 
@@ -154,8 +154,14 @@ const Home: NextPage = () => {
               flex-col mt-4 xs:gap-2
               md:gap-6 md:flex-row md:min-w-max'
             >
-              <span className='max-w-max'>
-                Welcome Back, <u className='ml-1'>{session?.user.name}</u>!
+              <span className='max-w-max flex'>
+                Welcome Back,{" "}
+                <img
+                  src={session?.user?.image!}
+                  className='rounded-full aspect-square w-8 object-cover ml-3 mr-1'
+                  alt={`${session?.user?.name}'s profile picture`}
+                />{" "}
+                <u className='ml-1'>{session?.user.name}</u>!
               </span>
               <motion.button
                 className='bg-g-primary text-lg hover:text-green-50 font-semibold p-[.5em] px-[1em] rounded-3xl

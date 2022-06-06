@@ -98,7 +98,7 @@ const Menu = () => {
               </div>
               {artists.length != 1 ? (
                 <div
-                  className={`hidden z-50 peer-hover:block hover:block w-full absolute py-1 px-1 pl-2 bg-card-accent 
+                  className={`hidden z-50 peer-hover:block hover:block min-w-full max-w-max absolute py-1 px-1 pl-2 bg-card-accent 
                drop-shadow-lg -top-1 ${
                  cords.x + menuRef?.current?.offsetWidth! * 2 >
                  window.innerWidth
