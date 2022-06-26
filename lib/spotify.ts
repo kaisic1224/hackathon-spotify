@@ -16,7 +16,8 @@ const scopes = [
   "playlist-modify-private",
   "user-read-private",
   "user-library-read",
-  "user-library-modify"
+  "user-library-modify",
+  "ugc-image-upload"
 ].join(",");
 
 const params = {

@@ -45,7 +45,6 @@ const Playlist = ({
             <div
               onClick={() => {
                 openModal(true);
-                console.log(file);
               }}
               className='group absolute py-4 grid place-items-center top-0 left-0 inset-0 hover:bg-black-main/60 cursor-pointer'
             >
@@ -80,12 +79,28 @@ const Playlist = ({
                 setPublic(!pub);
               }}
             />
-            <label
-              htmlFor='public'
-              className='flex cursor-pointer items-center gap-2 select-none'
-            >
-              {pub ? <>Public</> : <>Private</>}
-              {pub ? <FaLockOpen /> : <FaLock />}
+            <label htmlFor='public' className='cursor-pointer select-none'>
+              {pub ? (
+                <>
+                  <motion.div
+                    className='flex items-center gap-2 '
+                    whileTap={{ y: 5 }}
+                  >
+                    Public
+                    <FaLockOpen />
+                  </motion.div>
+                </>
+              ) : (
+                <>
+                  <motion.div
+                    className='flex items-center gap-2 '
+                    whileTap={{ y: 5 }}
+                  >
+                    Private
+                    <FaLock />
+                  </motion.div>
+                </>
+              )}
             </label>
           </div>
         </div>
@@ -118,7 +133,18 @@ const Playlist = ({
             }
           );
           const data = await res.json();
-          console.log(data);
+          const res2 = await fetch(
+            "/api/addItemsToPlaylist?" +
+              new URLSearchParams({
+                songs: tracks.map((track) => track.uri).join(","),
+                playlist_id: data.id
+              })
+          );
+
+          const data2 = await res2.json();
+          console.log(data2);
+
+          window.open(data.external_urls.spotify);
         }}
         className='font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-accent'
       >

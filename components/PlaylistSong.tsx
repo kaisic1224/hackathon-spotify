@@ -1,16 +1,10 @@
-import {
-  DragControls,
-  Reorder,
-  useDragControls,
-  useMotionValue
-} from "framer-motion";
+import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { useState } from "react";
 import { FaEllipsisH } from "react-icons/fa";
 import { track } from "./Card";
 
 const PlaylistSong = ({ track }: { track: track }) => {
   const [open, setOpen] = useState(false);
-  const y = useMotionValue(0);
   return (
     <Reorder.Item
       value={track}
