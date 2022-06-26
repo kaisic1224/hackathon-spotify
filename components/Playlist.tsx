@@ -142,9 +142,22 @@ const Playlist = ({
           );
 
           const data2 = await res2.json();
-          console.log(data2);
 
-          window.open(data.external_urls.spotify);
+          const res3 = await fetch(
+            "/api/changePlaylistImage?" +
+              new URLSearchParams({
+                playlist_id: data.id
+              }),
+            {
+              method: "PUT",
+              body: JSON.stringify((fLink as string)?.split(",")[1])
+            }
+          );
+
+          const data3 = await res3.json();
+
+          console.log(data3);
+          // window.open(data.external_urls.spotify);
         }}
         className='font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-accent'
       >
