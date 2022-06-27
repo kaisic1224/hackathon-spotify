@@ -31,6 +31,7 @@ const Playlist = ({
 }) => {
   const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
@@ -156,10 +157,10 @@ const Playlist = ({
 
           const data3 = await res3.json();
 
-          console.log(data3);
-          // window.open(data.external_urls.spotify);
+          window.open(data.external_urls.spotify);
         }}
-        className='font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-accent'
+        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-accent
+        ${loading ? "cursor-not-allowed" : "cursor-auto"}`}
       >
         Create!
       </button>
