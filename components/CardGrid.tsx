@@ -1,32 +1,37 @@
-import { AnimatePresence, motion } from "framer-motion";
-import Card, { playlistItem, track } from "./Card";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import Card, { artist, playlistItem, track } from "./Card";
 
 const staggerFadeUp = {
   show: {
     transition: {
       staggerChildren: 0.1
     }
-  },
-  layout: {
-    transition: {
-      duration: 1,
-      staggerChildren: 0.6
-    }
   }
 };
 
-const CardGrid = ({ dataItems }: { dataItems: playlistItem[] | track[] }) => {
+const CardGrid = ({
+  dataItems,
+  layoutID
+}: {
+  layoutID?: string;
+  dataItems: playlistItem[] | track[] | artist[];
+}) => {
   return (
     <motion.div
       variants={staggerFadeUp}
       initial='hidden'
       animate='show'
-      layout='position'
-      className='grid grid-cols-4 gap-6 justify-items-center px-4 overflow-hidden'
+      className='grid justify-items-center mx-auto
+       xs:gap-12
+       md:grid-cols-2
+       xl:grid-cols-4 xl:gap-10 
+       2xl:max-w-screen-2xl'
     >
-      {dataItems.map((item) => (
-        <Card key={item.track?.id ?? item.id} song={item} />
-      ))}
+      <LayoutGroup id={layoutID}>
+        {dataItems.map((item) => (
+          <Card key={item.track?.id ?? item.id} song={item} />
+        ))}
+      </LayoutGroup>
     </motion.div>
   );
 };

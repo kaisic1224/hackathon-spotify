@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import Menu from "./Menu";
 
 const variants = {
   hidden: {
@@ -20,7 +21,7 @@ export interface card {
   image: string;
 }
 
-interface artist {
+interface playLartist {
   external_urls: external_url;
   href: string;
   id: string;
@@ -40,16 +41,13 @@ interface album {
   external_urls: external_url;
   href: string;
   id: string;
-  images: [
-    {
-      height: number;
-      url: string;
-      width: number;
-    }
-  ];
+  images: image[];
   name: string;
   release_date: string;
   release_date_precision: string;
+  restrictions?: {
+    reason: string;
+  };
   total_tracks: number;
   type: string;
   uri: string;
@@ -61,9 +59,25 @@ interface image {
   width: number;
 }
 
+export interface artist {
+  external_urls: external_url;
+  followers: {
+    href: string | null;
+    total: number;
+  };
+  genres: string[];
+  href: string;
+  id: string;
+  images: image[];
+  name: string;
+  popularity: number;
+  type: string;
+  uri: string;
+}
+
 export interface track {
   album: album;
-  artists: artist[];
+  artists: playLartist[];
   available_markets: string[];
   disc_number: number;
   duration_ms: number;
@@ -84,7 +98,7 @@ export interface track {
 }
 
 export interface playlistItem {
-  track?: track;
+  track: track;
   played_at: string;
   context: {
     external_urls: external_url;
@@ -94,42 +108,105 @@ export interface playlistItem {
   };
 }
 
-const Card = ({ song }: { song: playlistItem | track }) => {
+export const getCards = () => {
+  const domCards = document.querySelectorAll(".song-card");
+  domCards.forEach((card) => {
+    card.classList.remove("bg-g-primary");
+  });
+};
+
+const Card = ({ song }: { song: playlistItem | track | artist }) => {
   if (song.track || song.type === "track") {
     return (
-      <motion.div
-        layout
-        variants={variants}
-        className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white font-medium
-         p-4 rounded-xl md:w-full'
-      >
-        {song.track?.name ?? song.name}
-        <img
-          className='mt-1 aspect-square object-cover'
-          src={song.track?.album.images[1].url ?? song.album.images[1].url}
-          width={
-            song.track?.album.images[1].width ?? song.album.images[1].width
+      <>
+        <motion.div
+          layout='position'
+          variants={variants}
+          data-open={
+            song?.track?.external_urls.spotify ?? song?.external_urls.spotify
           }
-          height={
-            song.track?.album.images[1].height ?? song.album.images[1].height
+          data-artists={
+            song?.track?.artists
+              .map(
+                (artist: artist) =>
+                  `${artist.name}::${artist.external_urls.spotify}`
+              )
+              .join(",") ??
+            song?.artists
+              .map(
+                (artist: artist) =>
+                  `${artist.name}::${artist.external_urls.spotify}`
+              )
+              .join(",")
           }
-        />
-      </motion.div>
+          className={`song-card group shadow-sm`}
+        >
+          <span
+            data-open={
+              song?.track?.external_urls.spotify ?? song?.external_urls.spotify
+            }
+            data-artists={
+              song?.track?.artists
+                .map(
+                  (artist: artist) =>
+                    `${artist.name}::${artist.external_urls.spotify}`
+                )
+                .join(",") ??
+              song?.artists
+                .map(
+                  (artist: artist) =>
+                    `${artist.name}::${artist.external_urls.spotify}`
+                )
+                .join(",")
+            }
+            className='inline-block cursor-default xs:max-w-[34ch] xsm:max-w-none md:max-w-[31ch] lg:max-w-none
+                    xl:max-w-[25ch] overflow-hidden whitespace-nowrap overflow-ellipsis'
+          >
+            {song?.track?.name ?? song.name}
+          </span>
+          <span
+            className=' absolute delay-300 text-white rounded-lg text-sm scale-0 group-hover:scale-100 transition-transform duration-200
+            px-2 py-1 z-50 top-0 -translate-y-[117%] left-0 bg-black-main origin-bottom border-2 border-card-accent'
+          >
+            {song?.track?.name ?? song.name}
+          </span>
+          <img
+            data-open={
+              song?.track?.external_urls.spotify ?? song?.external_urls.spotify
+            }
+            data-artists={
+              song?.track?.artists
+                .map(
+                  (artist: artist) =>
+                    `${artist.name}::${artist.external_urls.spotify}`
+                )
+                .join(",") ??
+              song?.artists
+                .map(
+                  (artist: artist) =>
+                    `${artist.name}::${artist.external_urls.spotify}`
+                )
+                .join(",")
+            }
+            className={`aspect-square object-cover justify-self-center w-full -z-10`}
+            src={song?.track?.album.images[0].url ?? song.album.images[0].url}
+          />
+        </motion.div>
+      </>
     );
   }
   return (
     <motion.div
-      layout
+      layout='position'
       variants={variants}
-      className='bg-body-main hover:bg-g-primary min-w-[300px] min-h-[300px] text-white font-medium
-      p-4 rounded-xl md:w-full'
+      data-open={song?.external_urls.spotify}
+      className='song-card shadow-md'
     >
-      {song.name}
+      <span data-open={song?.external_urls.spotify}>{song.name}</span>
       <img
-        className='mt-1 aspect-square object-cover'
-        src={song.images[1].url!}
-        width={song.images[1].width}
-        height={song.images[1].height}
+        data-open={song?.external_urls.spotify}
+        className={`aspect-square object-cover justify-self-center w-full`}
+        src={song.images[0].url!}
       />
     </motion.div>
   );

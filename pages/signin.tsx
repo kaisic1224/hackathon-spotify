@@ -15,9 +15,9 @@ const signin = () => {
         </h1>
 
         <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className='text-white mt-20 shadow-2xl bg-g-primary p-3 rounded-xl hover:bg-[#1ed760]'
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className='text-white font-semibold tracking-wider mt-20 shadow-xl bg-g-primary p-3 rounded-xl shadow-green-400 hover:bg-[#1ed760]'
           onClick={() => signIn("spotify", { callbackUrl: "/" })}
         >
           Sigussy In
