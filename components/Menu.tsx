@@ -1,5 +1,11 @@
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import { FaCaretRight } from "react-icons/fa";
 import { artist, getCards } from "./Card";
 import Toast from "./Toast";
@@ -13,7 +19,7 @@ const Menu = () => {
   const [artists, setArtists] = useState<string[][]>([]);
 
   const handleContext = useCallback(
-    (e: MouseEvent) => {
+    (e: MouseEvent<HTMLDivElement>) => {
       e.preventDefault();
       if (!(e.target as HTMLElement)?.dataset.open) {
         setOpen(false);
