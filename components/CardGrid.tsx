@@ -1,5 +1,7 @@
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { Suspense } from "react";
 import Card, { artist, playlistItem, track } from "./Card";
+import CardLoader from "./CardLoader";
 
 const staggerFadeUp = {
   show: {
@@ -29,7 +31,12 @@ const CardGrid = ({
     >
       <LayoutGroup id={layoutID}>
         {dataItems.map((item) => (
-          <Card key={item.track?.id ?? item.id} song={item} />
+          <Card
+            key={
+              (item as playlistItem).track?.id ?? (item as track | artist).id
+            }
+            song={item}
+          />
         ))}
       </LayoutGroup>
     </motion.div>

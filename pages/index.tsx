@@ -91,10 +91,9 @@ const Home: NextPage = () => {
 
     if (parseInt(sessionStorage.getItem("timestamp")!) > Date.now()) {
       fetchSession();
-      return;
+    } else {
+      fetchData();
     }
-
-    fetchData();
   }, []);
 
   if (session?.error === "refresh error") {

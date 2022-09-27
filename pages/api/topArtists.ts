@@ -25,5 +25,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (response.status != 200) {
     console.log(`artists: ${response.statusText}`);
   }
-  return res.status(200).json(JSON.stringify(data, null, 2));
+  return res.status(200).json(data);
 };

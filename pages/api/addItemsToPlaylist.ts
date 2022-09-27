@@ -18,5 +18,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   );
   const data = await response.json();
 
-  return res.status(200).json(JSON.stringify(data, null, 2));
+  return res.status(200).json(data);
 };

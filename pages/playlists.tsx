@@ -10,6 +10,7 @@ import { DateContext } from ".";
 import DatePicker from "../components/DatePicker";
 import LoadMore from "../components/LoadMore";
 import AddImage from "../components/AddImage";
+import PlaylistLoader from "../components/PlaylistLoader";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -150,6 +151,12 @@ const playlists = () => {
           setDescription={setDesc}
         />
       )}
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 100 }}
+        transition={{ duration: 1.75, ease: "easeOut" }}
+        className='fixed bottom-0 left-1/2 -translate-x-1/2 rounded-full bg-card-base/60 w-8 h-8 -z-50'
+      />
       <DateContext.Provider value={{ time_range, setTime }}>
         <main className='text-white px-8 pb-16 '>
           <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
@@ -171,7 +178,9 @@ const playlists = () => {
               description={desc}
               setDescription={setDesc}
             />
-          ) : null}
+          ) : (
+            <PlaylistLoader />
+          )}
         </main>
       </DateContext.Provider>
     </>

@@ -37,10 +37,10 @@ const Menu = () => {
         });
       }
       setOpen(true);
-      setLinks({ open: e.target?.dataset.open });
-      if (e.target?.dataset.artists) {
-        const artistes = e.target?.dataset.artists
-          .split(",")
+      setLinks({ open: (e.target as HTMLDivElement)?.dataset.open! });
+      if ((e.target as HTMLDivElement)?.dataset.artists) {
+        const artistes = (e.target as HTMLDivElement)?.dataset
+          .artists!.split(",")
           .map((artistPair: string) => artistPair.split("::"));
         setArtists([...artistes]);
       } else {
