@@ -34,4 +34,8 @@
     @apply focus:outline-none outline-none bg-body-main transition-all focus:bg-card-base
      hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
   }
+
+  .page-bars {
+    @apply bg-black;
+  }
 }

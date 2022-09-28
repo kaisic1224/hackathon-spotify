@@ -2,7 +2,9 @@ import NextAuth, { User } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { LOGIN_URL } from "../../../lib/spotify";
 
-const basic = process.env.BASIC;
+const basic = Buffer.from(
+  `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
+).toString("base64");
 
 const refreshToken = async (token: any) => {
   try {

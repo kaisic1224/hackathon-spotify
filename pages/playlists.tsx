@@ -1,4 +1,4 @@
-import { motion, Reorder } from "framer-motion";
+import { AnimatePresence, motion, Reorder } from "framer-motion";
 import { getSession, signIn, useSession } from "next-auth/react";
 import { FaLink } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
@@ -11,6 +11,8 @@ import DatePicker from "../components/DatePicker";
 import LoadMore from "../components/LoadMore";
 import AddImage from "../components/AddImage";
 import PlaylistLoader from "../components/PlaylistLoader";
+import PageTransition from "../components/PageTransition";
+import PageTransition2 from "../components/PageTransition2";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -42,6 +44,7 @@ const playlists = () => {
   const [file, setFile] = useState<File>();
   const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
   const [desc, setDesc] = useState("");
+  const [dick, setDick] = useState(true);
 
   const fetchRecommended = async () => {
     const sGenres = topArtists
@@ -129,6 +132,12 @@ const playlists = () => {
     fetchData();
   }, [loading]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setDick(false);
+    }, 2000);
+  }, []);
+
   return (
     <>
       <Head>
@@ -138,6 +147,7 @@ const playlists = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
 
+      <PageTransition2 direction='top' />
       {open && (
         <AddImage
           file={file}
@@ -151,14 +161,9 @@ const playlists = () => {
           setDescription={setDesc}
         />
       )}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 100 }}
-        transition={{ duration: 1.75, ease: "easeOut" }}
-        className='fixed bottom-0 left-1/2 -translate-x-1/2 rounded-full bg-card-base/60 w-8 h-8 -z-50'
-      />
+
       <DateContext.Provider value={{ time_range, setTime }}>
-        <main className='text-white px-8 pb-16 '>
+        <main className='text-white px-8 pb-16 bg-card-base/60'>
           <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
             According to your Most Listened Artists...
             <DatePicker endpoint='topArtists' setFn={setTopArtists} />

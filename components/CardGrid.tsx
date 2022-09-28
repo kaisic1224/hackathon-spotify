@@ -1,4 +1,5 @@
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { memo } from "react";
 import { Suspense } from "react";
 import Card, { artist, playlistItem, track } from "./Card";
 import CardLoader from "./CardLoader";
@@ -23,6 +24,8 @@ const CardGrid = ({
       variants={staggerFadeUp}
       initial='hidden'
       animate='show'
+      // whileInView='show'
+      // viewport={{ once: true }}
       className='grid justify-items-center mx-auto
        xs:gap-12
        md:grid-cols-2

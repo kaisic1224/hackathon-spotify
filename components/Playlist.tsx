@@ -82,25 +82,15 @@ const Playlist = ({
             />
             <label htmlFor='public' className='cursor-pointer select-none'>
               {pub ? (
-                <>
-                  <motion.div
-                    className='flex items-center gap-2 '
-                    whileTap={{ y: 5 }}
-                  >
-                    Public
-                    <FaLockOpen />
-                  </motion.div>
-                </>
+                <div className='flex items-center gap-2'>
+                  <span className='peer'>Public</span>
+                  <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
+                </div>
               ) : (
-                <>
-                  <motion.div
-                    className='flex items-center gap-2 '
-                    whileTap={{ y: 5 }}
-                  >
-                    Private
-                    <FaLock />
-                  </motion.div>
-                </>
+                <div className='flex items-center gap-2'>
+                  <span className='peer'>Private</span>
+                  <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
+                </div>
               )}
             </label>
           </div>
