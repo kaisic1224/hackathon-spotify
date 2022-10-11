@@ -56,7 +56,7 @@ const Home: NextPage = () => {
       const recently = await fetch("/api/getRecent");
       const recentlyData = await recently.json();
       setRecent(recentlyData.items);
-      setTopArtists(JSON.parse(sessionStorage.getItem("topTracks")!));
+      setTopArtists(JSON.parse(sessionStorage.getItem("topArtists")!));
       setTopTracks(JSON.parse(sessionStorage.getItem("topTracks")!));
     };
 
