@@ -12,7 +12,7 @@ import LoadMore from "../components/LoadMore";
 import AddImage from "../components/AddImage";
 import PlaylistLoader from "../components/PlaylistLoader";
 import PageTransition from "../components/PageTransition";
-import PageTransition2 from "../components/PageTransition2";
+import PageBars from "../components/PageBars";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -134,7 +134,7 @@ const playlists = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
 
-      <PageTransition2 direction='top' />
+      <PageBars direction='top' />
 
       {recommended?.length ?? 0 != 0 ? (
         <Playlist items={recommended} />

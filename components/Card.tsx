@@ -215,6 +215,7 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
         data-open={song?.external_urls.spotify}
         className={`aspect-square object-cover justify-self-center w-full`}
         src={song.images[0].url!}
+        alt={song?.name + "'s cover picture"}
       />
     </motion.div>
   );

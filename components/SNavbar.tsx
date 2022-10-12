@@ -14,7 +14,7 @@ const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
     <>
       <Navbar fixed='top' bg='dark' variant='dark'>
         <Container className='flex justify-between'>
-          <Navbar.Brand href=''>
+          <Navbar.Brand>
             <div
               className='cursor-pointer'
               onClick={() => {
@@ -27,6 +27,7 @@ const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
                 width='30'
                 height='30'
                 className='d-inline-block align-top mr-2'
+                alt='spotify logo'
               />
               Subussy
             </div>
@@ -40,7 +41,6 @@ const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
                     {viewedSection === ind[0] && (
                       <motion.div
                         className='w-full absolute left-0 bottom-1 h-[2px] rounded-xl bg-g-primary'
-                        layout
                         layoutId='underline'
                       />
                     )}

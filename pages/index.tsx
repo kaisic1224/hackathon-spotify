@@ -4,7 +4,6 @@ import SNavbar from "../components/SNavbar";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { artist, playlistItem, track } from "../components/Card";
-import { useInView } from "react-intersection-observer";
 import { useState, useEffect, useLayoutEffect } from "react";
 import Locked from "../components/Locked";
 import DatePicker from "../components/DatePicker";
@@ -15,6 +14,7 @@ import Footer from "../components/Footer";
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
 import Link from "next/link";
+import Mouse from "../components/Mouse";
 
 export const DateContext = React.createContext({
   time_range: "short_term",
@@ -22,7 +22,7 @@ export const DateContext = React.createContext({
 });
 
 const Home: NextPage = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [recentTracks, setRecent] = useState<playlistItem[]>([]);
   const [topArtists, setTopArtists] = useState<artist[]>([]);
@@ -31,33 +31,14 @@ const Home: NextPage = () => {
   const [sectName, setName] = useState<string>();
   const [time_range, setTime] = useState("short_term");
   const [time_range2, setTime2] = useState("short_term");
-  const [ref, inView, entry] = useInView();
-  const [ref2, inView2, entry2] = useInView({ threshold: 0.2, delay: 0.25 });
-  const [ref3, inView3, entry3] = useInView({ threshold: 0.2, delay: 0.25 });
-  const [ref4, inView4, entry4] = useInView({ threshold: 0.2, delay: 0.25 });
-
-  useLayoutEffect(() => {
-    if (entry?.isIntersecting) {
-      setName("Most Recent");
-    }
-    if (entry2?.isIntersecting) {
-      setName("Favourite Artists");
-    }
-    if (entry3?.isIntersecting) {
-      setName("Favourite Songs");
-    }
-    if (entry4?.isIntersecting) {
-      setName("Playlists Made For You");
-    }
-  }, [inView, inView2, inView3, inView4]);
 
   useEffect(() => {
     const fetchSession = async () => {
       const recently = await fetch("/api/getRecent");
       const recentlyData = await recently.json();
       setRecent(recentlyData.items);
-      setTopArtists(JSON.parse(sessionStorage.getItem("topArtists")!));
-      setTopTracks(JSON.parse(sessionStorage.getItem("topTracks")!));
+      setTopArtists(JSON.parse(sessionStorage.getItem("topArtists") as string));
+      setTopTracks(JSON.parse(sessionStorage.getItem("topTracks") as string));
     };
 
     const fetchData = async () => {
@@ -131,6 +112,7 @@ const Home: NextPage = () => {
         <title>SubWoofer | Home</title>
       </Head>
 
+      {/* <Mouse /> */}
       <SNavbar viewedSection={sectName!} />
       <Menu />
 
@@ -138,6 +120,7 @@ const Home: NextPage = () => {
         <img
           className='-z-10 absolute object-cover aspect-video h-screen w-full select-none -translate-y-15'
           src='/photos/heroimage.jpg'
+          alt='hero banner background image'
         />
         <motion.div
           initial={{ y: 200 }}
@@ -189,11 +172,7 @@ const Home: NextPage = () => {
       </header>
       <main className='relative bg-card-base'>
         {session?.user ? null : <Locked />}
-        <section
-          className='relative px-8 mx-auto pb-8'
-          id='most-recent'
-          ref={ref}
-        >
+        <section className='relative px-8 mx-auto pb-8' id='most-recent'>
           <motion.h2 className='px-20 text-white xs:text-center xs:py-16 lg:py-20'>
             Most Recent
           </motion.h2>
@@ -204,7 +183,6 @@ const Home: NextPage = () => {
         <section
           className='relative px-8 mx-auto pb-8'
           id='most-listened-artists'
-          ref={ref2}
         >
           <DateContext.Provider value={{ time_range, setTime }}>
             <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
@@ -230,7 +208,6 @@ const Home: NextPage = () => {
         <section
           className='relative px-8 mx-auto pb-8'
           id='most-listened-songs'
-          ref={ref3}
         >
           <DateContext.Provider
             value={{ time_range: time_range2, setTime: setTime2 }}
@@ -239,9 +216,10 @@ const Home: NextPage = () => {
               Most Listened Songs
               <DatePicker endpoint='topTracks' setFn={setTopTracks} />
             </motion.h2>
-            {topTracks?.length ?? 0 != 0 ? (
-              <CardGrid layoutID='tracks' dataItems={topTracks} />
-            ) : null}
+            {topTracks?.length ??
+              (0 != 0 ? (
+                <CardGrid layoutID='tracks' dataItems={topTracks} />
+              ) : null)}
             <LoadMore
               setFn={setTopTracks}
               endpoint='topTracks'
@@ -253,7 +231,6 @@ const Home: NextPage = () => {
         <section
           className='relative px-8 mx-auto pb-8'
           id='customized-playlists'
-          ref={ref4}
         >
           <motion.h2 className='px-20 py-20 text-white xs:text-center'>
             Customized Playlists
@@ -262,9 +239,9 @@ const Home: NextPage = () => {
           <div className='flex items-center justify-center pb-12'>
             <LayoutGroup>
               <Link href='/playlists'>
-                <motion.div className='absolute cursor-pointer bg-card-accent duration-200 mx-auto p-[.35em] hover:p-[.85em] rounded-full transition-all w-fit'>
+                <div className='absolute cursor-pointer bg-card-accent duration-200 mx-auto p-[.35em] hover:p-[.85em] rounded-full transition-all w-fit'>
                   <FaArrowRight className='fill-white w-6 h-6' />
-                </motion.div>
+                </div>
               </Link>
             </LayoutGroup>
           </div>

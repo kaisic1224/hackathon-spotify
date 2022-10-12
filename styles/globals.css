@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 14px;
 }
 
 ::-webkit-scrollbar-track {
@@ -13,6 +13,8 @@
 ::-webkit-scrollbar-thumb {
   background-color: #888;
   border-radius: 0.75rem;
+  border: 3.5px solid transparent;
+  background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -21,6 +23,10 @@
 
 .crossover {
   grid-column: span 2;
+}
+
+* {
+  /* cursor: none !important; */
 }
 
 @layer {
@@ -35,5 +41,13 @@
 
   .page-bars {
     @apply bg-black;
+  }
+
+  .mouse-follow {
+    @apply w-5 h-5 aspect-square rounded-full pointer-events-none z-[10000] fixed bg-white opacity-0 transition-opacity will-change-transform;
+  }
+
+  #main:hover > .mouse-follow {
+    @apply opacity-100;
   }
 }

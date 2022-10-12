@@ -1,15 +1,17 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const bars = {
   hidden: {
-    scaleY: 1
+    scaleY: 0
   },
   show: {
-    scaleY: 0,
+    scaleY: 1,
     transition: {
       duration: 0.6,
-      delay: 0.5,
-      ease: "easeOut"
+      ease: "easeOut",
+      repeat: 1,
+      repeatType: "mirror" as "mirror",
+      repeatDelay: 2
     }
   }
 };
@@ -17,13 +19,12 @@ const bars = {
 const screen = {
   show: {
     transition: {
-      staggerChildren: 0.1,
-      staggerDirection: 0
+      staggerChildren: 0.1
     }
   }
 };
 
-const PageTransition = ({ direction }: { direction: string }) => {
+const PageBars = ({ direction }: { direction: string }) => {
   return (
     <motion.div
       variants={screen}
@@ -35,30 +36,30 @@ const PageTransition = ({ direction }: { direction: string }) => {
     >
       <motion.div
         className='page-bars'
-        style={{ transformOrigin: direction }}
+        style={{ transformOrigin: "top" }}
         variants={bars}
       />
       <motion.div
         className='page-bars'
-        style={{ transformOrigin: direction }}
+        style={{ transformOrigin: "top" }}
         variants={bars}
       />
       <motion.div
         className='page-bars'
-        style={{ transformOrigin: direction }}
+        style={{ transformOrigin: "top" }}
         variants={bars}
       />
       <motion.div
         className='page-bars'
-        style={{ transformOrigin: direction }}
+        style={{ transformOrigin: "top" }}
         variants={bars}
       />
       <motion.div
         className='page-bars'
-        style={{ transformOrigin: direction }}
+        style={{ transformOrigin: "top" }}
         variants={bars}
       />
     </motion.div>
   );
 };
-export default PageTransition;
+export default PageBars;
