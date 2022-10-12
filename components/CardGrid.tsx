@@ -23,9 +23,8 @@ const CardGrid = ({
     <motion.div
       variants={staggerFadeUp}
       initial='hidden'
-      animate='show'
-      // whileInView='show'
-      // viewport={{ once: true }}
+      whileInView='show'
+      viewport={{ once: true }}
       className='grid justify-items-center mx-auto
        xs:gap-12
        md:grid-cols-2

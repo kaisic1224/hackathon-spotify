@@ -9,32 +9,33 @@ import React, {
 } from "react";
 import { FaLink, FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
 import PlaylistSong from "./PlaylistSong";
+import AddImage from "./AddImage";
 
-const Playlist = ({
-  items,
-  openModal,
-  name,
-  setName,
-  file,
-  fLink,
-  description,
-  setDescription
-}: {
-  file: File | undefined;
-  fLink: string | ArrayBuffer | null | undefined;
-  items: track[];
-  openModal: Dispatch<SetStateAction<boolean>>;
-  name: string;
-  setName: Dispatch<SetStateAction<string>>;
-  description: string;
-  setDescription: Dispatch<SetStateAction<string>>;
-}) => {
+const Playlist = ({ items }: { items: track[] }) => {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("Music for me");
+  const [file, setFile] = useState<File>();
+  const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
+  const [desc, setDesc] = useState("");
   const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (
     <>
+      {open && (
+        <AddImage
+          file={file}
+          setFile={setFile}
+          fLink={fLink}
+          setFlink={setFlink}
+          name={name}
+          setName={setName}
+          setOpen={setOpen}
+          description={desc}
+          setDescription={setDesc}
+        />
+      )}
       <div className='shadow-lg'>
         <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main'>
           <div className='relative'>
@@ -45,7 +46,7 @@ const Playlist = ({
             />
             <div
               onClick={() => {
-                openModal(true);
+                setOpen(true);
               }}
               className='group absolute py-4 grid place-items-center top-0 left-0 inset-0 hover:bg-black-main/60 cursor-pointer'
             >
@@ -63,9 +64,9 @@ const Playlist = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            {description.length != 0 ? (
+            {desc.length != 0 ? (
               <p className='max-w-xs text-base text-ellipsis overflow-hidden'>
-                {description}
+                {desc}
               </p>
             ) : null}
           </div>
@@ -119,7 +120,7 @@ const Playlist = ({
               body: new URLSearchParams({
                 name: name,
                 public: `${pub}`,
-                description: description
+                description: desc
               })
             }
           );

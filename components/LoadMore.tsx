@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { DateContext } from "../pages";
+import { artist, playlistItem, track } from "./Card";
 
 const LoadMore = ({
   endpoint,
@@ -40,11 +41,11 @@ const LoadMore = ({
       ) : (
         <span
           onClick={() => {
-            setFn([...items].slice(0, 8));
+            setFn((i: Array<playlistItem | artist | track>) => i.slice(0, 8));
             setDataset(8);
             location.hash = `#${anchor}`;
           }}
-          className='text-[#707070] mt-12 bg-[#2b2b2b] hover:text-white py-1 px-2 cursor-pointer font-medium text-center inline-block mx-auto'
+          className='text-[#707070] mt-12 hover:text-white py-1 px-2 cursor-pointer font-medium text-center inline-block mx-auto'
         >
           Show less
         </span>

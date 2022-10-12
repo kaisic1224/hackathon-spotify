@@ -29,7 +29,7 @@ const PageTransition = ({ direction }: { direction: string }) => {
       variants={screen}
       initial='hidden'
       animate='show'
-      className={`absolute grid inset-0 z-[9999] ${
+      className={`absolute grid inset-0 z-[9999] pointer-events-none ${
         direction === "top" ? "grid-cols-5" : "grid-rows-5"
       }`}
     >

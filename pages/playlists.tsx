@@ -37,14 +37,7 @@ const playlists = () => {
   const [topArtists, setTopArtists] = useState<artist[]>([]);
   const [topTracks, setTopTracks] = useState<track[]>([]);
   const [recommended, setRecommended] = useState<track[]>([]);
-  const [time_range, setTime] = useState("short_term");
   const [loading, setloading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("Music for me");
-  const [file, setFile] = useState<File>();
-  const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
-  const [desc, setDesc] = useState("");
-  const [dick, setDick] = useState(true);
 
   const fetchRecommended = async () => {
     const sGenres = topArtists
@@ -132,12 +125,6 @@ const playlists = () => {
     fetchData();
   }, [loading]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setDick(false);
-    }, 2000);
-  }, []);
-
   return (
     <>
       <Head>
@@ -148,46 +135,12 @@ const playlists = () => {
       </Head>
 
       <PageTransition2 direction='top' />
-      {open && (
-        <AddImage
-          file={file}
-          setFile={setFile}
-          fLink={fLink}
-          setFlink={setFlink}
-          name={name}
-          setName={setName}
-          setOpen={setOpen}
-          description={desc}
-          setDescription={setDesc}
-        />
-      )}
 
-      <DateContext.Provider value={{ time_range, setTime }}>
-        <main className='text-white px-8 pb-16 bg-card-base/60'>
-          <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
-            According to your Most Listened Artists...
-            <DatePicker endpoint='topArtists' setFn={setTopArtists} />
-          </motion.h2>
-          {topArtists?.length ?? 0 != 0 ? (
-            <CardGrid layoutID='artists' dataItems={topArtists.slice(0, 4)} />
-          ) : null}
-          <motion.h2>Here are some songs you might like...</motion.h2>
-          {recommended?.length ?? 0 != 0 ? (
-            <Playlist
-              fLink={fLink}
-              file={file}
-              openModal={setOpen}
-              name={name}
-              setName={setName}
-              items={recommended}
-              description={desc}
-              setDescription={setDesc}
-            />
-          ) : (
-            <PlaylistLoader />
-          )}
-        </main>
-      </DateContext.Provider>
+      {recommended?.length ?? 0 != 0 ? (
+        <Playlist items={recommended} />
+      ) : (
+        <PlaylistLoader />
+      )}
     </>
   );
 };

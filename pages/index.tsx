@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import SNavbar from "../components/SNavbar";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
-import { LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { artist, playlistItem, track } from "../components/Card";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect, useLayoutEffect } from "react";
@@ -133,22 +133,24 @@ const Home: NextPage = () => {
 
       <SNavbar viewedSection={sectName!} />
       <Menu />
+
       <header className='min-h-[89vh]'>
         <img
           className='-z-10 absolute object-cover aspect-video h-screen w-full select-none -translate-y-15'
           src='/photos/heroimage.jpg'
         />
         <motion.div
-          initial={{ y: "100%", x: "-50%", opacity: 0 }}
-          animate={{ y: "-75%", opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: 200 }}
+          animate={{ y: 0 }}
+          style={{ translateY: "-75%", translateX: "-50%" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className='flex flex-col absolute justify-center items-center left-1/2 top-1/2'
         >
-          <motion.h1 className='mx-auto mt-8 font-src-pro font-semibold text-6xl max-w-[24ch] text-center text-white'>
+          <h1 className='mx-auto mt-8 font-src-pro font-semibold text-6xl max-w-[24ch] text-center text-white'>
             Customize Your Shareable Playlists
-          </motion.h1>
+          </h1>
           {session?.user ? (
-            <motion.div
+            <div
               className='text-white text-center font-src-pro font-bold text-xl flex items-center
               flex-col mt-4 xs:gap-2
               md:gap-6 md:flex-row md:min-w-max'
@@ -172,7 +174,7 @@ const Home: NextPage = () => {
               >
                 Not you? Log Out
               </motion.button>
-            </motion.div>
+            </div>
           ) : (
             <motion.button
               className='bg-g-primary text-white hover:text-green-50 hover:shadow-green-400 font-semibold p-[.5em] px-[1em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4'
@@ -268,7 +270,6 @@ const Home: NextPage = () => {
           </div>
         </section>
       </main>
-
       {session?.user && <Footer />}
     </>
   );
