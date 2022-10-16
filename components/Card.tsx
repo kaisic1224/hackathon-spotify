@@ -117,7 +117,6 @@ export const getCards = () => {
 
 const Card = ({ song }: { song: playlistItem | track | artist }) => {
   if ("track" in song || song.type === "track") {
-    song = song as track | playlistItem;
     return (
       <>
         <motion.div
@@ -215,6 +214,7 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
         data-open={song?.external_urls.spotify}
         className={`aspect-square object-cover justify-self-center w-full`}
         src={song.images[0].url!}
+        alt={song?.name + "'s cover picture"}
       />
     </motion.div>
   );
