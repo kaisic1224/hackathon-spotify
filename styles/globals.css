@@ -38,4 +38,8 @@
     @apply focus:outline-none outline-none bg-body-main transition-all focus:bg-card-base
      hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
   }
+
+  .border-bar {
+    @apply bg-zinc-900 hover:bg-zinc-800/60 flex-1 cursor-pointer;
+  }
 }

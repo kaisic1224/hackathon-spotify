@@ -23,9 +23,9 @@ const CardGrid = ({
       initial='hidden'
       whileInView='show'
       viewport={{ once: true }}
-      className='grid justify-items-center mx-auto
+      className='grid justify-items-center mx-auto pb-2
        xs:gap-12 xs:max-w-screen xs:grid-flow-col-dense xs:overflow-x-auto
-       xl:grid-cols-4 xl:gap-10 
+       xl:gap-10 xl:px-4
        2xl:max-w-screen-2xl'
     >
       <LayoutGroup id={layoutID}>
