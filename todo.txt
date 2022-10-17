@@ -1,4 +1,2 @@
-Tomorrow:
- - Get data from spotify api
- - sign out auth page
- - playlist builder
+- add follow artists and like songs in cards
+- fix card designs

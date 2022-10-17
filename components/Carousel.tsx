@@ -10,15 +10,15 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
   return (
     <>
       <div
-        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute
-       after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black after:via-black/70 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
+        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute bg-gradient-to-t from-body-main to-transparent
+       after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
       >
         <AnimatePresence initial={false}>
           <motion.div
             layoutId='primary'
             initial={{ x }}
             animate={{ x: 0 }}
-            exit={{ x: x! * -2.5 }}
+            exit={{ x: x! * -1 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             drag='x'
             dragConstraints={{ left: 0, right: 0 }}
@@ -28,7 +28,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
               const { velocity, offset } = info;
               if (offset.x * velocity.x > 10000) {
                 // determine direction and switch
-                const d = offset.x > 0 ? -300 : 300;
+                const d = offset.x > 0 ? -1000 : 1000;
                 setDirection(d);
               }
             }}
@@ -58,7 +58,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
         {indexes.map((index) => (
           <div
             onClick={() => {
-              const d = index > active ? -300 : 300;
+              const d = index > active ? -1000 : 1000;
               setActive(index);
               setDirection(d);
             }}
