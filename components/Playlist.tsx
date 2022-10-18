@@ -1,7 +1,8 @@
-import type { track } from "./Card";
-import { Reorder } from "framer-motion";
+import type { track } from "../lib/api.d";
+import { AnimatePresence, Reorder } from "framer-motion";
 import React, { useState } from "react";
 import { FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
+import { IoMdOptions } from "react-icons/io";
 import PlaylistSong from "./PlaylistSong";
 import AddImage from "./AddImage";
 
@@ -14,6 +15,7 @@ const Playlist = ({ items }: { items: track[] }) => {
   const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState([]);
 
   return (
     <>
@@ -30,8 +32,16 @@ const Playlist = ({ items }: { items: track[] }) => {
           setDescription={setDesc}
         />
       )}
+
+      <div className='flex flex-col w-screen relative'>
+        <div className='text-zinc-500 font-bold uppercase flex items-center gap-1'>
+          Filters <IoMdOptions />
+        </div>
+        <div className='flex-nowrap overflow-x-auto flex gap-2'></div>
+      </div>
+
       <div className='shadow-lg'>
-        <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main'>
+        <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main text-zinc-100'>
           <div className='relative'>
             <img
               className='object-cover aspect-square w-36 peer'
@@ -94,8 +104,9 @@ const Playlist = ({ items }: { items: track[] }) => {
           axis='y'
           onReorder={setTracks}
           values={tracks}
-          style={{ height: 320, overflowY: "auto" }}
-          className='flex flex-col pr-7 pl-0'
+          layoutScroll
+          style={{ height: 320, overflowY: "scroll" }}
+          className='pl-0'
         >
           {tracks.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />

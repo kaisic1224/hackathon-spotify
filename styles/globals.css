@@ -29,6 +29,10 @@
   grid-column: span 2;
 }
 
+.hidden-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
 @layer {
   .song-card {
     @apply bg-body-main isolate z-50 relative hover:bg-g-primary text-white font-medium

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, Reorder } from "framer-motion";
 import { getSession, signIn, useSession } from "next-auth/react";
 import React, { Suspense, useEffect, useState } from "react";
-import { artist, playlistItem, track } from "../components/Card";
+import { artist, playlistItem, track } from "../lib/api.d";
 import Head from "next/head";
 import Playlist from "../components/Playlist";
 import PlaylistLoader from "../components/PlaylistLoader";
@@ -93,7 +93,6 @@ const playlists = () => {
       const top = await fetch("/api/topArtists");
       const topData = await top.json();
       setTopArtists(topData.items);
-      console.log(topData);
       sessionStorage.setItem("topArtists", JSON.stringify([...topData.items]));
 
       // FETCH POPULAR SONGS
@@ -163,7 +162,7 @@ const playlists = () => {
         {topArtists?.length ?? 0 === 0 ? <Carousel items={topArtists} /> : null}
       </header>
 
-      <main className='mt-[25vh]'>
+      <main>
         {recommended?.length ?? 0 != 0 ? (
           <Playlist items={recommended} />
         ) : (

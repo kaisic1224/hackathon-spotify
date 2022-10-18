@@ -1,8 +1,25 @@
-import { artist } from "./Card";
+import { artist } from "../lib/api.d";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const indexes = [0, 1, 2, 3];
+
+const getNextPosition = (
+  min: number,
+  max: number,
+  current: number,
+  direction: number
+): number => {
+  let next = 0;
+  if (current === max && direction > 0) {
+    next = 0;
+  } else if (current === min && direction < 0) {
+    next = max;
+  } else {
+    next = current + direction;
+  }
+  return next;
+};
 
 const Carousel = ({ items }: { items: Array<artist> }) => {
   const [active, setActive] = useState(0);
@@ -15,14 +32,13 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
       >
         <AnimatePresence initial={false}>
           <motion.div
-            layoutId='primary'
+            key={items[active].id}
             initial={{ x }}
             animate={{ x: 0 }}
             exit={{ x: x! * -1 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             drag='x'
             dragConstraints={{ left: 0, right: 0 }}
-            key={items[active].id}
             dragElastic={1}
             onDragEnd={(e, info) => {
               const { velocity, offset } = info;
@@ -30,6 +46,8 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
                 // determine direction and switch
                 const d = offset.x > 0 ? -1000 : 1000;
                 setDirection(d);
+                const nextPosition = getNextPosition(0, 3, active, d / 1000);
+                setActive(nextPosition);
               }
             }}
           >
@@ -63,7 +81,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
               setDirection(d);
             }}
             key={index}
-            className={`border-bar ${index === active && "bg-zinc-700"}`}
+            className={`border-bar ${index === active ? "bg-zinc-700" : ""}`}
           />
         ))}
       </div>
