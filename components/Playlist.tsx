@@ -1,13 +1,29 @@
-import type { track } from "../lib/api.d";
-import { AnimatePresence, Reorder } from "framer-motion";
-import React, { useState } from "react";
+import type { artist, track } from "../lib/api.d";
+import { AnimatePresence, Reorder, motion } from "framer-motion";
+import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
 import { IoMdOptions } from "react-icons/io";
 import PlaylistSong from "./PlaylistSong";
 import AddImage from "./AddImage";
 
-const Playlist = ({ items }: { items: track[] }) => {
+interface Filters {
+  artists: artist[];
+  tracks: track[];
+}
+
+const Playlist = ({
+  items,
+  setRecommended,
+  artists,
+  topTracks
+}: {
+  items: track[];
+  setRecommended: Dispatch<SetStateAction<track[]>>;
+  artists: artist[];
+  topTracks: track[];
+}) => {
   const [open, setOpen] = useState(false);
+  const [filterOpen, setFopen] = useState(true);
   const [name, setName] = useState("Music for me");
   const [file, setFile] = useState<File>();
   const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
@@ -15,7 +31,10 @@ const Playlist = ({ items }: { items: track[] }) => {
   const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState<Filters>({
+    artists,
+    tracks: topTracks
+  });
 
   return (
     <>
@@ -33,11 +52,22 @@ const Playlist = ({ items }: { items: track[] }) => {
         />
       )}
 
-      <div className='flex flex-col w-screen relative'>
+      {filterOpen && <motion.div className='absolute w-screen'></motion.div>}
+
+      <div className='flex flex-col max-w-screen relative'>
         <div className='text-zinc-500 font-bold uppercase flex items-center gap-1'>
           Filters <IoMdOptions />
         </div>
-        <div className='flex-nowrap overflow-x-auto flex gap-2'></div>
+        <div className='overflow-x-auto flex gap-2 hidden-scrollbar items-center pb-3 pt-1'>
+          {filters.artists.map((artist) => (
+            <div
+              tabIndex={0}
+              className='whitespace-nowrap chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
+            >
+              {artist.name}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className='shadow-lg'>
@@ -104,9 +134,7 @@ const Playlist = ({ items }: { items: track[] }) => {
           axis='y'
           onReorder={setTracks}
           values={tracks}
-          layoutScroll
-          style={{ height: 320, overflowY: "scroll" }}
-          className='pl-0'
+          className='pl-0 playlist'
         >
           {tracks.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
@@ -139,6 +167,7 @@ const Playlist = ({ items }: { items: track[] }) => {
           );
 
           const data2 = await res2.json();
+          console.log(data2);
 
           const res3 = await fetch(
             "/api/changePlaylistImage?" +

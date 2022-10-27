@@ -63,7 +63,7 @@ const Home: NextPage = () => {
     const fetchData = async () => {
       // ASSURE THERE IS A SESSION FIRST
       const session = await getSession();
-      if (!session) return;
+      if (!session || session.error) return;
 
       // FETCH RECENTLY PLAYED SONGS
       const recently = await fetch("/api/getRecent");

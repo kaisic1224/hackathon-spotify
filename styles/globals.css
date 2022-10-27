@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
+::-webkit-scrollbar:not(.hidden-scrollbar) {
   width: 10px;
 }
 
@@ -29,21 +29,25 @@
   grid-column: span 2;
 }
 
-.hidden-scrollbar::-webkit-scrollbar-thumb {
-  background-color: transparent;
-}
-
-@layer {
+@layer components {
   .song-card {
     @apply bg-body-main isolate z-50 relative hover:bg-g-primary text-white font-medium
-         p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[none];
+    p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[none];
   }
   .text-form {
     @apply focus:outline-none outline-none bg-body-main transition-all focus:bg-card-base
-     hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
+    hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
   }
 
   .border-bar {
     @apply bg-zinc-900 hover:bg-zinc-800/60 flex-1 cursor-pointer;
+  }
+  .chip {
+    @apply rounded-full font-bold min-w-[15ch] uppercase text-center p-1 border cursor-default;
+  }
+  .search {
+    @apply outline-none rounded-md bg-card-base/60 text-[#5c5959] w-full leading-relaxed p-1 pl-9 
+    placeholder:text-zinc-700 focus:placeholder:text-zinc-600
+    border border-spacing-11 border-card-base;
   }
 }

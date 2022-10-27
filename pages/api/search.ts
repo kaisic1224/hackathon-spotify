@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { getToken } from "next-auth/jwt";
 import { authOptions } from "./auth/[...nextauth]";
 
 export default async function handler(
@@ -10,19 +9,24 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) return res.status(401);
 
+  const { q } = req.query;
+  const types = ["album", "artist", "track"];
   const queryParamString = new URLSearchParams({
-    limit: "4"
+    q: q as string,
+    type: types.join(","),
+    limit: "5"
   });
   const response = await fetch(
-    "https://api.spotify.com/v1/me/player/recently-played?" +
-      queryParamString.toString(),
+    "https://api.spotify.com/v1/search?" + queryParamString.toString(),
     {
-      method: "GET",
       headers: {
-        Authorization: `Bearer ${session?.accessToken}`
+        Authorization: `Bearer ${session?.accessToken}`,
+        "Content-Type": "application/json"
       }
     }
   );
+
   const data = await response.json();
+
   return res.status(200).json(data);
 }

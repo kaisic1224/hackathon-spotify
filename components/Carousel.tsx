@@ -44,9 +44,9 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
               const { velocity, offset } = info;
               if (offset.x * velocity.x > 10000) {
                 // determine direction and switch
-                const d = offset.x > 0 ? -1000 : 1000;
+                const d = offset.x > 0 ? -500 : 500;
                 setDirection(d);
-                const nextPosition = getNextPosition(0, 3, active, d / 1000);
+                const nextPosition = getNextPosition(0, 3, active, d / 500);
                 setActive(nextPosition);
               }
             }}
@@ -76,12 +76,14 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
         {indexes.map((index) => (
           <div
             onClick={() => {
-              const d = index > active ? -1000 : 1000;
-              setActive(index);
+              const d = index > active ? 500 : -500;
               setDirection(d);
+              setActive(index);
             }}
             key={index}
-            className={`border-bar ${index === active ? "bg-zinc-700" : ""}`}
+            className={`border-bar ${
+              index === active ? "bg-zinc-700 hover:bg-body-main" : ""
+            }`}
           />
         ))}
       </div>

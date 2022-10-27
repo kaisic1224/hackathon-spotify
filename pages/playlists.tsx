@@ -6,6 +6,7 @@ import Head from "next/head";
 import Playlist from "../components/Playlist";
 import PlaylistLoader from "../components/PlaylistLoader";
 import Carousel from "../components/Carousel";
+import Searchbar from "../components/Searchbar";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -104,8 +105,6 @@ const playlists = () => {
         JSON.stringify([...topTracksData.items])
       );
 
-      setloading(false);
-
       const today = new Date(Date.now() + 1000 * 60 * 5).getTime();
       sessionStorage.setItem("timestamp", today.toString());
     };
@@ -163,8 +162,14 @@ const playlists = () => {
       </header>
 
       <main>
+        <Searchbar />
         {recommended?.length ?? 0 != 0 ? (
-          <Playlist items={recommended} />
+          <Playlist
+            items={recommended}
+            setRecommended={setRecommended}
+            topTracks={topTracks}
+            artists={topArtists}
+          />
         ) : (
           <PlaylistLoader />
         )}
