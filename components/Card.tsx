@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
-import Menu from "./Menu";
+import { playlistItem, track, artist, playLartist } from "../lib/api.d";
 
 const variants = {
   hidden: {
@@ -21,93 +20,6 @@ export interface card {
   image: string;
 }
 
-interface playLartist {
-  external_urls: external_url;
-  href: string;
-  id: string;
-  name: string;
-  type: string;
-  uri: string;
-}
-
-interface external_url {
-  spotify: string;
-}
-
-interface album {
-  album_type: string;
-  artists: artist[];
-  available_markets: string[];
-  external_urls: external_url;
-  href: string;
-  id: string;
-  images: image[];
-  name: string;
-  release_date: string;
-  release_date_precision: string;
-  restrictions?: {
-    reason: string;
-  };
-  total_tracks: number;
-  type: string;
-  uri: string;
-}
-
-interface image {
-  height: number;
-  url: string;
-  width: number;
-}
-
-export interface artist {
-  external_urls: external_url;
-  followers: {
-    href: string | null;
-    total: number;
-  };
-  genres: string[];
-  href: string;
-  id: string;
-  images: image[];
-  name: string;
-  popularity: number;
-  type: string;
-  uri: string;
-}
-
-export interface track {
-  album: album;
-  artists: playLartist[];
-  available_markets: string[];
-  disc_number: number;
-  duration_ms: number;
-  explicit: boolean;
-  external_ids: {
-    isrc: string;
-  };
-  external_urls: external_url;
-  href: string;
-  id: string;
-  is_local: boolean;
-  name: string;
-  popularity: number;
-  preview_url: string;
-  track_number: number;
-  type: string;
-  uri: string;
-}
-
-export interface playlistItem {
-  track: track;
-  played_at: string;
-  context: {
-    external_urls: external_url;
-    href: string;
-    type: string;
-    uri: string;
-  };
-}
-
 export const getCards = () => {
   const domCards = document.querySelectorAll(".song-card");
   domCards.forEach((card) => {
@@ -117,7 +29,6 @@ export const getCards = () => {
 
 const Card = ({ song }: { song: playlistItem | track | artist }) => {
   if ("track" in song || song.type === "track") {
-    song = song as track | playlistItem;
     return (
       <>
         <motion.div
@@ -215,6 +126,7 @@ const Card = ({ song }: { song: playlistItem | track | artist }) => {
         data-open={song?.external_urls.spotify}
         className={`aspect-square object-cover justify-self-center w-full`}
         src={song.images[0].url!}
+        alt={song?.name + "'s cover picture"}
       />
     </motion.div>
   );

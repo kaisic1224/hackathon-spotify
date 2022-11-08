@@ -1,42 +1,47 @@
-import type { track } from "./Card";
-import { Reorder, motion, AnimatePresence } from "framer-motion";
-import React, {
-  SetStateAction,
-  Dispatch,
-  useState,
-  useContext,
-  useEffect
-} from "react";
-import { FaLink, FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
+import type { track } from "../lib/api.d";
+import { AnimatePresence, Reorder } from "framer-motion";
+import React, { useState } from "react";
+import { FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
+import { IoMdOptions } from "react-icons/io";
 import PlaylistSong from "./PlaylistSong";
+import AddImage from "./AddImage";
 
-const Playlist = ({
-  items,
-  openModal,
-  name,
-  setName,
-  file,
-  fLink,
-  description,
-  setDescription
-}: {
-  file: File | undefined;
-  fLink: string | ArrayBuffer | null | undefined;
-  items: track[];
-  openModal: Dispatch<SetStateAction<boolean>>;
-  name: string;
-  setName: Dispatch<SetStateAction<string>>;
-  description: string;
-  setDescription: Dispatch<SetStateAction<string>>;
-}) => {
+const Playlist = ({ items }: { items: track[] }) => {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("Music for me");
+  const [file, setFile] = useState<File>();
+  const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
+  const [desc, setDesc] = useState("");
   const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState([]);
 
   return (
     <>
+      {open && (
+        <AddImage
+          file={file}
+          setFile={setFile}
+          fLink={fLink}
+          setFlink={setFlink}
+          name={name}
+          setName={setName}
+          setOpen={setOpen}
+          description={desc}
+          setDescription={setDesc}
+        />
+      )}
+
+      <div className='flex flex-col w-screen relative'>
+        <div className='text-zinc-500 font-bold uppercase flex items-center gap-1'>
+          Filters <IoMdOptions />
+        </div>
+        <div className='flex-nowrap overflow-x-auto flex gap-2'></div>
+      </div>
+
       <div className='shadow-lg'>
-        <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main'>
+        <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main text-zinc-100'>
           <div className='relative'>
             <img
               className='object-cover aspect-square w-36 peer'
@@ -45,7 +50,7 @@ const Playlist = ({
             />
             <div
               onClick={() => {
-                openModal(true);
+                setOpen(true);
               }}
               className='group absolute py-4 grid place-items-center top-0 left-0 inset-0 hover:bg-black-main/60 cursor-pointer'
             >
@@ -63,9 +68,9 @@ const Playlist = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            {description.length != 0 ? (
+            {desc.length != 0 ? (
               <p className='max-w-xs text-base text-ellipsis overflow-hidden'>
-                {description}
+                {desc}
               </p>
             ) : null}
           </div>
@@ -82,25 +87,15 @@ const Playlist = ({
             />
             <label htmlFor='public' className='cursor-pointer select-none'>
               {pub ? (
-                <>
-                  <motion.div
-                    className='flex items-center gap-2 '
-                    whileTap={{ y: 5 }}
-                  >
-                    Public
-                    <FaLockOpen />
-                  </motion.div>
-                </>
+                <div className='flex items-center gap-2'>
+                  <span className='peer'>Public</span>
+                  <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
+                </div>
               ) : (
-                <>
-                  <motion.div
-                    className='flex items-center gap-2 '
-                    whileTap={{ y: 5 }}
-                  >
-                    Private
-                    <FaLock />
-                  </motion.div>
-                </>
+                <div className='flex items-center gap-2'>
+                  <span className='peer'>Private</span>
+                  <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
+                </div>
               )}
             </label>
           </div>
@@ -109,8 +104,9 @@ const Playlist = ({
           axis='y'
           onReorder={setTracks}
           values={tracks}
-          style={{ height: 320, overflowY: "auto" }}
-          className='flex flex-col pr-7 pl-0'
+          layoutScroll
+          style={{ height: 320, overflowY: "scroll" }}
+          className='pl-0'
         >
           {tracks.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
@@ -129,7 +125,7 @@ const Playlist = ({
               body: new URLSearchParams({
                 name: name,
                 public: `${pub}`,
-                description: description
+                description: desc
               })
             }
           );

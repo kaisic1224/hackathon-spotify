@@ -1,16 +1,11 @@
-import { motion, Reorder } from "framer-motion";
+import { AnimatePresence, motion, Reorder } from "framer-motion";
 import { getSession, signIn, useSession } from "next-auth/react";
-import { FaLink } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
-import { artist, playlistItem, track } from "../components/Card";
+import React, { Suspense, useEffect, useState } from "react";
+import { artist, playlistItem, track } from "../lib/api.d";
 import Head from "next/head";
-import CardGrid from "../components/CardGrid";
 import Playlist from "../components/Playlist";
-import { DateContext } from ".";
-import DatePicker from "../components/DatePicker";
-import LoadMore from "../components/LoadMore";
-import AddImage from "../components/AddImage";
 import PlaylistLoader from "../components/PlaylistLoader";
+import Carousel from "../components/Carousel";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -35,13 +30,7 @@ const playlists = () => {
   const [topArtists, setTopArtists] = useState<artist[]>([]);
   const [topTracks, setTopTracks] = useState<track[]>([]);
   const [recommended, setRecommended] = useState<track[]>([]);
-  const [time_range, setTime] = useState("short_term");
   const [loading, setloading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState("Music for me");
-  const [file, setFile] = useState<File>();
-  const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
-  const [desc, setDesc] = useState("");
 
   const fetchRecommended = async () => {
     const sGenres = topArtists
@@ -93,7 +82,7 @@ const playlists = () => {
     const fetchData = async () => {
       // ASSURE THERE IS A SESSION FIRST
       const session = await getSession();
-      if (!session) return;
+      if (!session || session?.error) return;
 
       // FETCH RECENTLY PLAYED SONGS
       const recently = await fetch("/api/getRecent");
@@ -129,6 +118,34 @@ const playlists = () => {
     fetchData();
   }, [loading]);
 
+  if (session?.error === "refresh error") {
+    return (
+      <>
+        <Head>
+          <title>SubWoofer | Error</title>
+          <meta charSet='UTF-8' />
+          <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+          <meta
+            name='viewport'
+            content='width=device-width, initial-scale=1.0'
+          />
+        </Head>
+        <main className='text-white text-center overflow-y-hidden pb-24'>
+          <h1 className='mt-48 text-5xl'>Refresh Token Error</h1>
+          <p className='text-lg'>Try signing in again</p>
+          <motion.button
+            className='bg-g-primary text-white hover:text-green-50 hover:shadow-green-400 font-semibold p-[.5em] px-[1.5em] rounded-3xl shadow-2xl hover:bg-[#1ed760] transition-colors mt-4'
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => signIn()}
+          >
+            Sign In
+          </motion.button>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Head>
@@ -138,51 +155,20 @@ const playlists = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       </Head>
 
-      {open && (
-        <AddImage
-          file={file}
-          setFile={setFile}
-          fLink={fLink}
-          setFlink={setFlink}
-          name={name}
-          setName={setName}
-          setOpen={setOpen}
-          description={desc}
-          setDescription={setDesc}
-        />
-      )}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 100 }}
-        transition={{ duration: 1.75, ease: "easeOut" }}
-        className='fixed bottom-0 left-1/2 -translate-x-1/2 rounded-full bg-card-base/60 w-8 h-8 -z-50'
-      />
-      <DateContext.Provider value={{ time_range, setTime }}>
-        <main className='text-white px-8 pb-16 '>
-          <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white xs:text-center'>
-            According to your Most Listened Artists...
-            <DatePicker endpoint='topArtists' setFn={setTopArtists} />
-          </motion.h2>
-          {topArtists?.length ?? 0 != 0 ? (
-            <CardGrid layoutID='artists' dataItems={topArtists.slice(0, 4)} />
-          ) : null}
-          <motion.h2>Here are some songs you might like...</motion.h2>
-          {recommended?.length ?? 0 != 0 ? (
-            <Playlist
-              fLink={fLink}
-              file={file}
-              openModal={setOpen}
-              name={name}
-              setName={setName}
-              items={recommended}
-              description={desc}
-              setDescription={setDesc}
-            />
-          ) : (
-            <PlaylistLoader />
-          )}
-        </main>
-      </DateContext.Provider>
+      <header
+        className='xs:min-h-[425px]
+       min-h-[80vh] relative z-50 isolate'
+      >
+        {topArtists?.length ?? 0 === 0 ? <Carousel items={topArtists} /> : null}
+      </header>
+
+      <main>
+        {recommended?.length ?? 0 != 0 ? (
+          <Playlist items={recommended} />
+        ) : (
+          <PlaylistLoader />
+        )}
+      </main>
     </>
   );
 };

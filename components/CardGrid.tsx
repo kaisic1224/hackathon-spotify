@@ -1,6 +1,6 @@
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { Suspense } from "react";
-import Card, { artist, playlistItem, track } from "./Card";
+import { artist, playlistItem, track } from "../lib/api.d";
+import Card from "./Card";
 import CardLoader from "./CardLoader";
 
 const staggerFadeUp = {
@@ -22,11 +22,11 @@ const CardGrid = ({
     <motion.div
       variants={staggerFadeUp}
       initial='hidden'
-      animate='show'
-      className='grid justify-items-center mx-auto
-       xs:gap-12
-       md:grid-cols-2
-       xl:grid-cols-4 xl:gap-10 
+      whileInView='show'
+      viewport={{ once: true }}
+      className='grid justify-items-center mx-auto pb-2 hidden-scrollbar
+       xs:gap-12 xs:max-w-screen xs:grid-flow-col-dense xs:overflow-x-auto
+       xl:gap-10 xl:px-4
        2xl:max-w-screen-2xl'
     >
       <LayoutGroup id={layoutID}>

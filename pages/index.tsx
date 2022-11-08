@@ -3,7 +3,7 @@ import Head from "next/head";
 import SNavbar from "../components/SNavbar";
 import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import { LayoutGroup, motion } from "framer-motion";
-import { artist, playlistItem, track } from "../components/Card";
+import { artist, playlistItem, track } from "../lib/api.d";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect, useLayoutEffect } from "react";
 import Locked from "../components/Locked";
@@ -56,7 +56,7 @@ const Home: NextPage = () => {
       const recently = await fetch("/api/getRecent");
       const recentlyData = await recently.json();
       setRecent(recentlyData.items);
-      setTopArtists(JSON.parse(sessionStorage.getItem("topTracks")!));
+      setTopArtists(JSON.parse(sessionStorage.getItem("topArtists")!));
       setTopTracks(JSON.parse(sessionStorage.getItem("topTracks")!));
     };
 
@@ -149,18 +149,18 @@ const Home: NextPage = () => {
           </motion.h1>
           {session?.user ? (
             <motion.div
-              className='text-white text-center font-src-pro font-bold text-xl flex items-center
+              className='text-white text-center font-src-pro text-xl flex items-center
               flex-col mt-4 xs:gap-2
               md:gap-6 md:flex-row md:min-w-max'
             >
               <span className='max-w-max flex'>
-                Welcome Back,{" "}
+                Welcome back{" "}
                 <img
                   src={session?.user?.image!}
                   className='rounded-full aspect-square w-8 object-cover ml-3 mr-1'
                   alt={`${session?.user?.name}'s profile picture`}
                 />{" "}
-                <u className='ml-1'>{session?.user.name}</u>!
+                <u className='ml-1 font-bold text-xl'>{session?.user.name}</u>!
               </span>
               <motion.button
                 className='bg-g-primary text-lg hover:text-green-50 font-semibold p-[.5em] px-[1em] rounded-3xl
@@ -170,7 +170,7 @@ const Home: NextPage = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => signOut()}
               >
-                Not you? Log Out
+                Not you? Log out
               </motion.button>
             </motion.div>
           ) : (

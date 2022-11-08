@@ -8,6 +8,10 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar:hover ::-webkit-scrollbar-track {
   background-color: #333;
 }
 
@@ -25,13 +29,21 @@
   grid-column: span 2;
 }
 
+.hidden-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
 @layer {
   .song-card {
     @apply bg-body-main isolate z-50 relative hover:bg-g-primary text-white font-medium
-         p-4 rounded-xl xs:max-w-lg sm:max-w-xl;
+         p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[none];
   }
   .text-form {
     @apply focus:outline-none outline-none bg-body-main transition-all focus:bg-card-base
      hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
+  }
+
+  .border-bar {
+    @apply bg-zinc-900 hover:bg-zinc-800/60 flex-1 cursor-pointer;
   }
 }
