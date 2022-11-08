@@ -1,7 +1,8 @@
 import { Reorder } from "framer-motion";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Card, { track } from "./Card";
+import Card from "./Card";
+import { playlistItem, track, artist, playLartist } from "../lib/api.d";
 
 const vars = {
   hidden: {
