@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaCaretRight } from "react-icons/fa";
-import { artist, getCards } from "./Card";
+import { getCards } from "./Card";
+import { playlistItem, track, artist, playLartist } from "../lib/api.d";
 import Toast from "./Toast";
 
 const Menu = () => {
