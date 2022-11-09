@@ -7,9 +7,11 @@ const PlaylistSong = ({ track }: { track: track }) => {
   const [open, setOpen] = useState(false);
   return (
     <Reorder.Item
+      dragConstraints={{ bottom: 0, top: 0 }}
+      dragElastic={1}
       value={track}
       id={track.id}
-      className='flex items-center pr-4 bg-body-main/40 backdrop-blur-md hover:bg-card-base select-none'
+      className='flex items-center pr-4 bg-body-main/40 hover:bg-card-base select-none'
     >
       <img
         className='object-cover aspect-square w-20 select-none'
@@ -20,7 +22,7 @@ const PlaylistSong = ({ track }: { track: track }) => {
         <span className='crossover text-zinc-50 font-semibold'>
           {track.name}
         </span>
-        <span className='text-zinc-400'>
+        <span className='text-zinc-500'>
           {track.artists
             .slice(0, 3)
             .map((artist) => artist.name)

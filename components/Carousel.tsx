@@ -27,16 +27,19 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
   return (
     <>
       <div
-        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute bg-gradient-to-t from-body-main to-transparent
+        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute
        after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
       >
         <AnimatePresence initial={false}>
           <motion.div
             key={items[active].id}
-            initial={{ x }}
-            animate={{ x: 0 }}
-            exit={{ x: x! * -1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            initial={{ x, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -x!, opacity: 0 }}
+            transition={{
+              x: { type: "spring", stiffness: 200, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
             drag='x'
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
@@ -44,9 +47,9 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
               const { velocity, offset } = info;
               if (offset.x * velocity.x > 10000) {
                 // determine direction and switch
-                const d = offset.x > 0 ? -1000 : 1000;
+                const d = offset.x > 0 ? -500 : 500;
                 setDirection(d);
-                const nextPosition = getNextPosition(0, 3, active, d / 1000);
+                const nextPosition = getNextPosition(0, 3, active, d / 500);
                 setActive(nextPosition);
               }
             }}
@@ -76,12 +79,14 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
         {indexes.map((index) => (
           <div
             onClick={() => {
-              const d = index > active ? -1000 : 1000;
-              setActive(index);
+              const d = index > active ? 500 : -500;
               setDirection(d);
+              setActive(index);
             }}
             key={index}
-            className={`border-bar ${index === active ? "bg-zinc-700" : ""}`}
+            className={`border-bar ${
+              index === active ? "bg-zinc-700 hover:bg-zinc-600/60" : ""
+            }`}
           />
         ))}
       </div>

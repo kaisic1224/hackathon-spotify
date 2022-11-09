@@ -2,13 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
+:not(.hidden-scrollbar)::-webkit-scrollbar {
   width: 10px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+  background-color: rgb(32, 32, 32);
 }
 
 ::-webkit-scrollbar:hover ::-webkit-scrollbar-track {
@@ -22,28 +22,42 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(94, 94, 94);
+  background-color: rgb(66, 66, 66);
 }
 
 .crossover {
   grid-column: span 2;
 }
 
-.hidden-scrollbar::-webkit-scrollbar-thumb {
-  background-color: transparent;
-}
+@layer components {
+  .carousel-header {
+    @apply min-h-[412px];
+  }
 
-@layer {
   .song-card {
     @apply bg-body-main isolate z-50 relative hover:bg-g-primary text-white font-medium
-         p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[none];
+    p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[none];
   }
   .text-form {
     @apply focus:outline-none outline-none bg-body-main transition-all focus:bg-card-base
-     hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
+    hover:bg-card-base border-b-2 border-transparent focus:border-b-white w-64;
   }
 
   .border-bar {
     @apply bg-zinc-900 hover:bg-zinc-800/60 flex-1 cursor-pointer;
+  }
+
+  .chip-row {
+    @apply overflow-x-auto flex gap-2 items-center pb-3 pt-1 lg:flex-wrap;
+  }
+
+  .chip {
+    @apply rounded-full font-bold min-w-[15ch] max-w-[15ch] uppercase text-center p-1 border cursor-default overflow-hidden overflow-ellipsis focus:text-zinc-500;
+  }
+
+  .search {
+    @apply outline-none rounded-md bg-card-base/60 text-zinc-500 w-full leading-relaxed p-1 pl-9 whitespace-nowrap 
+    placeholder:text-zinc-700 focus:placeholder:text-zinc-500
+    border border-spacing-11 border-card-base;
   }
 }

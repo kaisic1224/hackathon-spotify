@@ -1,15 +1,20 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { unstable_getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const token = await getSession({ req });
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const session = await unstable_getServerSession(req, res, authOptions);
+  if (!session) return res.status(401);
 
   const response = await fetch(
     `https://api.spotify.com/v1/users/${req.query.id}/playlists`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token?.accessToken}`
+        Authorization: `Bearer ${session?.accessToken}`
       },
       body: JSON.stringify({
         name: req.body.name,
@@ -20,4 +25,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   );
   const data = await response.json();
   return res.status(200).json(data);
-};
+}

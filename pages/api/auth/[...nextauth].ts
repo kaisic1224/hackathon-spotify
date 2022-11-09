@@ -1,8 +1,10 @@
-import NextAuth, { User } from "next-auth";
+import NextAuth, { NextAuthOptions, User } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { LOGIN_URL } from "../../../lib/spotify";
 
-const basic = process.env.BASIC;
+const basic = Buffer.from(
+  `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
+).toString("base64");
 
 const refreshToken = async (token: any) => {
   try {
@@ -37,7 +39,7 @@ const refreshToken = async (token: any) => {
   }
 };
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.CLIENT_ID!,
@@ -80,4 +82,6 @@ export default NextAuth({
       return session;
     }
   }
-});
+};
+
+export default NextAuth(authOptions);

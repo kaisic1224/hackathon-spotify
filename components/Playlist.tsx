@@ -1,21 +1,39 @@
-import type { track } from "../lib/api.d";
-import { AnimatePresence, Reorder } from "framer-motion";
-import React, { useState } from "react";
+import type { artist, track } from "../lib/api.d";
+import { AnimatePresence, Reorder, motion } from "framer-motion";
+import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
 import { IoMdOptions } from "react-icons/io";
 import PlaylistSong from "./PlaylistSong";
 import AddImage from "./AddImage";
 
-const Playlist = ({ items }: { items: track[] }) => {
+interface Filters {
+  artists: artist[];
+  genres: string[];
+}
+
+const Playlist = ({
+  items,
+  setRecommended,
+  artists,
+  topTracks
+}: {
+  items: track[];
+  setRecommended: Dispatch<SetStateAction<track[]>>;
+  artists: artist[];
+  topTracks: track[];
+}) => {
   const [open, setOpen] = useState(false);
+  const [filterOpen, setFopen] = useState(true);
   const [name, setName] = useState("Music for me");
   const [file, setFile] = useState<File>();
   const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
   const [desc, setDesc] = useState("");
-  const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState<Filters>({
+    artists,
+    genres: artists.slice(0, 0).map((artist) => artist.genres[0])
+  });
 
   return (
     <>
@@ -33,19 +51,51 @@ const Playlist = ({ items }: { items: track[] }) => {
         />
       )}
 
-      <div className='flex flex-col w-screen relative'>
-        <div className='text-zinc-500 font-bold uppercase flex items-center gap-1'>
+      {filterOpen && (
+        <motion.div className='absolute w-screen top-0 z-[999] bg-black/60'>
+          <div></div>
+        </motion.div>
+      )}
+
+      <div className='flex flex-col max-w-screen mx-auto relative'>
+        <div
+          className='text-zinc-500 font-bold uppercase flex items-center gap-1'
+          onClick={() => setFopen(true)}
+        >
           Filters <IoMdOptions />
         </div>
-        <div className='flex-nowrap overflow-x-auto flex gap-2'></div>
+
+        <div className='chip-row hidden-scrollbar'>
+          {filters.artists.map((artist) => (
+            <div
+              key={artist.id}
+              tabIndex={0}
+              className='chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
+            >
+              {artist.name}
+            </div>
+          ))}
+        </div>
+        <div className='chip-row hidden-scrollbar'>
+          {filters.genres.map((genre) => (
+            <div
+              key={genre}
+              tabIndex={0}
+              className='chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
+            >
+              {genre}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className='shadow-lg'>
+      <div className='xs:max-w-[calc(100vw_-_1rem)] mx-auto shadow-lg'>
         <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main text-zinc-100'>
           <div className='relative'>
             <img
-              className='object-cover aspect-square w-36 peer'
-              src={file ? (fLink as string) : tracks[0].album.images[0].url}
+              className='object-cover aspect-square
+              xs:w-4 lg:w-36'
+              src={file ? (fLink as string) : items[0].album.images[0].url}
               alt='Album cover'
             />
             <div
@@ -75,6 +125,13 @@ const Playlist = ({ items }: { items: track[] }) => {
             ) : null}
           </div>
           <div className='ml-auto flex flex-col items-center'>
+            <label htmlFor='public' className='cursor-pointer select-none'>
+              {pub ? (
+                <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
+              ) : (
+                <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
+              )}
+            </label>
             <input
               className='hidden'
               type='checkbox'
@@ -85,30 +142,15 @@ const Playlist = ({ items }: { items: track[] }) => {
                 setPublic(!pub);
               }}
             />
-            <label htmlFor='public' className='cursor-pointer select-none'>
-              {pub ? (
-                <div className='flex items-center gap-2'>
-                  <span className='peer'>Public</span>
-                  <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
-                </div>
-              ) : (
-                <div className='flex items-center gap-2'>
-                  <span className='peer'>Private</span>
-                  <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
-                </div>
-              )}
-            </label>
           </div>
         </div>
         <Reorder.Group
           axis='y'
-          onReorder={setTracks}
-          values={tracks}
-          layoutScroll
-          style={{ height: 320, overflowY: "scroll" }}
-          className='pl-0'
+          onReorder={setRecommended}
+          values={items}
+          className='pl-0 playlist'
         >
-          {tracks.map((track) => (
+          {items.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
           ))}
         </Reorder.Group>
@@ -133,12 +175,13 @@ const Playlist = ({ items }: { items: track[] }) => {
           const res2 = await fetch(
             "/api/addItemsToPlaylist?" +
               new URLSearchParams({
-                songs: tracks.map((track) => track.uri).join(","),
+                songs: items.map((track) => track.uri).join(","),
                 playlist_id: data.id
               })
           );
 
           const data2 = await res2.json();
+          console.log(data2);
 
           const res3 = await fetch(
             "/api/changePlaylistImage?" +
@@ -155,7 +198,7 @@ const Playlist = ({ items }: { items: track[] }) => {
 
           window.open(data.external_urls.spotify);
         }}
-        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-accent
+        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-base/60 text-zinc-400 active:text-zinc-500
         ${loading ? "cursor-not-allowed" : "cursor-auto"}`}
       >
         Create!

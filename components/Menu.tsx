@@ -1,8 +1,5 @@
-import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FaCaretRight } from "react-icons/fa";
-import { getCards } from "./Card";
-import { playlistItem, track, artist, playLartist } from "../lib/api.d";
+import { FaCaretRight, FaRegCheckCircle } from "react-icons/fa";
 import Toast from "./Toast";
 
 const Menu = () => {
@@ -60,7 +57,11 @@ const Menu = () => {
 
   return (
     <>
-      {toast && <Toast />}
+      {toast && (
+        <Toast>
+          Copied to clipboard! <FaRegCheckCircle />
+        </Toast>
+      )}
       {open && (
         <div
           ref={menuRef}
