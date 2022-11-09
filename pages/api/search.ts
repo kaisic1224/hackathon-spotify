@@ -10,11 +10,11 @@ export default async function handler(
   if (!session) return res.status(401);
 
   const { q } = req.query;
-  const types = ["album", "artist", "track"];
+  const types = ["track"];
   const queryParamString = new URLSearchParams({
     q: q as string,
     type: types.join(","),
-    limit: "5"
+    limit: "1"
   });
   const response = await fetch(
     "https://api.spotify.com/v1/search?" + queryParamString.toString(),

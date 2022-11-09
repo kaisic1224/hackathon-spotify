@@ -27,16 +27,19 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
   return (
     <>
       <div
-        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute bg-gradient-to-t from-body-main to-transparent
+        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute
        after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
       >
         <AnimatePresence initial={false}>
           <motion.div
             key={items[active].id}
-            initial={{ x }}
-            animate={{ x: 0 }}
-            exit={{ x: x! * -1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            initial={{ x, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -x!, opacity: 0 }}
+            transition={{
+              x: { type: "spring", stiffness: 200, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
             drag='x'
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
@@ -82,7 +85,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
             }}
             key={index}
             className={`border-bar ${
-              index === active ? "bg-zinc-700 hover:bg-body-main" : ""
+              index === active ? "bg-zinc-700 hover:bg-zinc-600/60" : ""
             }`}
           />
         ))}

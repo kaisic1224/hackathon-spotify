@@ -1,6 +1,6 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
-const Toast = () => {
+const Toast = ({ children }: any) => {
   return (
     <>
       <motion.div
@@ -9,7 +9,7 @@ const Toast = () => {
         style={{ left: "50%", translateX: "-50%" }}
         className='fixed p-4 bg-card-accent top-12 z-[9999] flex items-center text-lg gap-3 font-semibold text-white rounded-md'
       >
-        Copied to clipboard! <FaRegCheckCircle />
+        {children}
       </motion.div>
     </>
   );

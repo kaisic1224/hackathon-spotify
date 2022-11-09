@@ -8,7 +8,7 @@ import AddImage from "./AddImage";
 
 interface Filters {
   artists: artist[];
-  tracks: track[];
+  genres: string[];
 }
 
 const Playlist = ({
@@ -28,12 +28,11 @@ const Playlist = ({
   const [file, setFile] = useState<File>();
   const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
   const [desc, setDesc] = useState("");
-  const [tracks, setTracks] = useState(items);
   const [pub, setPublic] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     artists,
-    tracks: topTracks
+    genres: artists.slice(0, 0).map((artist) => artist.genres[0])
   });
 
   return (
@@ -52,30 +51,51 @@ const Playlist = ({
         />
       )}
 
-      {filterOpen && <motion.div className='absolute w-screen'></motion.div>}
+      {filterOpen && (
+        <motion.div className='absolute w-screen top-0 z-[999] bg-black/60'>
+          <div></div>
+        </motion.div>
+      )}
 
-      <div className='flex flex-col max-w-screen relative'>
-        <div className='text-zinc-500 font-bold uppercase flex items-center gap-1'>
+      <div className='flex flex-col max-w-screen mx-auto relative'>
+        <div
+          className='text-zinc-500 font-bold uppercase flex items-center gap-1'
+          onClick={() => setFopen(true)}
+        >
           Filters <IoMdOptions />
         </div>
-        <div className='overflow-x-auto flex gap-2 hidden-scrollbar items-center pb-3 pt-1'>
+
+        <div className='chip-row hidden-scrollbar'>
           {filters.artists.map((artist) => (
             <div
+              key={artist.id}
               tabIndex={0}
-              className='whitespace-nowrap chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
+              className='chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
             >
               {artist.name}
             </div>
           ))}
         </div>
+        <div className='chip-row hidden-scrollbar'>
+          {filters.genres.map((genre) => (
+            <div
+              key={genre}
+              tabIndex={0}
+              className='chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
+            >
+              {genre}
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className='shadow-lg'>
+      <div className='xs:max-w-[calc(100vw_-_1rem)] mx-auto shadow-lg'>
         <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main text-zinc-100'>
           <div className='relative'>
             <img
-              className='object-cover aspect-square w-36 peer'
-              src={file ? (fLink as string) : tracks[0].album.images[0].url}
+              className='object-cover aspect-square
+              xs:w-4 lg:w-36'
+              src={file ? (fLink as string) : items[0].album.images[0].url}
               alt='Album cover'
             />
             <div
@@ -105,6 +125,13 @@ const Playlist = ({
             ) : null}
           </div>
           <div className='ml-auto flex flex-col items-center'>
+            <label htmlFor='public' className='cursor-pointer select-none'>
+              {pub ? (
+                <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
+              ) : (
+                <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
+              )}
+            </label>
             <input
               className='hidden'
               type='checkbox'
@@ -115,28 +142,15 @@ const Playlist = ({
                 setPublic(!pub);
               }}
             />
-            <label htmlFor='public' className='cursor-pointer select-none'>
-              {pub ? (
-                <div className='flex items-center gap-2'>
-                  <span className='peer'>Public</span>
-                  <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
-                </div>
-              ) : (
-                <div className='flex items-center gap-2'>
-                  <span className='peer'>Private</span>
-                  <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
-                </div>
-              )}
-            </label>
           </div>
         </div>
         <Reorder.Group
           axis='y'
-          onReorder={setTracks}
-          values={tracks}
+          onReorder={setRecommended}
+          values={items}
           className='pl-0 playlist'
         >
-          {tracks.map((track) => (
+          {items.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
           ))}
         </Reorder.Group>
@@ -161,7 +175,7 @@ const Playlist = ({
           const res2 = await fetch(
             "/api/addItemsToPlaylist?" +
               new URLSearchParams({
-                songs: tracks.map((track) => track.uri).join(","),
+                songs: items.map((track) => track.uri).join(","),
                 playlist_id: data.id
               })
           );
@@ -184,7 +198,7 @@ const Playlist = ({
 
           window.open(data.external_urls.spotify);
         }}
-        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-accent
+        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-base/60 text-zinc-400 active:text-zinc-500
         ${loading ? "cursor-not-allowed" : "cursor-auto"}`}
       >
         Create!

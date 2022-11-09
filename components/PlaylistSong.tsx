@@ -7,6 +7,8 @@ const PlaylistSong = ({ track }: { track: track }) => {
   const [open, setOpen] = useState(false);
   return (
     <Reorder.Item
+      dragConstraints={{ bottom: 0, top: 0 }}
+      dragElastic={1}
       value={track}
       id={track.id}
       className='flex items-center pr-4 bg-body-main/40 hover:bg-card-base select-none'

@@ -20,13 +20,6 @@ export interface card {
   image: string;
 }
 
-export const getCards = () => {
-  const domCards = document.querySelectorAll(".song-card");
-  domCards.forEach((card) => {
-    card.classList.remove("bg-g-primary");
-  });
-};
-
 const Card = ({ song }: { song: playlistItem | track | artist }) => {
   if ("track" in song || song.type === "track") {
     return (
