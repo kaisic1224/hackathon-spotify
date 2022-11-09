@@ -8,6 +8,7 @@ import PlaylistLoader from "../components/PlaylistLoader";
 import Carousel from "../components/Carousel";
 import Searchbar from "../components/Searchbar";
 import useFetch from "../lib/useFetch";
+import { NextPage } from "next";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -21,7 +22,7 @@ const fadeinUp = {
   }
 };
 
-const playlists = () => {
+const playlists: NextPage = () => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
