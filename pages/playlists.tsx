@@ -22,7 +22,7 @@ const fadeinUp = {
   }
 };
 
-const playlists: NextPage = () => {
+const Playlists: NextPage = () => {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -93,4 +93,4 @@ const playlists: NextPage = () => {
     </>
   );
 };
-export default playlists;
+export default Playlists;
