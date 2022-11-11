@@ -54,7 +54,7 @@ const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
                     </Link>
                     {viewedSection === ind[0] && (
                       <motion.div
-                        className='w-full absolute left-0 bottom-0 h-[2px] rounded-xl bg-g-primary'
+                        className='w-full absolute left-0 -bottom-1 h-[2px] rounded-xl bg-g-primary'
                         layout
                         layoutId='underline'
                       />
