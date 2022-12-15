@@ -23,7 +23,7 @@ const Playlist = ({
   topTracks: track[];
 }) => {
   const [open, setOpen] = useState(false);
-  const [filterOpen, setFopen] = useState(true);
+  const [filterOpen, setFopen] = useState(false);
   const [name, setName] = useState("Music for me");
   const [file, setFile] = useState<File>();
   const [fLink, setFlink] = useState<string | ArrayBuffer | null>();
@@ -53,11 +53,14 @@ const Playlist = ({
 
       {filterOpen && (
         <motion.div className='absolute w-screen top-0 z-[999] bg-black/60'>
-          <div></div>
+          <div>
+            <label htmlFor='instrumental'>Include Instrumental?</label>
+            <input type='checkbox' name='instrumental' id='instrumental' />
+          </div>
         </motion.div>
       )}
 
-      <div className='flex flex-col max-w-screen mx-auto relative'>
+      <div className='flex flex-col max-w-screen mx-auto relative px-5'>
         <div
           className='text-zinc-500 font-bold uppercase flex items-center gap-1'
           onClick={() => setFopen(true)}
@@ -89,12 +92,12 @@ const Playlist = ({
         </div>
       </div>
 
-      <div className='xs:max-w-[calc(100vw_-_1rem)] mx-auto shadow-lg'>
+      <div className='mx-auto shadow-lg'>
         <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main text-zinc-100'>
           <div className='relative'>
             <img
               className='object-cover aspect-square
-              xs:w-4 lg:w-36'
+              xs:w-36 lg:w-36'
               src={file ? (fLink as string) : items[0].album.images[0].url}
               alt='Album cover'
             />
@@ -125,11 +128,27 @@ const Playlist = ({
             ) : null}
           </div>
           <div className='ml-auto flex flex-col items-center'>
-            <label htmlFor='public' className='cursor-pointer select-none'>
+            <label
+              htmlFor='public'
+              className='cursor-pointer select-none relative isolate
+              after:absolute after:w-[calc(100%_+_2rem)] after:h-[calc(100%_+_2rem)] after:rounded-full after:top-1/2 after:left-1/2 after:pointer-events-none
+              after:-translate-y-1/2 after:-translate-x-1/2 after:-z-10 expand'
+              aria-label='Toggle public on or off playlist'
+            >
               {pub ? (
-                <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150' />
+                <>
+                  <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150 peer' />
+                  <span className='playlist-tooltip transition-all scale-0 peer-hover:scale-100 origin-right delay-200'>
+                    Playlist will be <u>public</u>
+                  </span>
+                </>
               ) : (
-                <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150' />
+                <>
+                  <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150 peer' />
+                  <span className='playlist-tooltip transition-all scale-0 peer-hover:scale-100 origin-right delay-200'>
+                    Playlist will be <u>private</u>
+                  </span>
+                </>
               )}
             </label>
             <input
@@ -145,10 +164,11 @@ const Playlist = ({
           </div>
         </div>
         <Reorder.Group
+          as='ul'
           axis='y'
           onReorder={setRecommended}
           values={items}
-          className='pl-0 playlist'
+          className='pl-0 flex flex-col'
         >
           {items.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
@@ -198,8 +218,8 @@ const Playlist = ({
 
           window.open(data.external_urls.spotify);
         }}
-        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-base/60 text-zinc-400 active:text-zinc-500
-        ${loading ? "cursor-not-allowed" : "cursor-auto"}`}
+        className={`font-semibold text-xl mx-auto block bg-card-base rounded-lg py-[.5em] px-[1.25em] hover:bg-card-base/60 mt-8 text-zinc-100 active:text-zinc-500
+        ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
       >
         Create!
       </button>

@@ -74,6 +74,7 @@ const Searchbar = ({
         >
           <img
             src={results.album.images[results.album.images.length - 1].url}
+            alt={`Album cover for ${results.album.name}`}
           />
           <div className='flex flex-col ml-2 font-bold'>
             <span className='text-sm text-zinc-400'>{results?.name}</span>

@@ -86,10 +86,7 @@ export default function useFetch(fetchRec = false) {
     );
     const data2 = await res2.json();
 
-    // const filteredTracks = new Set([...data.tracks, ...data2.tracks]);
-
     setRecommended([...data.tracks, ...data2.tracks]);
-    console.log(recommended);
   };
 
   useEffect(() => {

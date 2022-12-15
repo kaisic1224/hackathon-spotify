@@ -31,7 +31,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
        after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
       >
         <AnimatePresence initial={false}>
-          <motion.div
+          <motion.img
             key={items[active].id}
             initial={{ x, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -45,20 +45,16 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
             dragElastic={1}
             onDragEnd={(e, info) => {
               const { velocity, offset } = info;
-              if (offset.x * velocity.x > 10000) {
-                // determine direction and switch
-                const d = offset.x > 0 ? -500 : 500;
-                setDirection(d);
-                const nextPosition = getNextPosition(0, 3, active, d / 500);
-                setActive(nextPosition);
-              }
+              if (offset.x * velocity.x < 10000) return;
+              // determine direction and switch
+              const d = offset.x > 0 ? -500 : 500;
+              setDirection(d);
+              const nextPosition = getNextPosition(0, 3, active, d / 500);
+              setActive(nextPosition);
             }}
-          >
-            <img
-              className='w-full object-cover absolute'
-              src={items[active].images[0].url}
-            />
-          </motion.div>
+            className='w-full object-cover absolute'
+            src={items[active].images[0].url}
+          />
         </AnimatePresence>
         <div className='z-[60] bottom-2 absolute ml-4 text-white flex flex-col'>
           <h2 className='flex gap-2 items-center mb-0'>

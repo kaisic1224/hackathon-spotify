@@ -55,7 +55,16 @@ const Home: NextPage = () => {
     if (entry4?.isIntersecting) {
       setName("Playlists Made For You");
     }
-  }, [inView, inView2, inView3, inView4]);
+  }, [
+    inView,
+    inView2,
+    inView3,
+    inView4,
+    entry?.isIntersecting,
+    entry2?.isIntersecting,
+    entry3?.isIntersecting,
+    entry4?.isIntersecting
+  ]);
 
   if (session?.error === "refresh error") {
     return (
@@ -98,6 +107,7 @@ const Home: NextPage = () => {
         <img
           className='-z-10 absolute object-cover aspect-video h-screen w-full select-none -translate-y-15'
           src='/photos/heroimage.jpg'
+          alt='hero-banner'
         />
         <motion.div
           initial={{ y: "100%", x: "-50%", opacity: 0 }}
@@ -114,7 +124,7 @@ const Home: NextPage = () => {
               flex-col mt-4 gap-2
               md:gap-6 md:flex-row md:min-w-max'
             >
-              <span className='max-w-max flex'>
+              <span className='max-w-max flex font-semibold'>
                 Welcome back{" "}
                 <img
                   src={session?.user?.image!}
@@ -153,7 +163,7 @@ const Home: NextPage = () => {
           id='most-recent'
           ref={ref}
         >
-          <motion.h2 className='px-20 text-white text-center py-16 lg:py-20'>
+          <motion.h2 className='px-20 text-white text-center text-4xl font-bold py-16 lg:py-20'>
             Most Recent
           </motion.h2>
           {recentTracks?.length ?? 0 != 0 ? (
@@ -166,7 +176,7 @@ const Home: NextPage = () => {
           ref={ref2}
         >
           <DateContext.Provider value={{ time_range, setTime }}>
-            <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white text-center'>
+            <motion.h2 className='px-20 py-20 flex flex-col gap-3 text-white text-center text-4xl font-bold'>
               Most Listened Artists
               <DatePicker endpoint='topArtists' setFn={setTopArtists} />
             </motion.h2>
@@ -194,7 +204,7 @@ const Home: NextPage = () => {
           <DateContext.Provider
             value={{ time_range: time_range2, setTime: setTime2 }}
           >
-            <motion.h2 className='px-20 flex flex-col gap-3 py-20 text-white text-center'>
+            <motion.h2 className='px-20 flex flex-col gap-3 py-20 text-white text-center text-4xl font-bold'>
               Most Listened Songs
               <DatePicker endpoint='topTracks' setFn={setTopTracks} />
             </motion.h2>
@@ -214,7 +224,7 @@ const Home: NextPage = () => {
           id='customized-playlists'
           ref={ref4}
         >
-          <motion.h2 className='px-20 py-20 text-white text-center'>
+          <motion.h2 className='px-20 py-20 text-white text-center text-4xl font-bold'>
             Customized Playlists
           </motion.h2>
 

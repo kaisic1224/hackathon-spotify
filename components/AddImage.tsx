@@ -45,7 +45,7 @@ const AddImage = ({
         }
       }}
     >
-      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden'>
+      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden xs:w-[calc(100vw_-_2rem)]'>
         <div className='bg-slate-100 p-8 overflow-hidden'>
           <span className='text-center inline-block max-w-[14ch] text-6xl font-bold text-slate-300'>
             Customized Playlists
@@ -78,25 +78,38 @@ const AddImage = ({
           </div>
         )}
         {file == undefined && (
-          <div className='grid place-items-center bg-body-main hover:bg-card-accent border-8 border-body-main'>
-            <label
-              htmlFor='cover-img'
-              className='text-white select-none font-bold w-full text-center p-8 cursor-pointer'
-            >
-              Add an image
-            </label>
-            <input
-              ref={fileRef}
-              type='file'
-              name='user-cover-img'
-              id='cover-img'
-              accept='image/*'
-              className='hidden'
-              onChange={() => {
-                setFile(fileRef.current?.files![0]);
+          <>
+            <div className='grid place-items-center bg-body-main hover:bg-card-accent border-8 border-body-main'>
+              <label
+                htmlFor='cover-img'
+                className='text-white select-none font-bold w-full text-center p-8 cursor-pointer'
+              >
+                Add an image
+              </label>
+              <input
+                ref={fileRef}
+                type='file'
+                name='user-cover-img'
+                id='cover-img'
+                accept='image/*'
+                className='hidden'
+                onChange={() => {
+                  setFile(fileRef.current?.files![0]);
+                }}
+              />
+            </div>
+            <textarea
+              placeholder='Add a description...'
+              value={description}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                e.target.style.height = "auto";
+                e.target.style.height = e.target.scrollHeight + "px";
               }}
+              maxLength={150}
+              className='resize-none self-start text-form text-white overflow-y-visible p-2 flex-1 mr-2 focus:placeholder:text-white/60'
             />
-          </div>
+          </>
         )}
       </div>
     </div>
