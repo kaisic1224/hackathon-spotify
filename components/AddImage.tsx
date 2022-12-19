@@ -45,7 +45,7 @@ const AddImage = ({
         }
       }}
     >
-      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden'>
+      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden xs:w-[calc(100vw_-_2rem)] xl:w-auto'>
         <div className='bg-slate-100 p-8 overflow-hidden'>
           <span className='text-center inline-block max-w-[14ch] text-6xl font-bold text-slate-300'>
             Customized Playlists
