@@ -3,3 +3,5 @@
 - playlist change
 - customzie playlist / playlst organizer
 	- always have mixed things, simply just like a song on spotify and we will detect and then organzie and always have the first 15-20 likd songs in a playlist
+
+	big bad mistakes
