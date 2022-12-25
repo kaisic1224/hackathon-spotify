@@ -5,9 +5,12 @@ import { track } from "../lib/api.d";
 
 const PlaylistSong = ({ track }: { track: track }) => {
   const [open, setOpen] = useState(false);
+  const controls = useDragControls();
   return (
     <Reorder.Item
       dragConstraints={{ bottom: 0, top: 0 }}
+      dragControls={controls}
+      dragListener={false}
       dragElastic={1}
       value={track}
       id={track.id}
@@ -19,14 +22,25 @@ const PlaylistSong = ({ track }: { track: track }) => {
         alt='Track art cover'
       />
       <div className='flex flex-col self-start ml-2 mt-2'>
-        <span className='crossover text-zinc-50 font-semibold'>
+        <span
+          onPointerDown={(e) => controls.start(e)}
+          className='crossover text-zinc-50 font-semibold'
+        >
           {track.name}
         </span>
         <span className='text-zinc-500'>
-          {track.artists
-            .slice(0, 3)
-            .map((artist) => artist.name)
-            .join(" • ")}
+          {track.artists.map((artist, i) => (
+            <>
+              <a
+                key={`${track.name}:${artist.name}`}
+                className='text-zinc-500 no-underline hover:underline hover:text-zinc-300'
+                href={artist.external_urls.spotify}
+              >
+                {artist.name}
+              </a>
+              <>{i != track.artists.length - 1 && " • "}</>
+            </>
+          ))}
         </span>
       </div>
     </Reorder.Item>

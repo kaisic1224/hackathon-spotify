@@ -43,26 +43,23 @@ const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
         </div>
         <ul className='flex items-center justify-center gap-2 mb-0 ml-auto pr-2'>
           <AnimatePresence initial={false}>
-            <LayoutGroup id='ulime'>
-              {links.map((ind) => {
-                return (
-                  <li className='relative' key={ind[1]}>
-                    <Link href={ind[1]}>
-                      <a className='no-underline text-zinc-300/70 hover:text-zinc-400/70'>
-                        {width! <= 840 ? ind[2] : ind[0]}
-                      </a>
-                    </Link>
-                    {viewedSection === ind[0] && (
-                      <motion.div
-                        className='w-full absolute left-0 -bottom-1 h-[2px] rounded-xl bg-g-primary'
-                        layout
-                        layoutId='underline'
-                      />
-                    )}
-                  </li>
-                );
-              })}
-            </LayoutGroup>
+            {links.map((ind) => {
+              return (
+                <li className='relative' key={ind[1]}>
+                  <Link href={ind[1]}>
+                    <a className='no-underline text-zinc-300/70 hover:text-zinc-400/70'>
+                      {width! <= 840 ? ind[2] : ind[0]}
+                    </a>
+                  </Link>
+                  {viewedSection === ind[0] && (
+                    <motion.div
+                      className='w-full absolute left-0 -bottom-1 h-[2px] rounded-xl bg-g-primary'
+                      layoutId='underline'
+                    />
+                  )}
+                </li>
+              );
+            })}
           </AnimatePresence>
         </ul>
       </div>

@@ -77,12 +77,12 @@ const Menu = () => {
                 setToast(false);
               }, 2000);
             }}
-            className='px-2 py-1 select-none hover:bg-slate-500'
+            className='px-2 py-1 select-none hover:bg-slate-500 rounded-sm'
           >
             Copy link
           </div>
           <div
-            className='px-2 py-1 select-none hover:bg-slate-500'
+            className='px-2 py-1 select-none hover:bg-slate-500 rounded-sm'
             onClick={() => window.open(links.open, "_blank")}
           >
             Open in Spotify
@@ -94,7 +94,7 @@ const Menu = () => {
                   if (artists.length === 1)
                     window.open(artists[0][1], "_blank");
                 }}
-                className='pl-2 py-1 z-10 select-none hover:bg-slate-500 flex items-center justify-between peer'
+                className='pl-2 py-1 z-10 select-none hover:bg-slate-500 rounded-sm flex items-center justify-between peer'
               >
                 Go to artist {artists.length != 1 && <FaCaretRight />}
               </div>
@@ -111,7 +111,7 @@ const Menu = () => {
                   {artists.map((artist: string[]) => (
                     <div
                       key={artist[0]}
-                      className='px-2 py-1 select-none text-g-primary hover:text-green-300 hover:bg-slate-500'
+                      className='px-2 rounded-sm py-1 select-none hover:bg-slate-500'
                       onClick={() => window.open(artist[1], "_blank")}
                     >
                       {artist[0]}
