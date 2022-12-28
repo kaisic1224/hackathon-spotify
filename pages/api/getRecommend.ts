@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
 import { authOptions } from "./auth/[...nextauth]";
 
 export default async function handler(

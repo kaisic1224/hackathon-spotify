@@ -35,6 +35,9 @@ const Playlist = ({
     genres: artists.slice(0, 0).map((artist) => artist.genres[0])
   });
 
+  useEffect(() => {
+    document.body.classList.toggle("overflow-y-hidden");
+  }, [filterOpen]);
   return (
     <>
       {open && (
@@ -51,40 +54,75 @@ const Playlist = ({
         />
       )}
 
-      {filterOpen && (
-        <motion.div className='absolute w-screen top-0 z-[999] bg-black/60'>
-          <div>
-            <label htmlFor='instrumental'>Include Instrumental?</label>
-            <input type='checkbox' name='instrumental' id='instrumental' />
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence initial={false}>
+        {filterOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => {
+              setFopen(false);
+            }}
+            className='fixed w-screen inset-0 z-[9999] bg-black/60'
+          >
+            <motion.div
+              className='bottom-0 flex flex-col text-white'
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ ease: "easeOut" }}
+            >
+              <div className='chip-row hidden-scrollbar'>
+                {filters.artists.map((artist) => (
+                  <div
+                    key={artist.id}
+                    tabIndex={0}
+                    className='chip text-card-accent border-card-base focus:bg-body-main'
+                  >
+                    {artist.name}
+                  </div>
+                ))}
+              </div>
+              <label htmlFor='acousticness'>Include acousticness?</label>
+              <input type='checkbox' name='acousticness' id='acousticness' />
+              <label htmlFor='danceability'>Include danceability?</label>
+              <input type='checkbox' name='danceability' id='danceability' />
+              <label htmlFor='instrumentalness'>
+                Include instrumentalness?
+              </label>
+              <input
+                type='checkbox'
+                name='instrumentalness'
+                id='instrumentalness'
+              />
+              <label htmlFor='liveness'>Include liveness?</label>
+              <input type='checkbox' name='liveness' id='liveness' />
+              <label htmlFor='loudness'>Include loudness?</label>
+              <input type='checkbox' name='loudness' id='loudness' />
+              <label htmlFor='popularity'>Include popularity?</label>
+              <input type='checkbox' name='popularity' id='popularity' />
+              <label htmlFor='speechiness'>Include speechiness?</label>
+              <input type='checkbox' name='speechiness' id='speechiness' />
+              <label htmlFor='tempo'>Include tempo?</label>
+              <input type='checkbox' name='tempo' id='tempo' />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className='flex flex-col max-w-screen mx-auto relative px-5'>
         <div
           className='text-zinc-500 font-bold uppercase flex items-center gap-1'
-          onClick={() => setFopen(true)}
+          onClick={() => setFopen((v) => !v)}
         >
           Filters <IoMdOptions />
         </div>
 
         <div className='chip-row hidden-scrollbar'>
-          {filters.artists.map((artist) => (
-            <div
-              key={artist.id}
-              tabIndex={0}
-              className='chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
-            >
-              {artist.name}
-            </div>
-          ))}
-        </div>
-        <div className='chip-row hidden-scrollbar'>
           {filters.genres.map((genre) => (
             <div
               key={genre}
               tabIndex={0}
-              className='chip text-card-accent border-card-base focus:bg-body-main focus:border-card-accent'
+              className='chip text-card-accent border-card-base focus:bg-body-main'
             >
               {genre}
             </div>
@@ -109,7 +147,7 @@ const Playlist = ({
             >
               <div className='group-hover:grid place-items-center hidden select-none'>
                 <FaPlus />
-                Add Image
+                <span className='xs:hidden sm:inline'>Add image</span>
               </div>
             </div>
           </div>
@@ -138,15 +176,15 @@ const Playlist = ({
               {pub ? (
                 <>
                   <FaLockOpen className='peer-active:translate-y-[5px] transition-transform duration-150 peer' />
-                  <span className='playlist-tooltip transition-all scale-0 peer-hover:scale-100 origin-right delay-200'>
-                    Playlist will be <u>public</u>
+                  <span className='playlist-tooltip transition-all scale-0 peer-hover:scale-100 origin-right delay-200 xs:hidden md:inline'>
+                    Playlist will be <b>public</b>
                   </span>
                 </>
               ) : (
                 <>
                   <FaLock className='peer-active:translate-y-[5px] transition-transform duration-150 peer' />
-                  <span className='playlist-tooltip transition-all scale-0 peer-hover:scale-100 origin-right delay-200'>
-                    Playlist will be <u>private</u>
+                  <span className='playlist-tooltip transition-all scale-0 peer-hover:scale-100 origin-right delay-200 xs:hidden md:inline'>
+                    Playlist will be <b>private</b>
                   </span>
                 </>
               )}

@@ -100,3 +100,25 @@ export interface playlistItem {
     uri: string;
   };
 }
+
+// mode represents major/minor key, 1=major, 0=minor
+interface audioFeatures {
+  danceability: number;
+  energy: number;
+  key: number;
+  loudness: number;
+  mode: 1 | 0;
+  speechiness: number;
+  acousticness: number;
+  instrumentalness: number;
+  liveness: number;
+  valence: number;
+  tempo: number;
+  type: "audio_features";
+  id: string;
+  uri: string;
+  track_href: string;
+  analysis_url: string;
+  duration_ms: string;
+  time_signature: number;
+}

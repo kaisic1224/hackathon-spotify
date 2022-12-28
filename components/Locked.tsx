@@ -6,7 +6,7 @@ const Locked = () => {
   return (
     <div
       aria-disabled
-      className='absolute z-50 top-0 bottom-0 w-full bg-gradient-to-b from-transparent via-slate-300 to-slate-200 
+      className='absolute z-[999] top-0 bottom-0 w-full bg-gradient-to-b from-transparent via-slate-300 to-slate-200 
        grid place-items-center'
     >
       <div className='items-center gap-4'>

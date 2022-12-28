@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaCaretRight, FaRegCheckCircle } from "react-icons/fa";
 import Toast from "./Toast";
@@ -5,6 +6,7 @@ import Toast from "./Toast";
 const Menu = () => {
   const [open, setOpen] = useState(false);
   const [toast, setToast] = useState(false);
+  // const [selected, setSelected] = useState<EventTarget | undefined | null>();
   const [cords, setCords] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const [links, setLinks] = useState({ open: "" });
@@ -15,6 +17,7 @@ const Menu = () => {
       e.preventDefault();
       if (!(e.target as HTMLElement)?.dataset.open) {
         setOpen(false);
+        // setSelected(undefined);
         return;
       }
       if (e.pageX + menuRef?.current?.offsetWidth! > window.innerWidth) {
@@ -29,6 +32,7 @@ const Menu = () => {
         });
       }
       setOpen(true);
+      // setSelected(e.target);
       setLinks({ open: (e.target as HTMLDivElement)?.dataset.open! });
       if ((e.target as HTMLDivElement)?.dataset.artists) {
         const artistes = (e.target as HTMLDivElement)?.dataset
@@ -41,9 +45,15 @@ const Menu = () => {
     },
     [setCords]
   );
+
   const handleClick = useCallback(() => {
     setOpen(false);
+    // setSelected(undefined);
   }, [open]);
+
+  // useEffect(() => {
+  //   selected && (selected as HTMLDivElement).classList.toggle("bg-g-primary");
+  // }, [selected]);
 
   useEffect(() => {
     document.addEventListener("contextmenu", handleContext);
@@ -57,11 +67,13 @@ const Menu = () => {
 
   return (
     <>
-      {toast && (
-        <Toast>
-          Copied to clipboard! <FaRegCheckCircle />
-        </Toast>
-      )}
+      <AnimatePresence initial={false}>
+        {toast && (
+          <Toast>
+            Copied to clipboard! <FaRegCheckCircle />
+          </Toast>
+        )}
+      </AnimatePresence>
       {open && (
         <div
           ref={menuRef}
@@ -111,7 +123,7 @@ const Menu = () => {
                   {artists.map((artist: string[]) => (
                     <div
                       key={artist[0]}
-                      className='px-2 rounded-sm py-1 select-none hover:bg-slate-500'
+                      className='px-2 rounded-sm py-1 select-none hover:bg-slate-500 whitespace-nowrap'
                       onClick={() => window.open(artist[1], "_blank")}
                     >
                       {artist[0]}

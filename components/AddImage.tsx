@@ -45,7 +45,7 @@ const AddImage = ({
         }
       }}
     >
-      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden xs:w-[calc(100vw_-_2rem)]'>
+      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden xs:w-[calc(100vw_-_2rem)] md:w-auto'>
         <div className='bg-slate-100 p-8 overflow-hidden'>
           <span className='text-center inline-block max-w-[14ch] text-6xl font-bold text-slate-300'>
             Customized Playlists
@@ -55,12 +55,12 @@ const AddImage = ({
           <div className='relative flex gap-2 p-1'>
             <div className='relative w-fit h-fit'>
               <FaRegTimesCircle
-                className='fill-white absolute top-0 right-0 cursor-pointer w-5 h-5'
+                className='fill-white/60 hover:fill-white absolute top-0 right-0 cursor-pointer w-5 h-5'
                 onClick={() => setFile(undefined)}
               />
               <img
                 src={`${fLink}`}
-                className='object-cover aspect-square w-40 select-none'
+                className='object-cover aspect-square w-40 select-none peer'
                 alt='Your custom playlist cover image'
               />
             </div>
@@ -84,7 +84,7 @@ const AddImage = ({
                 htmlFor='cover-img'
                 className='text-white select-none font-bold w-full text-center p-8 cursor-pointer'
               >
-                Add an image
+                Add image
               </label>
               <input
                 ref={fileRef}
@@ -107,7 +107,7 @@ const AddImage = ({
                 e.target.style.height = e.target.scrollHeight + "px";
               }}
               maxLength={150}
-              className='resize-none self-start text-form text-white overflow-y-visible p-2 flex-1 mr-2 focus:placeholder:text-white/60'
+              className='resize-none text-form text-white overflow-y-visible p-2 w-full mx-auto focus:placeholder:text-white/60'
             />
           </>
         )}

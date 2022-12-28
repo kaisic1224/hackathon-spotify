@@ -6,22 +6,29 @@ const signin = () => {
   return (
     <>
       <Head>
-        <title>Sign In | Subussy</title>
+        <title>Sign In | SubWoofer</title>
       </Head>
 
-      <div className='bg-card-base text-center h-screen'>
-        <h1 className='text-5xl text-white text-center pt-40'>
-          Welcome! Login to your spotify to see your statistics!
-        </h1>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className='text-white font-semibold tracking-wider mt-20 shadow-xl bg-g-primary p-3 rounded-xl shadow-green-400 hover:bg-[#1ed760]'
-          onClick={() => signIn("spotify", { callbackUrl: "/" })}
-        >
-          Sigussy In
-        </motion.button>
+      <div className='bg-card-base text-center h-screen grid lg:grid-cols-2'>
+        <div className='flex justify-between lg:justify-center lg:gap-12 flex-col bg-black-main py-[12vh]'>
+          <h1 className='text-5xl font-bold text-white text-center'>
+            Seconds away from creating your <u>customized playlists</u>
+          </h1>
+          <img
+            src='/girl-enjoying-music.svg'
+            alt='girl with headphones enjoying music'
+          />
+        </div>
+        <div className='flex items-center justify-center relative xs:bg-black-main lg:bg-card-accent'>
+          <motion.button
+            className='text-white w-3/4 font-bold tracking-wider uppercase text-3xl shadow-2xl p-3 rounded-xl
+            hover:from-[#0BAB64] hover:to-[#48daab]
+            bg-gradient-to-tr from-[#0BAB64] to-[#3BB78F]'
+            onClick={() => signIn("spotify", { callbackUrl: "/" })}
+          >
+            Sign In
+          </motion.button>
+        </div>
       </div>
     </>
   );

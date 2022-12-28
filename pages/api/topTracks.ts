@@ -7,7 +7,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) return res.status(401);
+  if (!session)
+    return res.status(401).json({ err: "Unauthenticated, no access" });
   const rate = req.query.rate;
   const offset = req.query.offset;
   const queryParamString = new URLSearchParams({
@@ -29,6 +30,7 @@ export default async function handler(
   const data = await response.json();
   if (response.status != 200) {
     console.log(`tracks: ${response.statusText}`);
+    res.status(400).json(data);
   }
   return res.status(200).json(data);
 }

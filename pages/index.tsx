@@ -33,14 +33,8 @@ const Home: NextPage = () => {
   const [ref3, inView3, entry3] = useInView({ threshold: 0.2, delay: 0.25 });
   const [ref4, inView4, entry4] = useInView({ threshold: 0.2, delay: 0.25 });
 
-  const {
-    recentTracks,
-    topTracks,
-    topArtists,
-    setTopArtists,
-    setTopTracks,
-    setRecent
-  } = useFetch();
+  const { recentTracks, topTracks, topArtists, setTopArtists, setTopTracks } =
+    useFetch();
 
   useLayoutEffect(() => {
     if (entry?.isIntersecting) {
@@ -166,7 +160,7 @@ const Home: NextPage = () => {
           <motion.h2 className='px-20 text-white text-center text-4xl font-bold py-16 lg:py-20'>
             Most Recent
           </motion.h2>
-          {recentTracks?.length ?? 0 != 0 ? (
+          {session && (recentTracks?.length ?? 0) != 0 ? (
             <CardGrid layoutID='recent' dataItems={recentTracks} />
           ) : null}
         </section>
@@ -180,7 +174,7 @@ const Home: NextPage = () => {
               Most Listened Artists
               <DatePicker endpoint='topArtists' setFn={setTopArtists} />
             </motion.h2>
-            {topArtists?.length ?? 0 != 0 ? (
+            {session && (topArtists?.length ?? 0) != 0 ? (
               <CardGrid layoutID='artists' dataItems={topArtists} />
             ) : (
               <span>
@@ -208,7 +202,7 @@ const Home: NextPage = () => {
               Most Listened Songs
               <DatePicker endpoint='topTracks' setFn={setTopTracks} />
             </motion.h2>
-            {topTracks?.length ?? 0 != 0 ? (
+            {session && (topTracks?.length ?? 0) != 0 ? (
               <CardGrid layoutID='tracks' dataItems={topTracks} />
             ) : null}
             <LoadMore

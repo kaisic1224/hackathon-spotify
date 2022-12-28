@@ -57,11 +57,11 @@
   }
 
   .chip-row {
-    @apply overflow-x-auto flex gap-2 items-center pb-3 pt-1 lg:flex-wrap;
+    @apply overflow-x-auto flex gap-2 items-center pb-3 pt-1 w-full;
   }
 
   .chip {
-    @apply rounded-full font-bold min-w-[15ch] max-w-[15ch] uppercase text-center p-1 px-2 border cursor-default whitespace-nowrap overflow-hidden overflow-ellipsis focus:text-zinc-500;
+    @apply rounded-full font-bold uppercase text-center min-w-[15ch] max-w-[15ch] overflow-ellipsis overflow-hidden p-1 px-2 border cursor-default whitespace-nowrap focus:text-zinc-500;
   }
 
   .search {
@@ -71,6 +71,6 @@
   }
 
   .playlist-tooltip {
-    @apply absolute top-1/2 -translate-y-1/2 -left-2 bg-black/40 border border-card-accent p-1 rounded-lg -translate-x-full whitespace-nowrap text-lg pointer-events-none;
+    @apply absolute top-1/2 -translate-y-1/2 -left-6 bg-black/40 border border-card-accent p-1 rounded-lg -translate-x-full whitespace-nowrap text-lg pointer-events-none;
   }
 }

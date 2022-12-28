@@ -1,6 +1,7 @@
 import { artist } from "../lib/api.d";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaHeart } from "react-icons/fa";
 
 const indexes = [0, 1, 2, 3];
 
@@ -10,32 +11,53 @@ const getNextPosition = (
   current: number,
   direction: number
 ): number => {
-  let next = 0;
-  if (current === max && direction > 0) {
-    next = 0;
-  } else if (current === min && direction < 0) {
-    next = max;
+  const currentAndDirection = current + direction / 500;
+  //go from last to first
+  if (currentAndDirection > max) {
+    return 0;
+    // go from first to last
+  } else if (currentAndDirection < min) {
+    return max;
   } else {
-    next = current + direction;
+    return currentAndDirection;
   }
-  return next;
+};
+
+const vars = {
+  enter: (direction: number) => {
+    return {
+      x: direction,
+      opacity: 0
+    };
+  },
+  show: {
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => {
+    return {
+      x: -direction,
+      opacity: 0,
+      zIndex: 0
+    };
+  }
 };
 
 const Carousel = ({ items }: { items: Array<artist> }) => {
-  const [active, setActive] = useState(0);
-  const [x, setDirection] = useState<number>();
+  const [[x, active], setActive] = useState([0, 0]);
   return (
     <>
       <div
-        className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute
-       after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
+        className='w-full h-full overflow-hidden absolute
+       after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/90 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none'
       >
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} custom={x}>
           <motion.img
+            variants={vars}
             key={items[active].id}
-            initial={{ x, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -x!, opacity: 0 }}
+            initial='enter'
+            animate='show'
+            exit='exit'
             transition={{
               x: { type: "spring", stiffness: 200, damping: 30 },
               opacity: { duration: 0.2 }
@@ -43,20 +65,22 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
             drag='x'
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
+            custom={x}
             onDragEnd={(e, info) => {
               const { velocity, offset } = info;
               if (offset.x * velocity.x < 10000) return;
               // determine direction and switch
               const d = offset.x > 0 ? -500 : 500;
-              setDirection(d);
-              const nextPosition = getNextPosition(0, 3, active, d / 500);
-              setActive(nextPosition);
+              const nextPosition = getNextPosition(0, 3, active, d);
+              // find another way to manage current index - state gets batched and direction get messed up sometimes
+              // solution - combine your state call into one action
+              setActive([d, nextPosition]);
             }}
             className='w-full object-cover absolute'
             src={items[active].images[0].url}
           />
         </AnimatePresence>
-        <div className='z-[60] bottom-2 absolute ml-4 text-white flex flex-col'>
+        <div className='z-[60] bottom-4 absolute ml-4 text-white flex flex-col'>
           <h2 className='flex gap-2 items-center mb-0'>
             <img
               src={items[active].images[0].url}
@@ -65,9 +89,9 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
             />
             {items[active].name}
           </h2>
-          <span className='text-xs text-zinc-400'>
+          <span className='text-xs text-zinc-400 flex items-center gap-1'>
             {items[active].genres.map((genre) => genre + " • ")}
-            {items[active].followers.total.toLocaleString() + " ♥"}
+            {items[active].followers.total.toLocaleString()} <FaHeart />
           </span>
         </div>
       </div>
@@ -76,8 +100,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
           <div
             onClick={() => {
               const d = index > active ? 500 : -500;
-              setDirection(d);
-              setActive(index);
+              setActive([d, index]);
             }}
             key={index}
             className={`border-bar ${

@@ -14,7 +14,7 @@ export default async function handler(
   const queryParamString = new URLSearchParams({
     q: q as string,
     type: types.join(","),
-    limit: "1"
+    limit: "3"
   });
   const response = await fetch(
     "https://api.spotify.com/v1/search?" + queryParamString.toString(),

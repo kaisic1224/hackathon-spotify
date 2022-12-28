@@ -71,7 +71,8 @@ const Playlists: NextPage = () => {
       </Head>
 
       <header
-        className='xs:min-h-[425px]
+        className='xs:min-h-[100vw]
+        sm:min-h-[412px]
         relative z-50 isolate carousel-header'
       >
         {topArtists?.length ?? 0 === 0 ? <Carousel items={topArtists} /> : null}
