@@ -5,8 +5,11 @@ import { FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
 import { IoMdOptions } from "react-icons/io";
 import PlaylistSong from "./PlaylistSong";
 import AddImage from "./AddImage";
+import { songEnergies } from "../lib/songInfo";
+import Searchbar from "./Searchbar";
+import FiltersModal from "./FiltersModal";
 
-interface Filters {
+export interface Filters {
   artists: artist[];
   genres: string[];
 }
@@ -32,7 +35,7 @@ const Playlist = ({
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     artists,
-    genres: artists.slice(0, 0).map((artist) => artist.genres[0])
+    genres: []
   });
 
   useEffect(() => {
@@ -56,56 +59,11 @@ const Playlist = ({
 
       <AnimatePresence initial={false}>
         {filterOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => {
-              setFopen(false);
-            }}
-            className='fixed w-screen inset-0 z-[9999] bg-black/60'
-          >
-            <motion.div
-              className='bottom-0 flex flex-col text-white'
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ ease: "easeOut" }}
-            >
-              <div className='chip-row hidden-scrollbar'>
-                {filters.artists.map((artist) => (
-                  <div
-                    key={artist.id}
-                    tabIndex={0}
-                    className='chip text-card-accent border-card-base focus:bg-body-main'
-                  >
-                    {artist.name}
-                  </div>
-                ))}
-              </div>
-              <label htmlFor='acousticness'>Include acousticness?</label>
-              <input type='checkbox' name='acousticness' id='acousticness' />
-              <label htmlFor='danceability'>Include danceability?</label>
-              <input type='checkbox' name='danceability' id='danceability' />
-              <label htmlFor='instrumentalness'>
-                Include instrumentalness?
-              </label>
-              <input
-                type='checkbox'
-                name='instrumentalness'
-                id='instrumentalness'
-              />
-              <label htmlFor='liveness'>Include liveness?</label>
-              <input type='checkbox' name='liveness' id='liveness' />
-              <label htmlFor='loudness'>Include loudness?</label>
-              <input type='checkbox' name='loudness' id='loudness' />
-              <label htmlFor='popularity'>Include popularity?</label>
-              <input type='checkbox' name='popularity' id='popularity' />
-              <label htmlFor='speechiness'>Include speechiness?</label>
-              <input type='checkbox' name='speechiness' id='speechiness' />
-              <label htmlFor='tempo'>Include tempo?</label>
-              <input type='checkbox' name='tempo' id='tempo' />
-            </motion.div>
-          </motion.div>
+          <FiltersModal
+            filters={filters}
+            setFopen={setFopen}
+            setFilters={setFilters}
+          />
         )}
       </AnimatePresence>
 
@@ -115,18 +73,6 @@ const Playlist = ({
           onClick={() => setFopen((v) => !v)}
         >
           Filters <IoMdOptions />
-        </div>
-
-        <div className='chip-row hidden-scrollbar'>
-          {filters.genres.map((genre) => (
-            <div
-              key={genre}
-              tabIndex={0}
-              className='chip text-card-accent border-card-base focus:bg-body-main'
-            >
-              {genre}
-            </div>
-          ))}
         </div>
       </div>
 

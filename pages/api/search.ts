@@ -13,7 +13,7 @@ export default async function handler(
   const types = ["track"];
   const queryParamString = new URLSearchParams({
     q: q as string,
-    type: types.join(","),
+    type: "track",
     limit: "3"
   });
   const response = await fetch(

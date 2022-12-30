@@ -66,6 +66,7 @@ export default function useFetch(fetchRec = false) {
     });
     const res = await fetch("/api/getRecommend?" + queryParamString.toString());
     const data = await res.json();
+    if (!res.ok) fetchRecommended(topArt);
 
     const sGenres2 = topArt
       .slice(2, 4)
@@ -84,6 +85,7 @@ export default function useFetch(fetchRec = false) {
     const res2 = await fetch(
       "/api/getRecommend?" + queryParamString2.toString()
     );
+    if (!res2.ok) fetchRecommended(topArt);
     const data2 = await res2.json();
 
     setRecommended([...data.tracks, ...data2.tracks]);

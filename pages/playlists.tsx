@@ -30,7 +30,6 @@ const Playlists: NextPage = () => {
     }
   });
 
-  const [loading, setloading] = useState(true);
   const { topTracks, topArtists, recommended, setRecommended } = useFetch(true);
 
   if (session?.error === "refresh error") {
@@ -79,7 +78,9 @@ const Playlists: NextPage = () => {
       </header>
 
       <main className='pb-8'>
-        <Searchbar items={recommended} setRecommended={setRecommended} />
+        <div className='xs:mt-2 flex justify-center'>
+          <Searchbar items={recommended} setRecommended={setRecommended} />
+        </div>
         {recommended?.length ?? 0 != 0 ? (
           <Playlist
             items={recommended}

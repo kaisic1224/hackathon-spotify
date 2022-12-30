@@ -2,11 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-:not(.hidden-scrollbar)::-webkit-scrollbar {
+/* :not(.hidden-scrollbar)::-webkit-scrollbar {
   width: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background-color: rgb(32, 32, 32);
 }
@@ -15,7 +14,6 @@
   background-color: #333;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background-color: #888;
   border-radius: 0.75rem;
@@ -23,10 +21,37 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgb(66, 66, 66);
-}
+} */
 
 .crossover {
   grid-column: span 2;
+}
+
+.radial {
+  background-color: rgb(18, 18, 18); /*fallback colour*/
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  transition: all 250ms ease;
+  -webkit-transition: all 250ms ease;
+  -ms-transition: all 250ms ease;
+  -o-transition: all 250ms ease;
+  -moz-transition: all 250ms ease;
+}
+
+.radial::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(18, 18, 18) 100%
+  );
+  z-index: -10;
 }
 
 .expand::after {
@@ -36,6 +61,25 @@
 
 .expand:hover::after {
   box-shadow: inset 0 0 0 20px #555;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  position: relative;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  margin-top: 4px;
+  border: 1px solid green;
+  border-radius: 50%;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
 }
 
 @layer components {
@@ -61,7 +105,7 @@
   }
 
   .chip {
-    @apply rounded-full font-bold uppercase text-center min-w-[15ch] max-w-[15ch] overflow-ellipsis overflow-hidden p-1 px-2 border cursor-default whitespace-nowrap focus:text-zinc-500;
+    @apply relative rounded-full font-bold uppercase text-center min-w-[15ch] max-w-[15ch] overflow-ellipsis overflow-hidden p-1 px-2 border cursor-default whitespace-nowrap focus:text-zinc-200;
   }
 
   .search {
@@ -72,5 +116,9 @@
 
   .playlist-tooltip {
     @apply absolute top-1/2 -translate-y-1/2 -left-6 bg-black/40 border border-card-accent p-1 rounded-lg -translate-x-full whitespace-nowrap text-lg pointer-events-none;
+  }
+
+  .slider {
+    @apply appearance-none pointer-events-none absolute h-0 w-full outline-none;
   }
 }

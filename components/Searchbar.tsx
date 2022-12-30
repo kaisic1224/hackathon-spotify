@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FaCircle, FaSearch } from "react-icons/fa";
 import { track } from "../lib/api";
 import Toast from "./Toast";
+import { Filters } from "./Playlist";
 
 function debounce(f: Function, t: number) {
   let timer: any;
@@ -27,8 +28,10 @@ const Searchbar = ({
   items,
   setRecommended
 }: {
-  items: track[];
-  setRecommended: Dispatch<SetStateAction<track[]>>;
+  items: track[] | Filters;
+  setRecommended:
+    | Dispatch<SetStateAction<track[]>>
+    | Dispatch<SetStateAction<Filters>>;
 }) => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<track[]>();
@@ -68,9 +71,10 @@ const Searchbar = ({
       <AnimatePresence initial={false}>
         {toast && <Toast>Saved to playlist</Toast>}
       </AnimatePresence>
+
       <div
-        className='relative max-w-[calc(100%_-_3rem)] lg:max-w-lg xl:max-w-3xl mx-auto my-3
-      after:absolute after:-inset-2 after:border after:border-card-accent/60 after:rounded-md after:pointer-events-none focus:after:border-zinc-600'
+        className='relative w-screen max-w-[calc(100%_-_3rem)] md:max-w-2xl xl:max-w-3xl my-3
+        after:absolute after:-inset-2 after:border after:border-card-accent/60 after:rounded-md after:pointer-events-none focus:after:border-zinc-600'
       >
         <input
           className='search peer'

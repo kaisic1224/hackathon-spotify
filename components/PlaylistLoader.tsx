@@ -10,7 +10,7 @@ const PlaylistLoader = () => {
           </div>
           <div className='min-w-[12rem] h-[3ch] bg-black-main animate-pulse rounded-lg' />
         </div>
-        <div className='h-[320px] overflow-y-scroll'>
+        <div className=''>
           <SongLoader />
           <SongLoader />
           <SongLoader />

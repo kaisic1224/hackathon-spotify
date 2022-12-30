@@ -5,6 +5,9 @@
 	- always have mixed things, simply just like a song on spotify and we will detect and then organzie and always have the first 15-20 likd songs in a playlist
 
 	big bad mistakes
+- todo: fix carousel on computer - change it into a 4 grid
+
+
 
 recommendations
 - energy

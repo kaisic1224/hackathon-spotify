@@ -17,18 +17,18 @@ const PlaylistSong = ({ track }: { track: track }) => {
       className='flex gap-2 items-center pr-4 bg-body-main/40 hover:bg-card-base select-none'
     >
       <img
-        className='object-cover aspect-square w-20 select-none'
+        className='object-cover aspect-square w-20 flex-shrink-0 select-none'
         src={track.album.images[2].url}
         alt='Track art cover'
       />
-      <div className='flex flex-col self-start pt-2'>
+      <div className='flex flex-col self-start'>
         <span
           onPointerDown={(e) => controls.start(e)}
           className='crossover text-zinc-50 font-semibold'
         >
           {track.name}
         </span>
-        <span className='text-zinc-500'>
+        <span className='text-zinc-500 text-xs sm:text-sm'>
           {track.artists.map((artist, i) => (
             <>
               <a
