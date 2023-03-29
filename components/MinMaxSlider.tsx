@@ -1,8 +1,27 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 
-function MinMaxSlider({ bounds, label }: { bounds: number[]; label: string }) {
-  const [min, setMin] = useState(bounds[0]);
-  const [max, setMax] = useState(bounds[1]);
+function MinMaxSlider({
+  bounds,
+  label,
+  min,
+  max,
+  setMin,
+  setMax
+}: {
+  bounds: number[];
+  label: string;
+  min: number;
+  max: number;
+  setMin: Dispatch<SetStateAction<number>>;
+  setMax: Dispatch<SetStateAction<number>>;
+}) {
   const minRef = useRef<HTMLInputElement>(null);
   const maxRef = useRef<HTMLInputElement>(null);
   const range = useRef<HTMLDivElement>(null);

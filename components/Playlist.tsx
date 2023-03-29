@@ -35,7 +35,7 @@ const Playlist = ({
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<Filters>({
     artists,
-    genres: []
+    genres: Array.from(songEnergies.keys())
   });
 
   useEffect(() => {
@@ -57,15 +57,14 @@ const Playlist = ({
         />
       )}
 
-      <AnimatePresence initial={false}>
-        {filterOpen && (
-          <FiltersModal
-            filters={filters}
-            setFopen={setFopen}
-            setFilters={setFilters}
-          />
-        )}
-      </AnimatePresence>
+      <div style={filterOpen ? { display: "block" } : { display: "none" }}>
+        <FiltersModal
+          filters={filters}
+          setFopen={setFopen}
+          setFilters={setFilters}
+          topArtists={artists}
+        />
+      </div>
 
       <div className='flex flex-col max-w-screen mx-auto relative px-5'>
         <div
@@ -102,6 +101,7 @@ const Playlist = ({
               type='text'
               className='text-form'
               name='Playlist name'
+              placeholder='Playlist name'
               value={name}
               onChange={(e) => setName(e.target.value)}
             />

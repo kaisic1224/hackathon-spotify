@@ -32,11 +32,7 @@
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  transition: all 250ms ease;
-  -webkit-transition: all 250ms ease;
-  -ms-transition: all 250ms ease;
-  -o-transition: all 250ms ease;
-  -moz-transition: all 250ms ease;
+  overflow: hidden;
 }
 
 .radial::after {
@@ -101,11 +97,16 @@
   }
 
   .chip-row {
-    @apply overflow-x-auto flex gap-2 items-center pb-3 pt-1 w-full;
+    @apply overflow-x-auto flex gap-2 items-center pb-3 pt-1 w-full px-4;
   }
 
   .chip {
     @apply relative rounded-full font-bold uppercase text-center min-w-[15ch] max-w-[15ch] overflow-ellipsis overflow-hidden p-1 px-2 border cursor-default whitespace-nowrap focus:text-zinc-200;
+  }
+
+  .chip-tooltip {
+    @apply absolute left-0 z-50 rounded-md lg:whitespace-nowrap bg-black-main tracking-tighter lg:-translate-x-[calc(100%_+_2ch)] p-1 -top-full lg:top-1/2 lg:-translate-y-1/2 
+    scale-0 peer-hover:scale-100 normal-case;
   }
 
   .search {

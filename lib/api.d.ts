@@ -111,6 +111,7 @@ interface audioFeatures {
   speechiness: number;
   acousticness: number;
   instrumentalness: number;
+  key: number;
   liveness: number;
   valence: number;
   tempo: number;

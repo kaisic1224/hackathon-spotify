@@ -78,13 +78,14 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
             }}
             className='w-full object-cover absolute'
             src={items[active].images[0].url}
+            alt={`Profile picture for ${items[active].name}`}
           />
         </AnimatePresence>
         <div className='z-[60] bottom-4 absolute ml-4 text-white flex flex-col'>
           <h2 className='flex gap-2 items-center mb-0'>
             <img
               src={items[active].images[0].url}
-              alt=''
+              alt={`Profile picture for ${items[active].name}`}
               className='h-6 w-6 object-cover rounded-full'
             />
             {items[active].name}

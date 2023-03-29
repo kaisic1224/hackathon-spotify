@@ -1,5 +1,5 @@
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaEllipsisH } from "react-icons/fa";
 import { track } from "../lib/api.d";
 
@@ -30,16 +30,15 @@ const PlaylistSong = ({ track }: { track: track }) => {
         </span>
         <span className='text-zinc-500 text-xs sm:text-sm'>
           {track.artists.map((artist, i) => (
-            <>
+            <React.Fragment key={`${track.name}:${artist.name}`}>
               <a
-                key={`${track.name}:${artist.name}`}
                 className='text-zinc-500 no-underline hover:underline hover:text-zinc-300'
                 href={artist.external_urls.spotify}
               >
                 {artist.name}
               </a>
               <>{i != track.artists.length - 1 && " • "}</>
-            </>
+            </React.Fragment>
           ))}
         </span>
       </div>

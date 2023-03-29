@@ -79,7 +79,11 @@ const Playlists: NextPage = () => {
 
       <main className='pb-8'>
         <div className='xs:mt-2 flex justify-center'>
-          <Searchbar items={recommended} setRecommended={setRecommended} />
+          <Searchbar
+            filters={false}
+            items={recommended}
+            setRecommended={setRecommended}
+          />
         </div>
         {recommended?.length ?? 0 != 0 ? (
           <Playlist
@@ -91,6 +95,17 @@ const Playlists: NextPage = () => {
         ) : (
           <PlaylistLoader />
         )}
+        <div
+          onClick={async () => {
+            const q = new URLSearchParams({ artist_id: topArtists[0].id });
+            const resp = await fetch("/api/artistFeatures?" + q.toString());
+            const data = await resp.json();
+
+            console.log(data);
+          }}
+        >
+          click me
+        </div>
       </main>
     </>
   );
