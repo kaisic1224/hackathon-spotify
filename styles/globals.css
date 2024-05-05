@@ -71,6 +71,6 @@
   }
 
   .playlist-tooltip {
-    @apply absolute top-1/2 -translate-y-1/2 -left-2 bg-black/40 border border-card-accent p-1 rounded-lg -translate-x-full whitespace-nowrap text-lg pointer-events-none;
+    @apply absolute top-1/2 -translate-y-1/2 -left-5 bg-black/40 border border-card-accent p-1 rounded-lg -translate-x-full whitespace-nowrap text-lg pointer-events-none;
   }
 }

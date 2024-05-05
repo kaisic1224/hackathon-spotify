@@ -38,14 +38,14 @@ const AddImage = ({
   return (
     <div
       ref={bgref}
-      className='fixed z-[999] inset-0 bg-black/40 grid place-items-center'
+      className='fixed z-[999] inset-0 bg-black/40 grid place-items-center shadow'
       onClick={(e) => {
         if (e.target === bgref.current) {
           setOpen(false);
         }
       }}
     >
-      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden xs:w-[calc(100vw_-_2rem)]'>
+      <div className='bg-body-main rounded-lg z-[9999] overflow-hidden w-[calc(100vw_-_2rem)] xsm:w-[calc(min(100vw,_510px)_-_2rem)]'>
         <div className='bg-slate-100 p-8 overflow-hidden'>
           <span className='text-center inline-block max-w-[14ch] text-6xl font-bold text-slate-300'>
             Customized Playlists
@@ -73,7 +73,7 @@ const AddImage = ({
                 e.target.style.height = e.target.scrollHeight + "px";
               }}
               maxLength={150}
-              className='resize-none self-start text-form text-white overflow-y-visible p-2 flex-1 mr-2 focus:placeholder:text-white/60'
+              className='resize-none mx-auto self-start text-form text-white overflow-y-visible p-2 flex-1 mr-2 focus:placeholder:text-white/60'
             />
           </div>
         )}

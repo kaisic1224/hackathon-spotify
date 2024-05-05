@@ -3,7 +3,7 @@ import SongLoader from "./SongLoader";
 const PlaylistLoader = () => {
   return (
     <>
-      <div className='shadow-lg'>
+      <div className='shadow-lg pt-4'>
         <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main'>
           <div className='relative'>
             <div className='object-cover aspect-square w-36 peer bg-black-main' />

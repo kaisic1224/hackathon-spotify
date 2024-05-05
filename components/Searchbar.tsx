@@ -1,6 +1,7 @@
 import {
   ChangeEvent,
   Dispatch,
+  MutableRefObject,
   SetStateAction,
   useCallback,
   useEffect,
@@ -21,10 +22,12 @@ function debounce(f: Function, t: number) {
 
 const Searchbar = ({
   items,
-  setRecommended
+  setRecommended,
+  setNotification
 }: {
   items: track[];
   setRecommended: Dispatch<SetStateAction<track[]>>;
+  setNotification:Dispatch<SetStateAction<track | null>>;
 }) => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<track>();
@@ -46,6 +49,13 @@ const Searchbar = ({
     []
   );
 
+  const notify = (t: track) => {
+    setNotification(t)
+    setTimeout(() => {
+      setNotification(null)
+    }, 3000);
+  }
+
   useEffect(() => {
     if (search.length === 0) setResults(undefined);
     debouncedDay(search.trim());
@@ -66,10 +76,12 @@ const Searchbar = ({
       <FaSearch className='absolute top-1/2 left-2 -translate-y-1/2 w-5 h-5 fill-zinc-700' />
       {results && (
         <div
-          className='absolute w-full bg-black-main/60 backdrop-blur-sm items-center p-2 z-[9999] flex'
+          key={results.name}
+          className='absolute w-full bg-black-main/60 backdrop-blur-sm items-center p-2 z-[9999] flex cursor-pointer'
           onClick={() => {
             setRecommended([...items, results]);
             setResults(undefined);
+            notify(results)
           }}
         >
           <img

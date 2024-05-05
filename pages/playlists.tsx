@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, Reorder } from "framer-motion";
 import { getSession, signIn, useSession } from "next-auth/react";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { artist, playlistItem, track } from "../lib/api.d";
 import Head from "next/head";
 import Playlist from "../components/Playlist";
@@ -9,6 +9,7 @@ import Carousel from "../components/Carousel";
 import Searchbar from "../components/Searchbar";
 import useFetch from "../lib/useFetch";
 import { NextPage } from "next";
+import Notification from "../components/Notification";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -32,7 +33,7 @@ const Playlists: NextPage = () => {
 
   const [loading, setloading] = useState(true);
   const { topTracks, topArtists, recommended, setRecommended } = useFetch(true);
-
+  const [notification, setNotification] = useState<track | null>(null);
   if (session?.error === "refresh error") {
     return (
       <>
@@ -77,8 +78,11 @@ const Playlists: NextPage = () => {
         {topArtists?.length ?? 0 === 0 ? <Carousel items={topArtists} /> : null}
       </header>
 
+      <Notification track={notification} />
       <main className='pb-8'>
-        <Searchbar items={recommended} setRecommended={setRecommended} />
+        <section className="pt-4">
+          <Searchbar items={recommended} setRecommended={setRecommended} setNotification={setNotification} />
+        </section>
         {recommended?.length ?? 0 != 0 ? (
           <Playlist
             items={recommended}

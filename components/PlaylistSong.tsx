@@ -24,7 +24,7 @@ const PlaylistSong = ({ track }: { track: track }) => {
       <div className='flex flex-col self-start ml-2 mt-2'>
         <span
           onPointerDown={(e) => controls.start(e)}
-          className='crossover text-zinc-50 font-semibold'
+          className='crossover text-zinc-50 font-semibold cursor-grab active:cursor-grabbing'
         >
           {track.name}
         </span>

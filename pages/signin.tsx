@@ -20,7 +20,7 @@ const signin = () => {
           className='text-white font-semibold tracking-wider mt-20 shadow-xl bg-g-primary p-3 rounded-xl shadow-green-400 hover:bg-[#1ed760]'
           onClick={() => signIn("spotify", { callbackUrl: "/" })}
         >
-          Sigussy In
+          Sign in
         </motion.button>
       </div>
     </>
