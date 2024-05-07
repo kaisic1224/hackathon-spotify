@@ -1,8 +1,8 @@
 import type { artist, track } from "../lib/api.d";
 import { AnimatePresence, Reorder, motion } from "framer-motion";
 import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
-import { FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
-import { IoMdOptions } from "react-icons/io";
+import { FaArrowDown, FaLock, FaLockOpen, FaPlus } from "react-icons/fa";
+import { IoMdClose, IoMdOptions } from "react-icons/io";
 import PlaylistSong from "./PlaylistSong";
 import AddImage from "./AddImage";
 
@@ -22,6 +22,7 @@ const Playlist = ({
   artists: artist[];
   topTracks: track[];
 }) => {
+  const [firstTime, setFirst] = useState(true);
   const [open, setOpen] = useState(false);
   const [filterOpen, setFopen] = useState(false);
   const [name, setName] = useState("Music for me");
@@ -52,10 +53,14 @@ const Playlist = ({
       )}
 
       {filterOpen && (
-        <motion.div className='absolute w-screen top-0 z-[999] bg-black/60'>
+        <motion.div className='fixed h-screen w-screen top-0 z-[999] bg-black/60'>
           <div>
             <label htmlFor='instrumental'>Include Instrumental?</label>
             <input type='checkbox' name='instrumental' id='instrumental' />
+          </div>
+          <div
+            onClick={() => setFopen(false)}>
+            close
           </div>
         </motion.div>
       )}
@@ -92,7 +97,8 @@ const Playlist = ({
         </div>
       </div>
 
-      <div className='mx-auto shadow-lg'>
+      <div className='mx-auto shadow-lg
+                      md:w-[calc(100%_-_4rem)]'>
         <div className='flex items-center text-2xl pr-8 gap-4 bg-body-main text-zinc-100'>
           <div className='relative'>
             <img
@@ -170,6 +176,14 @@ const Playlist = ({
           values={items}
           className='pl-0 flex flex-col'
         >
+          {firstTime && (
+            <div 
+              className="absolute -translate-y-3/4 left-32 text-white bg-black-main px-2 py-1 flex items-center justify-center gap-2">
+              <FaArrowDown />
+              <span>Grab onto me!</span>
+              <IoMdClose className="cursor-pointer" onClick={() => setFirst(false)} />
+            </div>
+          )}
           {items.map((track) => (
             <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
           ))}

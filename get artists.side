@@ -1,0 +1,75 @@
+{
+  "id": "94969777-6885-4f07-8dea-f01960aff5d6",
+  "version": "2.0",
+  "name": "get artists",
+  "url": "https://open.spotify.com/artist/3HqSLMAZ3g3d5poNaI7GOU",
+  "tests": [{
+    "id": "4cf8924e-fcc1-4d7c-bd8f-cfb6f075c73c",
+    "name": "get description",
+    "commands": [{
+      "id": "564e3954-4840-4524-a5bc-6d337035da31",
+      "comment": "",
+      "command": "open",
+      "target": "https://open.spotify.com/artist/3HqSLMAZ3g3d5poNaI7GOU",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a61d7d8d-224f-435d-b4b8-ee3857916277",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "848x728",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "765ae063-b897-43bc-96ec-e5359d476785",
+      "comment": "",
+      "command": "runScript",
+      "target": "window.scrollTo(0,0)",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ae5e8ec8-ca71-43c1-9fe3-522569b17429",
+      "comment": "",
+      "command": "click",
+      "target": "css=.BPDHTIIFueJMvtDPZttw > .encore-text-body-medium-bold",
+      "targets": [
+        ["css=.BPDHTIIFueJMvtDPZttw > .encore-text-body-medium-bold", "css:finder"],
+        ["xpath=//div[@id='main']/div/div[2]/div[3]/div/div[2]/div[2]/div[2]/main/section/div/div[2]/div[3]/div[2]/div/div/button/div/div", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/button/div/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "5492981f-ffe0-44c0-b983-0220309032db",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Text__TextElement-sc-if376j-0 > .Type__TypeElement-sc-goli3j-0",
+      "targets": [
+        ["css=.Text__TextElement-sc-if376j-0 > .Type__TypeElement-sc-goli3j-0", "css:finder"],
+        ["xpath=//div[2]/div/div[2]/div/p", "xpath:position"],
+        ["xpath=//p[contains(.,'LE SSERAFIM is a girl group with SOURCE MUSIC, a label under HYBE, consisting of five members of different nationalities: SAKURA, KIM CHAEWON, HUH YUNJIN, KAZUHA and HONG EUNCHAE. The first girl group to launch through a collaboration between HYBE and SOURCE MUSIC, they are taking a daring stance and saying right from the outset that they will stand at the very top. The group’s name, LE SSERAFIM, is an anagram of the words “I’M FEARLESS.” The name captures the group’s self-confidence and iron will as they go out into the world fearlessly and unwavering before the watchful eyes of the world. It is like an incantation to guarantee their success on the merit of their unbreakable poise and strength.')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "00f4b915-d05a-408a-89fa-2fef4af4aa25",
+      "comment": "",
+      "command": "click",
+      "target": "css=.Text__TextElement-sc-if376j-0 > .Type__TypeElement-sc-goli3j-0",
+      "targets": [
+        ["css=.Text__TextElement-sc-if376j-0 > .Type__TypeElement-sc-goli3j-0", "css:finder"],
+        ["xpath=//div[2]/div/div[2]/div/p", "xpath:position"],
+        ["xpath=//p[contains(.,'LE SSERAFIM is a girl group with SOURCE MUSIC, a label under HYBE, consisting of five members of different nationalities: SAKURA, KIM CHAEWON, HUH YUNJIN, KAZUHA and HONG EUNCHAE. The first girl group to launch through a collaboration between HYBE and SOURCE MUSIC, they are taking a daring stance and saying right from the outset that they will stand at the very top. The group’s name, LE SSERAFIM, is an anagram of the words “I’M FEARLESS.” The name captures the group’s self-confidence and iron will as they go out into the world fearlessly and unwavering before the watchful eyes of the world. It is like an incantation to guarantee their success on the merit of their unbreakable poise and strength.')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "67670691-3a34-4f73-8c17-7849447e3d97",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": []
+  }],
+  "urls": ["https://open.spotify.com/artist", "https://open.spotify.com/artist/4SpbR6yFEvexJuaBpgAU5p", "https://open.spotify.com/artist/3HqSLMAZ3g3d5poNaI7GOU"],
+  "plugins": []
+}

@@ -10,6 +10,7 @@ import Searchbar from "../components/Searchbar";
 import useFetch from "../lib/useFetch";
 import { NextPage } from "next";
 import Notification from "../components/Notification";
+import useArtist from "../lib/useArtist";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
@@ -73,6 +74,9 @@ const Playlists: NextPage = () => {
 
       <header
         className='xs:min-h-[425px]
+        sm:min-h-[250px]
+        lg:min-h-[350px]
+        xl:min-h-[425px]
         relative z-50 isolate carousel-header'
       >
         {topArtists?.length ?? 0 === 0 ? <Carousel items={topArtists} /> : null}
@@ -98,3 +102,10 @@ const Playlists: NextPage = () => {
   );
 };
 export default Playlists;
+
+
+// export const getServerSideProps = (async () => {
+//   const data = useArtist();
+
+//   return { props: { data } }
+// })

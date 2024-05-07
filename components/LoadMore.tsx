@@ -15,6 +15,7 @@ const LoadMore = ({
   const [current, setCurrent] = useState(8);
   const { time_range } = useContext(DateContext);
   const [dataset, setDataset] = useState(8);
+  // need current, and dataset to adjust time range and offset of fetched params
 
   const load = async () => {
     const queryParamString = new URLSearchParams({
@@ -40,7 +41,8 @@ const LoadMore = ({
       ) : (
         <span
           onClick={() => {
-            setFn([...items].slice(0, 8));
+            setFn(items.slice(0, 8));
+            setCurrent(8);
             setDataset(8);
             location.hash = `#${anchor}`;
           }}

@@ -45,7 +45,7 @@
 
   .song-card {
     @apply bg-body-main isolate z-50 relative hover:bg-g-primary text-white font-medium
-    p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[none];
+    p-4 rounded-xl xs:max-w-lg sm:max-w-xl xs:min-w-[340px] md:min-w-[320px] lg:min-w-[none];
   }
   .text-form {
     @apply focus:outline-none outline-none bg-body-main transition-all focus:bg-card-base

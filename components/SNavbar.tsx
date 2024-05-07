@@ -39,7 +39,7 @@ const SNavbar = ({ viewedSection }: { viewedSection: string }) => {
             height='30'
             className='d-inline-block align-top mr-2'
           />
-          Subussy
+          SubWoofer
         </div>
         <ul className='flex items-center justify-center gap-2 mb-0 ml-auto pr-2'>
           <AnimatePresence initial={false}>
