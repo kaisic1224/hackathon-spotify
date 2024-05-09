@@ -32,7 +32,6 @@ const Playlists: NextPage = () => {
     }
   });
 
-  const [loading, setloading] = useState(true);
   const { topTracks, topArtists, recommended, setRecommended } = useFetch(true);
   const [notification, setNotification] = useState<track | null>(null);
   if (session?.error === "refresh error") {
@@ -102,10 +101,3 @@ const Playlists: NextPage = () => {
   );
 };
 export default Playlists;
-
-
-// export const getServerSideProps = (async () => {
-//   const data = useArtist();
-
-//   return { props: { data } }
-// })

@@ -1,9 +1,9 @@
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FaEllipsisH } from "react-icons/fa";
 import { track } from "../lib/api.d";
 
-const PlaylistSong = ({ track }: { track: track }) => {
+const PlaylistSong = ({ track, setRecommended }: { track: track; setRecommended: Dispatch<SetStateAction<track[]>> }) => {
   const [open, setOpen] = useState(false);
   const controls = useDragControls();
   return (
@@ -14,8 +14,15 @@ const PlaylistSong = ({ track }: { track: track }) => {
       dragElastic={1}
       value={track}
       id={track.id}
+      onContextMenu={() => setOpen(true)}
       className='flex items-center pr-4 bg-body-main/40 hover:bg-card-base select-none'
     >
+      {open && (
+        <div className="absolute">
+          <span>add</span>
+          <span>remove</span>
+        </div>
+      )}
       <img
         className='object-cover aspect-square w-20 select-none'
         src={track.album.images[2].url}
@@ -24,7 +31,7 @@ const PlaylistSong = ({ track }: { track: track }) => {
       <div className='flex flex-col self-start ml-2 mt-2'>
         <span
           onPointerDown={(e) => controls.start(e)}
-          className='crossover text-zinc-50 font-semibold cursor-grab active:cursor-grabbing'
+          className='crossover text-zinc-50 font-semibold cursor-grab active:cursor-grabbing active:text-zinc-400'
         >
           {track.name}
         </span>

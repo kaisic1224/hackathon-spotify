@@ -36,6 +36,17 @@ const Playlist = ({
     genres: artists.slice(0, 0).map((artist) => artist.genres[0])
   });
 
+  useEffect(() => {
+    if (filterOpen) {
+      document.body.style.overflowY = 'hidden';
+      document.body.style.top = '200px'
+      document.body.style.marginRight = '10px'
+    } else {
+      document.body.style.overflowY = 'auto';
+      document.body.style.marginRight = 'initial'
+    }
+  }, [filterOpen])
+
   return (
     <>
       {open && (
@@ -185,7 +196,7 @@ const Playlist = ({
             </div>
           )}
           {items.map((track) => (
-            <PlaylistSong key={`${track.id}:${track.name}`} track={track} />
+            <PlaylistSong key={`${track.id}:${track.name}`} track={track} setRecommended={setRecommended}/>
           ))}
         </Reorder.Group>
       </div>

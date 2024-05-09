@@ -85,8 +85,11 @@ export default function useFetch(fetchRec = false) {
       "/api/getRecommend?" + queryParamString2.toString()
     );
     const data2 = await res2.json();
-
-    setRecommended([...data.tracks, ...data2.tracks]);
+    if (res.status != 200 || res2.status != 200) {
+      setRecommended([])
+    } else {
+      setRecommended([...data.tracks, ...data2.tracks]);
+    }
   };
 
   useEffect(() => {

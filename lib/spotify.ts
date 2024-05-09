@@ -4,19 +4,18 @@ const basic = process.env.BASIC;
 
 const scopes = [
   "user-read-email",
-  "user-read-playback-state",
-  "user-read-currently-playing",
+  // "user-read-playback-state",
+  // "user-read-currently-playing",
   "user-read-recently-played",
-  "user-follow-modify",
-  "user-read-recently-played",
+  // "user-follow-modify",
   "user-top-read",
-  "playlist-read-collaborative",
+  // "playlist-read-collaborative",
   "playlist-modify-public",
-  "playlist-read-private",
+  // "playlist-read-private",
   "playlist-modify-private",
-  "user-read-private",
-  "user-library-read",
-  "user-library-modify",
+  // "user-read-private",
+  // "user-library-read",
+  // "user-library-modify",
   "ugc-image-upload"
 ].join(",");
 

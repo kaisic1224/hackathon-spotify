@@ -112,7 +112,8 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
               className="font-bold text-xl uppercase">
                 {items[active].name}
             </motion.span>
-            <motion.span>
+            <motion.span className="typewriter">
+              hello
             </motion.span>
           </div>
         </div>
@@ -122,3 +123,4 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
   );
 };
 export default Carousel;
+

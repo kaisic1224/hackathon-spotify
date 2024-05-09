@@ -35,5 +35,6 @@ async function firstTest(link: string) {
 
 export default function useArtist(link: string) {
     const [data, setData] = useState(null);
+    firstTest(link)
     return data;
 }
