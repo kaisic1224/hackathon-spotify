@@ -14,4 +14,4 @@ You can create, view and get recommendations for playlists/songs all in one app.
 
 
 ## Try it yourself
-https://hackathon-spotify-ten.vercel.app/
+https://hackathon-spotify-gules.vercel.app/
