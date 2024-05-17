@@ -26,7 +26,7 @@ export default async function handler(
   );
 
   if (response.status != 200) {
-    return res.status(500).json({message: response.statusText})
+    return res.status(201).json({message: response.statusText})
   }
   const data = await response.json();
 

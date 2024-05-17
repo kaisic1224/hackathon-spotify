@@ -24,14 +24,13 @@ const getNextPosition = (
 const Carousel = ({ items }: { items: Array<artist> }) => {
   const [active, setActive] = useState(0);
   const [x, setDirection] = useState<number>();
-  console.log(items[active])
   return (
     <>
     <div className="grid grid-cols-3 h-full
-    xs:min-h-[425px]
-    sm:min-h-[250px]
-    lg:min-h-[350px]
-    xl:min-h-[425px]">
+      xs:min-h-[425px]
+      sm:min-h-[250px]
+      lg:min-h-[350px]
+      xl:min-h-[425px]">
       <div>
         <div
           className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute
@@ -97,27 +96,29 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
           ))}
         </div>
       </div>
-      <AnimatePresence>
         <div
           className="xs:hidden text-white m-8 border-2 border-white w-[calc(100%_-_4rem)] h-[calc(100%_-_4.5rem)] col-span-2 bg-black-secondary
                     p-2
                     sm:block"
         >
           <div className="flex flex-col">
-            <motion.span 
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0 }}
+          <AnimatePresence initial={false}>
+            <motion.span
+              style={{position: 'absolute'}}
+              key={items[active].id}
+              initial={{ opacity: 0, }}
+              animate={{ opacity: 1,}}
+              exit={{ opacity: 0,}}
               transition={{ opacity: { duration: 0.8 } }}
-              className="font-bold text-xl uppercase">
+              className="font-bold text-4xl uppercase">
                 {items[active].name}
             </motion.span>
             <motion.span className="typewriter">
-              hello
+              
             </motion.span>
+            </AnimatePresence>
           </div>
         </div>
-        </AnimatePresence>
       </div>
     </>
   );

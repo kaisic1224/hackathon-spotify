@@ -38,27 +38,35 @@
   box-shadow: inset 0 0 0 20px #555;
 }
 
-.typewriter {
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: .15em solid orange; /* The typwriter cursor */
-  white-space: nowrap; /* Keeps the content on a single line */
-  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: .15em; /* Adjust as needed */
-  animation: 
-    typing 3.5s steps(40, end),
-    blink-caret .75s step-end infinite;
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  cursor: pointer;
+  pointer-events: auto;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  background-color: #474545;
+  transform: translateY(-25%);
 }
 
-/* The typing effect */
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+.slider-number::-webkit-inner-spin-button,
+.slider-number::-webkit-outer-spin-button {
+  appearance: none;
 }
 
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: orange; }
+.slider-hover {
+  display: none;
+  position: absolute;
+}
+
+.slider::-webkit-slider-thumb:hover .slider-hover {
+  display: block;
+}
+
+
+.slider-target::-webkit-slider-thumb {
+  border: 0.5rem;
+  background-color: #333;
 }
 
 
@@ -96,5 +104,14 @@
 
   .playlist-tooltip {
     @apply absolute top-1/2 -translate-y-1/2 -left-5 bg-black/40 border border-card-accent p-1 rounded-lg -translate-x-full whitespace-nowrap text-lg pointer-events-none;
+  }
+
+  .filter-chip {
+    @apply bg-black-main p-1 text-card-accent rounded-full text-center cursor-default relative
+    hover:bg-black-secondary; 
+  }
+
+  .filter-seeds {
+    @apply uppercase font-bold text-zinc-500;
   }
 }
