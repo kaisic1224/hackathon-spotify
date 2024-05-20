@@ -34,8 +34,8 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
       <div>
         <div
           className='w-full h-[calc(100%_-_0.5rem)] overflow-hidden absolute
-        after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none
-        sm:w-1/3'
+          after:absolute after:w-full after:h-1/5 after:bg-gradient-to-t after:from-black/80 after:to-transparent after:bottom-0 after:z-50 after:pointer-events-none
+          sm:w-1/3'
         >
           <AnimatePresence initial={false}>
             <motion.img
@@ -89,6 +89,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
                 setActive(index);
               }}
               key={index}
+              data-testid={`${index}`}
               className={`border-bar ${
                 index === active ? "bg-zinc-700 hover:bg-zinc-600/60" : ""
               }`}

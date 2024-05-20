@@ -8,7 +8,7 @@ import {
 } from "react";
 import { DateContext } from "../pages";
 
-const debounce = (fn: Function, timeout = 600) => {
+export const debounce = (fn: Function, timeout = 600) => {
   let time: NodeJS.Timeout;
   return (...args: any) => {
     clearTimeout(time);

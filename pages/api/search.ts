@@ -9,11 +9,10 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) return res.status(401);
 
-  const { q } = req.query;
-  const types = ["track"];
+  const { q, type } = req.query;
   const queryParamString = new URLSearchParams({
     q: q as string,
-    type: types.join(","),
+    type: (type as string),
     limit: "1"
   });
   const response = await fetch(

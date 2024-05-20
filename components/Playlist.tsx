@@ -16,7 +16,9 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { BsFillLightningChargeFill } from "react-icons/bs";
+import { GiBallerinaShoes } from 'react-icons/gi'
 import {
+  IoIosHappy,
   IoMdClose,
   IoMdCloseCircle,
   IoMdOptions,
@@ -26,8 +28,9 @@ import PlaylistSong from "./PlaylistSong";
 import AddImage from "./AddImage";
 import DoubleSlider from "./DoubleSlider";
 import { Analysis } from "../lib/useFetch";
+import FilterSearch from "./FilterSearch";
 
-interface Filters {
+export interface Filters {
   artists: artist[];
   genres: string[];
   tracks: track[];
@@ -37,18 +40,21 @@ interface RecomendContext {
   filters: Filters;
   recommended: track[];
   analyses: Analysis;
+  setAnalyses: Dispatch<SetStateAction<Analysis>>;
 }
 
 export const RecommendedContext = createContext<RecomendContext | null>(null);
 
 const Playlist = ({
   analyses,
+  setAnalyses,
   items,
   setRecommended,
   artists,
   topTracks,
 }: {
   analyses: Analysis
+  setAnalyses: Dispatch<SetStateAction<Analysis>>;
   items: track[];
   setRecommended: Dispatch<SetStateAction<track[]>>;
   artists: artist[];
@@ -88,7 +94,7 @@ const Playlist = ({
   }, [filterOpen]);
 
   return (
-    <RecommendedContext.Provider value={{ filters, recommended: items, analyses: analyses }}>
+    <RecommendedContext.Provider value={{ filters, recommended: items, analyses: analyses, setAnalyses: setAnalyses }}>
       {open && (
         <AddImage
           file={file}
@@ -144,17 +150,24 @@ const Playlist = ({
                     label={<>Target loudness? <IoMdVolumeHigh /></>}
                     target={analyses.loudness}
                     />
-                <div>
-                  {/* danceability split into traits */}
-                  <label
-                    className="text-zinc-300 uppercase font-semibold flex items-center gap-1"
-                    htmlFor="energy"
-                  >
-                    Target ?
-                  </label>
-                  <input type="range" name="" id="" />
-                </div>
-                <div>
+                  <DoubleSlider 
+                    desc="Valence measures how positive sounding a track is. A track with many positive features has less intense more upbet rhythms, whereas a low valence
+                    would reflect a track with more intensity or sad sounding"
+                    min={0}
+                    max={100}
+                    setting="valence"
+                    label={<>Target valence? <IoIosHappy /> </>}
+                    target={analyses.valence}
+                  />
+                  <DoubleSlider 
+                    desc="Danceability takes into consideration features such as beat strength, rhythmic stability and tempo."
+                    min={0}
+                    max={100}
+                    setting="danceability"
+                    label={<>Target danceability? <GiBallerinaShoes /></>}
+                    target={analyses.danceability}
+                  />
+                {/* <div>
                   <label
                     className="text-zinc-300 uppercase font-semibold flex items-center gap-1"
                     htmlFor="instrumental"
@@ -166,124 +179,29 @@ const Playlist = ({
                     name="instrumental"
                     id="instrumental"
                   />
-                </div>
-                <input type="submit" value="" onClick={(e) => e} />
+                </div> */}
+                <input className="px-4 pl-3 mt-4 py-2 bg-card-accent w-1/3 uppercase text-center font-bold text-zinc-300 text-sm rounded-md" type="submit" value="Add new recommendations" onClick={(e) => {
+                  e.preventDefault()
+                  let q = {min_energy: (analyses.minEnergy / 100).toString(), max_energy: (analyses.maxEnergy / 100).toString(), target_energy: (analyses.energy / 100).toString(),
+                    min_tempo: analyses.minTempo.toString(), max_tempo: analyses.maxTempo.toString(), target_tempo: analyses.tempo.toString(),
+                    min_loudness: analyses.minLoudness.toString(), max_loudness: analyses.maxLoudness.toString(), target_loudness: analyses.loudness.toString(),
+                    min_valence: (analyses.minValence / 100).toString(), max_valence: (analyses.maxValence / 100).toString(), target_valence: (analyses.valence / 100).toString(),
+                    min_danceability: (analyses.minDanceability / 100).toString(), max_danceability: (analyses.maxDanceability / 100).toString(), target_danceability: (analyses.danceability).toString(),
+                    };
+                  const seedLen = filters.genres.length + filters.artists.length + filters.tracks.length;
+                  const query = new URLSearchParams({...q}) // add seed genres
+                   fetch("/api/getRecommend?" + query.toString()).then(async (v) => {
+                    const data = await v.json();
+                    setRecommended([...items, data.tracks])
+                   })
+                }} />
               </form>
             </div>
-            <div className="p-3 pt-0">
-              <div>
-                <span className="filter-seeds">Current Seed Artists</span>
-                <ul className="grid grid-cols-3 gap-2">
-                  {filters.artists.length != 0 ? (
-                    filters.artists.map((artist) => (
-                      <motion.li
-                        className="filter-chip group"
-                        key={artist.id}
-                        title={artist.name}
-                      >
-                        <IoMdCloseCircle
-                          onClick={() =>
-                            setFilters({
-                              ...filters,
-                              artists: filters.artists.filter(
-                                (a) => a.name != artist.name
-                              ),
-                            })
-                          }
-                          className="hidden cursor-pointer group-hover:block absolute top-0 right-0 translate-x-1/2"
-                        />
-                        <span className="block overflow-hidden overflow-ellipsis whitespace-nowrap w-full">
-                          {artist.name}
-                        </span>
-                      </motion.li>
-                    ))
-                  ) : (
-                    <>
-                      <div className="col-span-2 text-zinc-500">
-                        Nothing to see here yet!
-                      </div>
-                      <motion.li className="filter-chip grid place-items-center bg-black-tertiary">
-                        <FaPlus />
-                      </motion.li>
-                    </>
-                  )}
-                </ul>
+            <div>
+              <FilterSearch topic="artists" setFilters={setFilters} />
+              <FilterSearch topic="genres" setFilters={setFilters} />
+              <FilterSearch topic="tracks" setFilters={setFilters} />
               </div>
-              <div className="pt-3">
-                <span className="filter-seeds">Current Seed Genres</span>
-                <ul className="grid grid-cols-3 gap-2">
-                  {filters.genres.length != 0 ? (
-                    filters.genres.map((genre) => (
-                      <motion.li
-                        className="filter-chip group"
-                        key={genre}
-                        title={genre}
-                      >
-                        <IoMdCloseCircle
-                          onClick={() =>
-                            setFilters({
-                              ...filters,
-                              genres: filters.genres.filter((g) => g != genre),
-                            })
-                          }
-                          className="hidden cursor-pointer group-hover:block absolute top-0 right-0 translate-x-1/2"
-                        />
-                        <span className="block overflow-hidden overflow-ellipsis whitespace-nowrap w-full">
-                          {genre}
-                        </span>
-                      </motion.li>
-                    ))
-                  ) : (
-                    <>
-                      <div className="col-span-2 text-zinc-500">
-                        Nothing to see here yet!
-                      </div>
-                      <motion.li className="filter-chip grid place-items-center bg-black-tertiary cursor-pointer">
-                        <FaPlus />
-                      </motion.li>
-                    </>
-                  )}
-                </ul>
-              </div>
-              <div className="pt-3">
-                <span className="filter-seeds">Current Seed Tracks</span>
-                <ul className="grid grid-cols-3 gap-2">
-                  {filters.tracks.length != 0 ? (
-                    filters.tracks.map((track) => (
-                      <motion.li
-                        className="filter-chip group"
-                        key={track.id}
-                        title={track.name}
-                      >
-                        <IoMdCloseCircle
-                          onClick={() =>
-                            setFilters({
-                              ...filters,
-                              tracks: filters.tracks.filter(
-                                (t) => t.id != track.id
-                              ),
-                            })
-                          }
-                          className="hidden cursor-pointer group-hover:block absolute top-0 right-0 translate-x-1/2"
-                        />
-                        <span className="block overflow-hidden overflow-ellipsis whitespace-nowrap w-full">
-                          {track.name}
-                        </span>
-                      </motion.li>
-                    ))
-                  ) : (
-                    <>
-                      <div className="col-span-2 text-zinc-500">
-                        Nothing to see here yet!
-                      </div>
-                      <motion.li className="filter-chip grid place-items-center bg-black-tertiary">
-                        <FaPlus />
-                      </motion.li>
-                    </>
-                  )}
-                </ul>
-              </div>
-            </div>
           </div>
         </motion.div>
       )}
@@ -296,7 +214,7 @@ const Playlist = ({
           Filters <IoMdOptions />
         </div>
 
-        <div className="chip-row hidden-scrollbar">
+        <div className="chip-row hidden-scrollbar" data-testid="filter-chips-artists">
           {filters.artists.map((artist) => (
             <div
               key={artist.id}

@@ -12,6 +12,12 @@ export interface Analysis {
   tempo: number;
   minTempo: number;
   maxTempo: number;
+  danceability: number;
+  maxDanceability: number;
+  minDanceability: number;
+  valence: number;
+  minValence: number;
+  maxValence: number;
 }
 
 export default function useFetch(fetchRec = false, fetchAnalysis = false) {
@@ -28,7 +34,13 @@ export default function useFetch(fetchRec = false, fetchAnalysis = false) {
     maxLoudness: 0,
     tempo: 0,
     minTempo: 0,
-    maxTempo: 0
+    maxTempo: 0,
+    danceability: 0,
+    maxDanceability: 0,
+    minDanceability: 0,
+    valence: 0,
+    minValence: 0,
+    maxValence: 0
   });
 
   const fetchSession = async () => {
@@ -140,12 +152,18 @@ export default function useFetch(fetchRec = false, fetchAnalysis = false) {
     let energyTotal = 0;
     let loudnessTotal = 0;
     let tempoTotal = 0;
+    let valenceTotal = 0;
+    let danceabilityTotal = 0;
     let energyMin = audio_features[0].energy;
     let energyMax = audio_features[0].energy;
     let loudnessMin = audio_features[0].loudness;
     let loudnessMax = audio_features[0].loudness;
     let tempoMin = audio_features[0].tempo;
     let tempoMax = audio_features[0].tempo;
+    let valenceMin = audio_features[0].valence;
+    let valenceMax = audio_features[0].valence;
+    let danceabilityMin = audio_features[0].danceability;
+    let danceabilityMax = audio_features[0].danceability;
     audio_features.forEach((t: AudioFeatures) => {
       if (t.loudness > loudnessMax) {
         loudnessMax = t.loudness;
@@ -167,23 +185,44 @@ export default function useFetch(fetchRec = false, fetchAnalysis = false) {
         tempoMin = t.tempo;
       }
       tempoTotal += t.tempo;
+
+      if (t.danceability > danceabilityMax) {
+        danceabilityMax = t.danceability;
+      } else if (t.danceability < danceabilityMin) {
+        danceabilityMin = t.danceability;
+      }
+      danceabilityTotal += t.danceability;
+
+      if (t.valence > valenceMax) {
+        valenceMax = t.valence;
+      } else if (t.valence < valenceMin) {
+        valenceMin = t.valence;
+      }
+      valenceTotal += t.valence;
     });
 
     setAnalyses({
       tempo: tempoTotal / audio_features.length,
       minTempo: tempoMin,
       maxTempo: tempoMax,
-      energy: energyTotal / audio_features.length * 10,
+      energy: energyTotal / audio_features.length * 100,
       minEnergy: energyMin,
       maxEnergy: energyMax,
       loudness: loudnessTotal / audio_features.length,
       maxLoudness: loudnessMax,
-      minLoudness: loudnessMin
+      minLoudness: loudnessMin,
+      danceability: danceabilityTotal / audio_features.length * 100,
+      maxDanceability: danceabilityMax,
+      minDanceability: danceabilityMin,
+      valence: valenceTotal / audio_features.length * 100,
+      minValence: valenceMin,
+      maxValence: valenceMax
     });
   };
 
   return {
     analyses,
+    setAnalyses,
     recentTracks,
     topTracks,
     topArtists,

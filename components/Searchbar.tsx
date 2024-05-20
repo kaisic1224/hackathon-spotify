@@ -5,7 +5,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
-  useState
+  useState,
 } from "react";
 import { FaSearch } from "react-icons/fa";
 import { track } from "../lib/api";
@@ -23,18 +23,18 @@ function debounce(f: Function, t: number) {
 const Searchbar = ({
   items,
   setRecommended,
-  setNotification
+  setNotification,
 }: {
   items: track[];
   setRecommended: Dispatch<SetStateAction<track[]>>;
-  setNotification:Dispatch<SetStateAction<track | null>>;
+  setNotification: Dispatch<SetStateAction<track | null>>;
 }) => {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<track>();
 
   const searchHandler = async (query: string) => {
     if (query.length === 0) return;
-    const q = new URLSearchParams({ q: query });
+    const q = new URLSearchParams({ q: query, type: "track" });
     const response = await fetch("/api/search?" + q.toString());
 
     const data = await response.json();
@@ -50,11 +50,11 @@ const Searchbar = ({
   );
 
   const notify = (t: track) => {
-    setNotification(t)
+    setNotification(t);
     setTimeout(() => {
-      setNotification(null)
+      setNotification(null);
     }, 3000);
-  }
+  };
 
   useEffect(() => {
     if (search.length === 0) setResults(undefined);
@@ -63,34 +63,34 @@ const Searchbar = ({
 
   return (
     <div
-      className='relative max-w-[calc(100%_-_3rem)] lg:max-w-lg xl:max-w-3xl mx-auto my-3
-      after:absolute after:-inset-2 after:border after:border-card-accent/60 after:rounded-md after:pointer-events-none focus:after:border-zinc-600'
+      className="relative max-w-[calc(100%_-_3rem)] lg:max-w-lg xl:max-w-3xl mx-auto my-3
+      after:absolute after:-inset-2 after:border after:border-card-accent/60 after:rounded-md after:pointer-events-none focus:after:border-zinc-600"
     >
       <input
-        className='search peer'
-        type='text'
-        placeholder='Search'
+        className="search peer"
+        type="text"
+        placeholder="Search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <FaSearch className='absolute top-1/2 left-2 -translate-y-1/2 w-5 h-5 fill-zinc-700' />
+      <FaSearch className="absolute top-1/2 left-2 -translate-y-1/2 w-5 h-5 fill-zinc-700" />
       {results && (
         <div
           key={results.name}
-          className='absolute w-full bg-black-main/60 backdrop-blur-sm items-center p-2 z-[9999] flex cursor-pointer'
+          className="absolute w-full bg-black-main/60 backdrop-blur-sm items-center p-2 z-[9999] flex cursor-pointer"
           onClick={() => {
             setRecommended([...items, results]);
             setResults(undefined);
-            notify(results)
+            notify(results);
           }}
         >
           <img
             src={results.album.images[results.album.images.length - 1].url}
             alt={`Album cover for ${results.album.name}`}
           />
-          <div className='flex flex-col ml-2 font-bold'>
-            <span className='text-sm text-zinc-400'>{results?.name}</span>
-            <span className='text-xs text-zinc-500'>
+          <div className="flex flex-col ml-2 font-bold">
+            <span className="text-sm text-zinc-400">{results?.name}</span>
+            <span className="text-xs text-zinc-500">
               {results?.artists.map((artist) => artist.name).join(" • ")}
             </span>
           </div>

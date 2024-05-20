@@ -36,7 +36,7 @@ const Playlists: NextPage<PageProps> = ({artists}: {artists: artist[]}) => {
     }
   });
 
-  const { analyses, topTracks, topArtists, recommended, setRecommended } = useFetch(true, true);
+  const { analyses, setAnalyses, topTracks, topArtists, recommended, setRecommended } = useFetch(true, true);
   const [notification, setNotification] = useState<track | null>(null);
   if (session?.error === "refresh error") {
     return (
@@ -93,6 +93,7 @@ const Playlists: NextPage<PageProps> = ({artists}: {artists: artist[]}) => {
         {(recommended != undefined && (recommended?.length ?? 0 != 0)) ? (
           <Playlist
             analyses={analyses}
+            setAnalyses={setAnalyses}
             items={recommended}
             setRecommended={setRecommended}
             topTracks={topTracks}
@@ -108,16 +109,16 @@ const Playlists: NextPage<PageProps> = ({artists}: {artists: artist[]}) => {
 export default Playlists;
 
 
-export async function getServersideProps() {
-  const sArtists = sessionStorage.getItem("topArtists")
-  let artists;
-  if (sArtists) {
-    artists = JSON.parse(sArtists);
-  } else {
-    artists = []
-  }
+// export async function getServerSideProps() {
+  // const sArtists = sessionStorage.getItem("topArtists")
+  // let artists;
+  // if (sArtists) {
+  //   artists = JSON.parse(sArtists);
+  // } else {
+  //   artists = []
+  // }
 
   // artists.map((artist: artist) => useArtist(artist.external_urls.spotify));
   
-  return { props: { artists } };
-}
+  // return { props: { artists } };
+// }

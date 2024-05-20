@@ -1,6 +1,7 @@
-import { ReactElement, useContext, useEffect, useState } from "react";
+import { ReactElement, useCallback, useContext, useEffect, useState } from "react";
 import { HiOutlineQuestionMarkCircle } from "react-icons/hi";
 import { RecommendedContext } from "./Playlist";
+import { debounce } from "./DatePicker";
 
 const DoubleSlider = ({
   min,
@@ -24,25 +25,49 @@ const DoubleSlider = ({
 
   const setFn = (newVal: number) => {
     if (newVal >= maxVal) return;
+    if (newVal > targetVal) setTarget(newVal);
     setMin(newVal);
   };
 
   const setFnMax = (newVal: number) => {
     if (newVal <= minVal) return;
+    if (newVal < targetVal) setTarget(newVal);
     setMax(newVal);
   };
 
   const setFnTarget = (newVal: number) => {
-    if (minVal > newVal || newVal > maxVal) return;
-    setTarget(newVal);
+    if (minVal > newVal) {
+      setTarget(minVal);
+    } else if (newVal > maxVal) {
+      setTarget(maxVal);
+    } else {
+      setTarget(newVal);
+    }
   }
+
+  const debouncedSet = useCallback(
+    debounce(() => {
+      if (setting === "energy") {
+        context?.setAnalyses({...context.analyses, energy: targetVal, minEnergy: minVal, maxEnergy: maxVal});
+      } else if (setting === "bpm") {
+        context?.setAnalyses({...context.analyses, tempo: targetVal, minTempo: minVal, maxTempo: maxVal});
+      } else if (setting === "loudness") {
+        context?.setAnalyses({...context.analyses, loudness: targetVal, minLoudness: minVal, maxLoudness: maxVal});
+      }
+    }, 1000),
+    [targetVal, minVal, maxVal]
+  );
+
+  useEffect(() => {
+    debouncedSet()
+  }, [targetVal, minVal, maxVal])
 
 
   return (
     <div>
       <label
         className="relative text-zinc-300 uppercase font-semibold flex items-center gap-1"
-        htmlFor={`${setting}-min`}
+        htmlFor={`${setting}`}
       >
         {label}
         <span className="cursor-pointer peer">
@@ -88,23 +113,26 @@ const DoubleSlider = ({
       <div className="w-1/3 flex justify-between">
         <input
           className="slider-number w-[4ch] focus:text-zinc-300 focus:outline-none text-zinc-400 appearance-none bg-transparent w-fit"
-          onChange={(e) => setFn(parseInt(e.target.value))}
+          onChange={(e) => setMin(parseInt(e.target.value))}
+          onBlur={(e) => setFn(parseInt(e.target.value))}
           type="number"
           name="min"
           id=""
           value={minVal}
         />
         <input
-          className="slider-number w-[4ch] focus:text-zinc-300 text-center focus:outline-none text-zinc-400 appearance-none bg-transparent w-fit"
-          onChange={(e) => setFnTarget(parseInt(e.target.value))}
+          className="slider-number w-[5ch] focus:text-zinc-300 text-center focus:outline-none text-zinc-400 appearance-none bg-transparent w-fit"
+          onBlur={(e) => setFnTarget(parseInt(e.target.value))}
+          onChange={(e) => setTarget(parseInt(e.target.value))}
           type="number"
-          name="max"
+          name="target"
           id=""
           value={targetVal}
         />
         <input
           className="slider-number w-[4ch] focus:text-zinc-300 text-end focus:outline-none text-zinc-400 appearance-none bg-transparent w-fit"
-          onChange={(e) => setFnMax(parseInt(e.target.value))}
+          onChange={(e) => setMax(parseInt(e.target.value))}
+          onBlur={(e) => setFnMax(parseInt(e.target.value))}
           type="number"
           name="max"
           id=""

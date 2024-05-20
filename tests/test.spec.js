@@ -1,5 +1,5 @@
-// import { By, Builder, Browser } from 'selenium-webdriver'
-const {By, Builder, Browser} = require("selenium-webdriver");
+import { By, Builder, Browser } from 'selenium-webdriver'
+// const {By, Builder, Browser} = require("selenium-webdriver");
 // runs a seleneiumIDE script to scrape and get info about artist (monthly listener and posted biography)
 // not provided by API and returns it in a react state for carousel element
 
