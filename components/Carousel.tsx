@@ -39,6 +39,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
         >
           <AnimatePresence initial={false}>
             <motion.img
+            data-testid="carousel-img"
               key={items[active].id}
               initial={{ x, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -63,7 +64,7 @@ const Carousel = ({ items }: { items: Array<artist> }) => {
               src={items[active].images[0].url}
             />
           </AnimatePresence>
-          <div className='z-[60] bottom-2 absolute ml-4 text-white flex flex-col
+          <div data-testid="carousel-text" className='z-[60] bottom-2 absolute ml-4 text-white flex flex-col
                           '>
             <h2 className='flex gap-2 items-center mb-0'>
               <img

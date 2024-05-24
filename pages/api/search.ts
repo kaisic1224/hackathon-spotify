@@ -9,11 +9,11 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) return res.status(401);
 
-  const { q, type } = req.query;
+  const { q, type, limit } = req.query;
   const queryParamString = new URLSearchParams({
     q: q as string,
     type: (type as string),
-    limit: "1"
+    limit: ((limit as string | undefined) ?? "1")
   });
   const response = await fetch(
     "https://api.spotify.com/v1/search?" + queryParamString.toString(),

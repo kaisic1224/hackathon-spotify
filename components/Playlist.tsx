@@ -16,7 +16,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 import { BsFillLightningChargeFill } from "react-icons/bs";
-import { GiBallerinaShoes } from 'react-icons/gi'
+import { GiBallerinaShoes } from "react-icons/gi";
 import {
   IoIosHappy,
   IoMdClose,
@@ -53,7 +53,7 @@ const Playlist = ({
   artists,
   topTracks,
 }: {
-  analyses: Analysis
+  analyses: Analysis;
   setAnalyses: Dispatch<SetStateAction<Analysis>>;
   items: track[];
   setRecommended: Dispatch<SetStateAction<track[]>>;
@@ -94,7 +94,14 @@ const Playlist = ({
   }, [filterOpen]);
 
   return (
-    <RecommendedContext.Provider value={{ filters, recommended: items, analyses: analyses, setAnalyses: setAnalyses }}>
+    <RecommendedContext.Provider
+      value={{
+        filters,
+        recommended: items,
+        analyses: analyses,
+        setAnalyses: setAnalyses,
+      }}
+    >
       {open && (
         <AddImage
           file={file}
@@ -125,83 +132,174 @@ const Playlist = ({
                 Current settings
               </h6>
               <form ref={formRef}>
-                <DoubleSlider 
-                    desc="Beats per minute (BPM) is a measure of how fast a song is, 
+                <DoubleSlider
+                  desc="Beats per minute (BPM) is a measure of how fast a song is, 
                     and is derived from the number of beats in a minute based off of the average beat duration."
-                    min={20}
-                    max={200}
-                    setting="bpm"
-                    label={<>Target BPM? <FaItunesNote /></>}
-                    target={analyses.tempo}
-                    />
-                  <DoubleSlider 
-                    desc="Energy is a measure of how intense a song can be, taking into consideration features such as beat strength, tempo, tension and volume"
-                    min={0}
-                    max={100}
-                    setting="energy"
-                    label={<>Target energy? <BsFillLightningChargeFill /></>}
-                    target={analyses.energy}
-                    />
-                  <DoubleSlider 
-                    desc="Loudness controls the average loudness over an entire track in decibels (dB)."
-                    min={-60}
-                    max={0}
-                    setting="loudness"
-                    label={<>Target loudness? <IoMdVolumeHigh /></>}
-                    target={analyses.loudness}
-                    />
-                  <DoubleSlider 
-                    desc="Valence measures how positive sounding a track is. A track with many positive features has less intense more upbet rhythms, whereas a low valence
+                  min={20}
+                  max={200}
+                  setting="bpm"
+                  label={
+                    <>
+                      Target BPM? <FaItunesNote />
+                    </>
+                  }
+                  target={analyses.tempo}
+                />
+                <DoubleSlider
+                  desc="Energy is a measure of how intense a song can be, taking into consideration features such as beat strength, tempo, tension and volume"
+                  min={0}
+                  max={100}
+                  setting="energy"
+                  label={
+                    <>
+                      Target energy? <BsFillLightningChargeFill />
+                    </>
+                  }
+                  target={analyses.energy}
+                />
+                <DoubleSlider
+                  desc="Loudness controls the average loudness over an entire track in decibels (dB)."
+                  min={-60}
+                  max={0}
+                  setting="loudness"
+                  label={
+                    <>
+                      Target loudness? <IoMdVolumeHigh />
+                    </>
+                  }
+                  target={analyses.loudness}
+                />
+                <DoubleSlider
+                  desc="Valence measures how positive sounding a track is. A track with many positive features has less intense more upbet rhythms, whereas a low valence
                     would reflect a track with more intensity or sad sounding"
-                    min={0}
-                    max={100}
-                    setting="valence"
-                    label={<>Target valence? <IoIosHappy /> </>}
-                    target={analyses.valence}
-                  />
-                  <DoubleSlider 
-                    desc="Danceability takes into consideration features such as beat strength, rhythmic stability and tempo."
-                    min={0}
-                    max={100}
-                    setting="danceability"
-                    label={<>Target danceability? <GiBallerinaShoes /></>}
-                    target={analyses.danceability}
-                  />
-                {/* <div>
-                  <label
-                    className="text-zinc-300 uppercase font-semibold flex items-center gap-1"
-                    htmlFor="instrumental"
-                  >
-                    Include Instrumental Only?
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="instrumental"
-                    id="instrumental"
-                  />
-                </div> */}
-                <input className="px-4 pl-3 mt-4 py-2 bg-card-accent w-1/3 uppercase text-center font-bold text-zinc-300 text-sm rounded-md" type="submit" value="Add new recommendations" onClick={(e) => {
-                  e.preventDefault()
-                  let q = {min_energy: (analyses.minEnergy / 100).toString(), max_energy: (analyses.maxEnergy / 100).toString(), target_energy: (analyses.energy / 100).toString(),
-                    min_tempo: analyses.minTempo.toString(), max_tempo: analyses.maxTempo.toString(), target_tempo: analyses.tempo.toString(),
-                    min_loudness: analyses.minLoudness.toString(), max_loudness: analyses.maxLoudness.toString(), target_loudness: analyses.loudness.toString(),
-                    min_valence: (analyses.minValence / 100).toString(), max_valence: (analyses.maxValence / 100).toString(), target_valence: (analyses.valence / 100).toString(),
-                    min_danceability: (analyses.minDanceability / 100).toString(), max_danceability: (analyses.maxDanceability / 100).toString(), target_danceability: (analyses.danceability).toString(),
+                  min={0}
+                  max={100}
+                  setting="valence"
+                  label={
+                    <>
+                      Target valence? <IoIosHappy />{" "}
+                    </>
+                  }
+                  target={analyses.valence}
+                />
+                <DoubleSlider
+                  desc="Danceability takes into consideration features such as beat strength, rhythmic stability and tempo."
+                  min={0}
+                  max={100}
+                  setting="danceability"
+                  label={
+                    <>
+                      Target danceability? <GiBallerinaShoes />
+                    </>
+                  }
+                  target={analyses.danceability}
+                />
+                <input
+                  className="px-4 pl-3 mt-4 py-2 bg-card-accent w-1/3 uppercase cursor-pointer text-center font-bold text-zinc-300 text-sm rounded-md"
+                  type="submit"
+                  value="Add new recommendations"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // analysis parameters
+                    const q = {
+                      min_energy: (analyses.minEnergy / 100).toString(),
+                      max_energy: (analyses.maxEnergy / 100).toString(),
+                      target_energy: (analyses.energy / 100).toString(),
+                      min_tempo: analyses.minTempo.toString(),
+                      max_tempo: analyses.maxTempo.toString(),
+                      target_tempo: analyses.tempo.toString(),
+                      min_loudness: analyses.minLoudness.toString(),
+                      max_loudness: analyses.maxLoudness.toString(),
+                      target_loudness: analyses.loudness.toString(),
+                      min_valence: (analyses.minValence / 100).toString(),
+                      max_valence: (analyses.maxValence / 100).toString(),
+                      target_valence: (analyses.valence / 100).toString(),
+                      min_danceability: (
+                        analyses.minDanceability / 100
+                      ).toString(),
+                      max_danceability: (
+                        analyses.maxDanceability / 100
+                      ).toString(),
+                      target_danceability: analyses.danceability.toString(),
                     };
-                  const seedLen = filters.genres.length + filters.artists.length + filters.tracks.length;
-                  const query = new URLSearchParams({...q}) // add seed genres
-                   fetch("/api/getRecommend?" + query.toString()).then(async (v) => {
-                    const data = await v.json();
-                    setRecommended([...items, data.tracks])
-                   })
-                }} />
+                    const seeds = [
+                      filters.genres,
+                      filters.artists.map((artist) => artist.name),
+                      filters.tracks.map((track) => track.name),
+                    ];
+                    // batch each set of seeds in set of 5 if the length exceeds 5
+                    if (seeds.length < 5) {
+                      const seed_genres = filters.genres[0];
+                      const seed_artists = filters.artists
+                        .map((artist) => artist.name)
+                        .join(",");
+                      const seed_tracks = filters.tracks
+                        .map((track) => track.name)
+                        .join(",");
+                      const query = new URLSearchParams({
+                        ...q,
+                        seed_genres,
+                        seed_artists,
+                        seed_tracks,
+                      });
+                      fetch("/api/getRecommend?" + query.toString()).then(
+                        async (v) => {
+                          const data = await v.json();
+                          setRecommended([...items, data.tracks]);
+                        }
+                      );
+                    } else {
+                      // in case more than 5 filters are added, spotify api only allows for 5 seeds to
+                      // be entered at a time, so batch seeds in sets of 5
+                      let iterations = 0;
+                      for (let i = seeds.length; i >= 0; i -= 5) {
+                        let seed_genres = [],
+                          seed_artists = [],
+                          seed_tracks = [];
+
+                        // 5-seed breakdown split: 1 genre, 2 artists, 2 tracks
+                        seed_tracks[0] = seeds[i];
+                        seed_artists[0] =
+                          seeds[i - filters.tracks.length - iterations];
+                        seed_genres[0] =
+                          seeds[
+                            i -
+                              filters.tracks.length -
+                              filters.artists.length -
+                              iterations
+                          ];
+                        seed_tracks[1] = seeds[i - iterations - 1];
+                        seed_artists[1] =
+                          seeds[i - filters.tracks.length - iterations];
+
+                        seed_genres = seed_genres.join(",");
+                        seed_artists = seed_artists.join(",");
+                        seed_tracks = seed_tracks.join(",");
+
+                        const query = new URLSearchParams({
+                          ...q,
+                          seed_genres,
+                          seed_artists,
+                          seed_tracks,
+                        }); // add seed genres
+                        fetch("/api/getRecommend?" + query.toString()).then(
+                          async (v) => {
+                            const data = await v.json();
+                            setRecommended([...items, data.tracks]);
+                          }
+                        );
+                        iterations++;
+                      }
+                    }
+                  }}
+                />
               </form>
             </div>
-            <div>
+            <div className="overflow-y-auto pr-4 h-full">
               <FilterSearch topic="artists" setFilters={setFilters} />
               <FilterSearch topic="genres" setFilters={setFilters} />
               <FilterSearch topic="tracks" setFilters={setFilters} />
-              </div>
+            </div>
           </div>
         </motion.div>
       )}
@@ -214,7 +312,10 @@ const Playlist = ({
           Filters <IoMdOptions />
         </div>
 
-        <div className="chip-row hidden-scrollbar" data-testid="filter-chips-artists">
+        <div
+          className="chip-row hidden-scrollbar"
+          data-testid="filter-chips-artists"
+        >
           {filters.artists.map((artist) => (
             <div
               key={artist.id}
