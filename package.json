@@ -10,18 +10,14 @@
     "test": "jest"
   },
   "dependencies": {
-    "bootstrap": "^5.1.3",
-    "chromedriver": "^124.0.3",
     "framer-motion": "^7.10.0",
-    "geckodriver": "^4.4.0",
     "next": "^12.1.5",
     "next-auth": "^4.3.3",
     "react": "^18.0.0",
     "react-bootstrap": "^2.3.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
-    "react-intersection-observer": "^8.34.0",
-    "selenium-webdriver": "^4.20.0"
+    "react-intersection-observer": "^8.34.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.5",
@@ -34,6 +30,8 @@
     "@types/react": "^18.0.5",
     "@types/react-dom": "^18.0.1",
     "@types/selenium-webdriver": "^4.1.22",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
     "autoprefixer": "^10.4.4",
     "eslint": "^8.13.0",
     "eslint-config-next": "^12.1.5",
