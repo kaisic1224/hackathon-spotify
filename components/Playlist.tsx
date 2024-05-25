@@ -253,9 +253,9 @@ const Playlist = ({
                       // be entered at a time, so batch seeds in sets of 5
                       let iterations = 0;
                       for (let i = seeds.length; i >= 0; i -= 5) {
-                        let seed_genres = [],
-                          seed_artists = [],
-                          seed_tracks = [];
+                        let seed_genres: any = [],
+                          seed_artists: any = [],
+                          seed_tracks: any = [];
 
                         // 5-seed breakdown split: 1 genre, 2 artists, 2 tracks
                         seed_tracks[0] = seeds[i];
