@@ -87,7 +87,7 @@ const FilterSearch = ({
                     onClick={() =>
                       setFilters({
                         ...filters,
-                        [topic]: filters[topic].filter((g) => g.id != itm.id),
+                        [topic]: filters[topic].filter((g: track | artist) => g.id != itm.id),
                       })
                     }
                     className="hidden cursor-pointer group-hover:block absolute top-0 right-0 translate-x-1/2"
