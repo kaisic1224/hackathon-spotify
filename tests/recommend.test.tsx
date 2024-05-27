@@ -12345,113 +12345,7 @@ jest.mock("../lib/useFetch", () => ({
   }),
 }));
 
-const mockFetch = jest.fn().mockImplementation(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => ({
-      artists: {
-        href: "https://api.spotify.com/v1/search?query=illit&type=artist&locale=*&offset=0&limit=3",
-        items: [
-          {
-            external_urls: {
-              spotify: "https://open.spotify.com/artist/36cgvBn0aadzOijnjjwqMN",
-            },
-            followers: { href: null, total: 851025 },
-            genres: ["5th gen k-pop"],
-            href: "https://api.spotify.com/v1/artists/36cgvBn0aadzOijnjjwqMN",
-            id: "36cgvBn0aadzOijnjjwqMN",
-            images: [
-              {
-                height: 640,
-                url: "https://i.scdn.co/image/ab6761610000e5eb5884b5e3bdc71d42b62bfcfd",
-                width: 640,
-              },
-              {
-                height: 320,
-                url: "https://i.scdn.co/image/ab676161000051745884b5e3bdc71d42b62bfcfd",
-                width: 320,
-              },
-              {
-                height: 160,
-                url: "https://i.scdn.co/image/ab6761610000f1785884b5e3bdc71d42b62bfcfd",
-                width: 160,
-              },
-            ],
-            name: "ILLIT",
-            popularity: 74,
-            type: "artist",
-            uri: "spotify:artist:36cgvBn0aadzOijnjjwqMN",
-          },
-          {
-            external_urls: {
-              spotify: "https://open.spotify.com/artist/6HvZYsbFfjnjFrWF950C9d",
-            },
-            followers: { href: null, total: 8011662 },
-            genres: ["k-pop", "k-pop girl group"],
-            href: "https://api.spotify.com/v1/artists/6HvZYsbFfjnjFrWF950C9d",
-            id: "6HvZYsbFfjnjFrWF950C9d",
-            images: [
-              {
-                height: 640,
-                url: "https://i.scdn.co/image/ab6761610000e5eb811211ee4001a11c1c7aae3d",
-                width: 640,
-              },
-              {
-                height: 320,
-                url: "https://i.scdn.co/image/ab67616100005174811211ee4001a11c1c7aae3d",
-                width: 320,
-              },
-              {
-                height: 160,
-                url: "https://i.scdn.co/image/ab6761610000f178811211ee4001a11c1c7aae3d",
-                width: 160,
-              },
-            ],
-            name: "NewJeans",
-            popularity: 77,
-            type: "artist",
-            uri: "spotify:artist:6HvZYsbFfjnjFrWF950C9d",
-          },
-          {
-            external_urls: {
-              spotify: "https://open.spotify.com/artist/4SpbR6yFEvexJuaBpgAU5p",
-            },
-            followers: { href: null, total: 5164678 },
-            genres: ["k-pop girl group"],
-            href: "https://api.spotify.com/v1/artists/4SpbR6yFEvexJuaBpgAU5p",
-            id: "4SpbR6yFEvexJuaBpgAU5p",
-            images: [
-              {
-                height: 640,
-                url: "https://i.scdn.co/image/ab6761610000e5eb73f96bdf146d008680149954",
-                width: 640,
-              },
-              {
-                height: 320,
-                url: "https://i.scdn.co/image/ab6761610000517473f96bdf146d008680149954",
-                width: 320,
-              },
-              {
-                height: 160,
-                url: "https://i.scdn.co/image/ab6761610000f17873f96bdf146d008680149954",
-                width: 160,
-              },
-            ],
-            name: "LE SSERAFIM",
-            popularity: 77,
-            type: "artist",
-            uri: "spotify:artist:4SpbR6yFEvexJuaBpgAU5p",
-          },
-        ],
-        limit: 3,
-        next: "https://api.spotify.com/v1/search?query=illit&type=artist&locale=*&offset=3&limit=3",
-        offset: 0,
-        previous: null,
-        total: 6,
-      },
-    }),
-  })
-);
+const mockFetch = jest.fn()
 
 const unmockedFetch =  global.fetch
 
@@ -12520,7 +12414,10 @@ describe("useFetch", () => {
 describe("filter functionality", () => {
   beforeAll(() => {
     global.fetch = mockFetch;
-    // useState.mockImplementation(jest.requireActual('react').useState)
+  })
+
+  beforeEach(() => {
+    mockFetch.mockClear();
   })
 
   afterAll(() => {
@@ -12639,9 +12536,7 @@ describe("filter functionality", () => {
     expect(addItemBtn?.children[1].firstChild).toBeInstanceOf(HTMLInputElement);
 
     // genres has list of children underneath
-    expect(addItemBtn?.children[1].children[1].children).toBeInstanceOf(
-      HTMLCollection<HTMLParagraphElement>
-    );
+    expect(addItemBtn?.children[1].children[1].children).toBeInstanceOf(HTMLCollection);
     expect(addItemBtn?.children[1].children[1].firstChild?.textContent).toBe(
       "acoustic"
     );
@@ -12656,6 +12551,113 @@ describe("filter functionality", () => {
   });
 
   test("add an artist filter", async () => {
+    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => ({
+          artists: {
+            href: "https://api.spotify.com/v1/search?query=illit&type=artist&locale=*&offset=0&limit=3",
+            items: [
+              {
+                external_urls: {
+                  spotify: "https://open.spotify.com/artist/36cgvBn0aadzOijnjjwqMN",
+                },
+                followers: { href: null, total: 851025 },
+                genres: ["5th gen k-pop"],
+                href: "https://api.spotify.com/v1/artists/36cgvBn0aadzOijnjjwqMN",
+                id: "36cgvBn0aadzOijnjjwqMN",
+                images: [
+                  {
+                    height: 640,
+                    url: "https://i.scdn.co/image/ab6761610000e5eb5884b5e3bdc71d42b62bfcfd",
+                    width: 640,
+                  },
+                  {
+                    height: 320,
+                    url: "https://i.scdn.co/image/ab676161000051745884b5e3bdc71d42b62bfcfd",
+                    width: 320,
+                  },
+                  {
+                    height: 160,
+                    url: "https://i.scdn.co/image/ab6761610000f1785884b5e3bdc71d42b62bfcfd",
+                    width: 160,
+                  },
+                ],
+                name: "ILLIT",
+                popularity: 74,
+                type: "artist",
+                uri: "spotify:artist:36cgvBn0aadzOijnjjwqMN",
+              },
+              {
+                external_urls: {
+                  spotify: "https://open.spotify.com/artist/6HvZYsbFfjnjFrWF950C9d",
+                },
+                followers: { href: null, total: 8011662 },
+                genres: ["k-pop", "k-pop girl group"],
+                href: "https://api.spotify.com/v1/artists/6HvZYsbFfjnjFrWF950C9d",
+                id: "6HvZYsbFfjnjFrWF950C9d",
+                images: [
+                  {
+                    height: 640,
+                    url: "https://i.scdn.co/image/ab6761610000e5eb811211ee4001a11c1c7aae3d",
+                    width: 640,
+                  },
+                  {
+                    height: 320,
+                    url: "https://i.scdn.co/image/ab67616100005174811211ee4001a11c1c7aae3d",
+                    width: 320,
+                  },
+                  {
+                    height: 160,
+                    url: "https://i.scdn.co/image/ab6761610000f178811211ee4001a11c1c7aae3d",
+                    width: 160,
+                  },
+                ],
+                name: "NewJeans",
+                popularity: 77,
+                type: "artist",
+                uri: "spotify:artist:6HvZYsbFfjnjFrWF950C9d",
+              },
+              {
+                external_urls: {
+                  spotify: "https://open.spotify.com/artist/4SpbR6yFEvexJuaBpgAU5p",
+                },
+                followers: { href: null, total: 5164678 },
+                genres: ["k-pop girl group"],
+                href: "https://api.spotify.com/v1/artists/4SpbR6yFEvexJuaBpgAU5p",
+                id: "4SpbR6yFEvexJuaBpgAU5p",
+                images: [
+                  {
+                    height: 640,
+                    url: "https://i.scdn.co/image/ab6761610000e5eb73f96bdf146d008680149954",
+                    width: 640,
+                  },
+                  {
+                    height: 320,
+                    url: "https://i.scdn.co/image/ab6761610000517473f96bdf146d008680149954",
+                    width: 320,
+                  },
+                  {
+                    height: 160,
+                    url: "https://i.scdn.co/image/ab6761610000f17873f96bdf146d008680149954",
+                    width: 160,
+                  },
+                ],
+                name: "LE SSERAFIM",
+                popularity: 77,
+                type: "artist",
+                uri: "spotify:artist:4SpbR6yFEvexJuaBpgAU5p",
+              },
+            ],
+            limit: 3,
+            next: "https://api.spotify.com/v1/search?query=illit&type=artist&locale=*&offset=3&limit=3",
+            offset: 0,
+            previous: null,
+            total: 6,
+          },
+        }),
+      })
+    );
     const result = useFetch();
     render(
       <RecommendedContext.Provider
@@ -12703,9 +12705,7 @@ describe("filter functionality", () => {
     expect((searchElement as HTMLInputElement).value).toBe("Illit");
 
     // search results has list of children underneath and search result that is part of spotify collection
-    expect(addItemBtn?.children[1].children[1].children).toBeInstanceOf(
-      HTMLCollection<HTMLParagraphElement>
-    );
+    expect(addItemBtn?.children[1].children[1].children).toBeInstanceOf(HTMLCollection);
     expect(addItemBtn?.children[1].children[1]).toBeInstanceOf(HTMLDivElement);
     await waitFor(() => {
       expect(screen.findByText("ILLIT")).toBeTruthy();

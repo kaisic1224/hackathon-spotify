@@ -39,7 +39,6 @@ const Home: NextPage = () => {
     topArtists,
     setTopArtists,
     setTopTracks,
-    setRecent
   } = useFetch();
 
   useLayoutEffect(() => {
