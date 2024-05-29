@@ -7,7 +7,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) return res.status(401);
+  if (!session) return res.status(401).json({message: "No valid session"});
+
   const rate = req.query.rate;
   const offset = req.query.offset;
   const queryParamString = new URLSearchParams({

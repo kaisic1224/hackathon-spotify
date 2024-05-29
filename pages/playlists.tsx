@@ -10,7 +10,6 @@ import Searchbar from "../components/Searchbar";
 import useFetch from "../lib/useFetch";
 import { NextPage } from "next";
 import Notification from "../components/Notification";
-import useArtist from "../lib/useArtist";
 
 const fadeinUp = {
   s: { opacity: 0, y: "100%" },
