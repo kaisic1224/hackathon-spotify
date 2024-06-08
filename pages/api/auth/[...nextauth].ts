@@ -1,6 +1,7 @@
-import NextAuth, { NextAuthOptions, User } from "next-auth";
+import NextAuth, { JWT, NextAuthOptions, User } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { LOGIN_URL } from "../../../lib/spotify";
+import { AdapterUser } from "next-auth/adapters";
 
 const basic = Buffer.from(
   `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
@@ -74,11 +75,11 @@ export const authOptions: NextAuthOptions = {
       return refreshToken(token);
     },
     async session({ token, session }) {
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
-      session.accessTokenExpires = token.accessTokenExpires;
-      session.error = token?.error;
-      session.user = token.user as User;
+      session.accessToken = token.accessToken as string;
+      session.refreshToken = token.refreshToken as string;
+      session.accessTokenExpires = token.accessTokenExpires as number;
+      session.error = token?.error as "refresh error" ?? undefined;
+      session.user = token.user as User | AdapterUser;
       return session;
     }
   }

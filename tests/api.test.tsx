@@ -1,3 +1,5 @@
+import { artist } from "../lib/api";
+
 const unmockedFetch = global.fetch;
 const mockedFetch = jest.fn();
 
@@ -10,7 +12,7 @@ describe("testing topItems API", () => {
     mockedFetch.mockClear();
   });
 
-  test("fetch topArtists successful", async () => {
+  test("get topArtists successful", async () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() => {
       return Promise.resolve({
         ok: true,
@@ -305,7 +307,21 @@ describe("testing topItems API", () => {
       });
     });
     const resp = await fetch("/api/topArtists");
+    const data = await resp.json();
     expect(resp.status).toBe(200);
-    expect(await resp.json()).toHaveProperty("items")
+    expect(data).toHaveProperty("items")
+    expect((data.items as artist[])[0].external_urls.spotify).toBe("https://open.spotify.com/artist/3HqSLMAZ3g3d5poNaI7GOU")
   });
+
+  test("get topArtists fail", async () => {
+    (global.fetch as jest.Mock).mockImplementationOnce(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 500,
+        json: () => (Promise.resolve({
+          
+        }))
+      })
+    })
+  })
 });
