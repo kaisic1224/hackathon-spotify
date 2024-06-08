@@ -11,18 +11,6 @@ import useFetch from "../lib/useFetch";
 import { NextPage } from "next";
 import Notification from "../components/Notification";
 
-const fadeinUp = {
-  s: { opacity: 0, y: "100%" },
-  a: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      ease: "easeOut",
-      duration: 1
-    }
-  }
-};
-
 interface PageProps {
   artists: artist[]
 }

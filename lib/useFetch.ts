@@ -40,7 +40,7 @@ export default function useFetch(fetchRec = false, fetchAnalysis = false) {
     minDanceability: 0,
     valence: 0,
     minValence: 0,
-    maxValence: 0
+    maxValence: 0,
   });
 
   const fetchSession = async () => {
@@ -139,7 +139,53 @@ export default function useFetch(fetchRec = false, fetchAnalysis = false) {
     }
   }, []);
 
-  const fetchAnalyses = async (tracks: track[]) => {
+  const fetchAnalyses = async (tracks: track[])=> {
+    if (tracks.length === 0) {
+      tracks.push({
+        href: "https://api.spotify.com/v1/tracks/4eLF9Nnj2pdfxlHRJmI59L",
+        id: "4eLF9Nnj2pdfxlHRJmI59L",
+        name: "二等天使",
+        album: {
+          album_group: "compilation",
+          album_type: "",
+          total_tracks: 0,
+          artists: [],
+          available_markets: [],
+          external_urls: {
+            spotify: ""
+          },
+          href: "",
+          id: "",
+          images: [],
+          name: "",
+          release_date: "",
+          release_date_precision: "",
+          type: "",
+          uri: ""
+        },
+        artists: [],
+        available_markets: [],
+        disc_number: 0,
+        duration_ms: 0,
+        explicit: false,
+        external_ids: {
+          isrc: "",
+          ean: "",
+          upc: ""
+        },
+        external_urls: {
+          spotify: ""
+        },
+        is_playable: false,
+        linked_from: undefined,
+        popularity: 0,
+        preview_url: "",
+        track_number: 0,
+        type: "",
+        uri: "",
+        is_local: false
+      });
+    }
     const resp = await fetch("/api/getAnalysis", {
       method: "POST",
       body: JSON.stringify({
@@ -205,18 +251,18 @@ export default function useFetch(fetchRec = false, fetchAnalysis = false) {
       tempo: tempoTotal / audio_features.length,
       minTempo: tempoMin,
       maxTempo: tempoMax,
-      energy: energyTotal / audio_features.length * 100,
+      energy: (energyTotal / audio_features.length) * 100,
       minEnergy: energyMin,
       maxEnergy: energyMax,
       loudness: loudnessTotal / audio_features.length,
       maxLoudness: loudnessMax,
       minLoudness: loudnessMin,
-      danceability: danceabilityTotal / audio_features.length * 100,
+      danceability: (danceabilityTotal / audio_features.length) * 100,
       maxDanceability: danceabilityMax,
       minDanceability: danceabilityMin,
-      valence: valenceTotal / audio_features.length * 100,
+      valence: (valenceTotal / audio_features.length) * 100,
       minValence: valenceMin,
-      maxValence: valenceMax
+      maxValence: valenceMax,
     });
   };
 
