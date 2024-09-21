@@ -19,3 +19,6 @@ https://hackathon-spotify-gules.vercel.app/
 ___
 ### NOTE
 Currently, SubWoofer is in development mode and awaiting approval from Spotify to switch to extended quota mode, meaning that only allowed user's can experience and use the app. However, if you wish to try it, open a pull request with your Spotify email and I can add you to the list :)
+
+### UPDATE: 9/21/2024
+Subwoofer is oficially in extended quota mode! Take a chance to try it out for yourself :)
